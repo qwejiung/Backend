@@ -1,5 +1,7 @@
 package LittlePet.UMC.Entity;
 
+import LittlePet.UMC.Entity.Enum.Gender;
+import LittlePet.UMC.Entity.Enum.SocialProvider;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
