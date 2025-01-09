@@ -2,7 +2,10 @@ package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 @Getter
 @Builder
@@ -18,11 +21,13 @@ public class Hospital {
     private String address;
     private String avgRating;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    @Column(nullable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    @Column(nullable = false)
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     // Getters, Setters, Constructors
 }

@@ -2,7 +2,10 @@ package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,11 +24,13 @@ public class Post {
     private String content;
     private Long view;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    @Column(nullable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    @Column(nullable = false)
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_Id")

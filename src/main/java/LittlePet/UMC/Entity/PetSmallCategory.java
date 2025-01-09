@@ -15,7 +15,6 @@ public class PetSmallCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "PetName")
     private String petname;
 
     @ManyToOne(fetch = FetchType.LAZY)

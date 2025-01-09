@@ -2,6 +2,8 @@ package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,10 +49,12 @@ public class User {
     @Column(name = "social_provider")
     private SocialProvider socialProvider;
 
-    @Column(name = "created_at")
+    @Column(nullable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(nullable = false)
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

@@ -1,7 +1,10 @@
 package LittlePet.UMC.Entity;
+import java.time.LocalDateTime;
 import java.util.Date;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 @Getter
 @Builder
@@ -16,11 +19,13 @@ public class ReviewMedia {
     private String mediaUrl;
     private String mediaType;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+    @Column(nullable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
+    @Column(nullable = false)
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "review_Id")

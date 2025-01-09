@@ -2,6 +2,8 @@ package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -28,22 +30,22 @@ public class Petinfo {
     @Column(name = "PlayMethods") //놀이방법
     private String playMethods;
 
-    @Column(name = "must_have_item_Food")
+
     private String mustHaveItemFood;
 
-    @Column(name = "must_have_item_Toys")
+
     private String mustHaveItemToys;
 
-    @Column(name = "must_have_item_Cage")
     private String mustHaveItemCage;
 
-    @Column(name = "feature_image_path")
     private String featureImagePath;
 
-    @Column(name = "created_at")
+    @Column(nullable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(nullable = false)
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 
     @OneToOne(fetch = FetchType.LAZY)
