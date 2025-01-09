@@ -1,10 +1,15 @@
-package LittlePet.spring.Entity;
+package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 //소동물 정보 - 먹이정보,생활환경,필수템 등
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 public class Petinfo {
     @Id

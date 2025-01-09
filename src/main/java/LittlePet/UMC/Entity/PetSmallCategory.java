@@ -1,10 +1,14 @@
-package LittlePet.spring.Entity;
+package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 public class PetSmallCategory {
     @Id

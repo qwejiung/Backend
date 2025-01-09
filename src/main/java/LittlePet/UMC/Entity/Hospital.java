@@ -1,8 +1,13 @@
-package LittlePet.spring.Entity;
+package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import lombok.*;
 
+import java.util.Date;
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 public class Hospital {
     @Id

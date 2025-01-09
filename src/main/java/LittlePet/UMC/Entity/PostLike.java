@@ -1,7 +1,12 @@
-package LittlePet.spring.Entity;
+package LittlePet.UMC.Entity;
 import java.util.Date;
 import jakarta.persistence.*;
+import lombok.*;
 
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 public class PostLike {
     @Id

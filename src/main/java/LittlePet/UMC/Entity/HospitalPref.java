@@ -1,7 +1,13 @@
-package LittlePet.spring.Entity;
+package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.Date;
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 public class HospitalPref {
     @Id
@@ -11,7 +17,7 @@ public class HospitalPref {
     private Long placeId;
 
     @ManyToOne
-    @JoinColumn(name = "user_ID")
+    @JoinColumn(name = "user_Id")
     private User user;
 
     // Getters, Setters, Constructors

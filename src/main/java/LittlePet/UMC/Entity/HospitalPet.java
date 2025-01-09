@@ -2,7 +2,6 @@ package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.Date;
 
 @Getter
@@ -10,12 +9,15 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Comment {
+public class HospitalPet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
+    private String specialCare;
+    private String diagnosisName;
+    private String prescription;
+    private String affectedArea;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -24,12 +26,10 @@ public class Comment {
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_Id")
-    private Post post;
+    @JoinColumn(name = "pet_Id")
+    private UserPet userpet;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_Id")
-    private User user;
+    private String placeId;
 
     // Getters, Setters, Constructors
 }

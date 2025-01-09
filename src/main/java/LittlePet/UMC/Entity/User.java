@@ -1,12 +1,17 @@
-package LittlePet.spring.Entity;
+package LittlePet.UMC.Entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 //유저 이름,성별,소셜로그인 등
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 public class User {
     @Id
