@@ -1,0 +1,21 @@
+package LittlePet.UMC.web.controller;
+
+import LittlePet.UMC.apiPayload.ApiResponse;
+import LittlePet.UMC.converter.TempConverter;
+import LittlePet.UMC.web.dto.TempResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/temp")
+@RequiredArgsConstructor
+public class TempRestController {
+
+    @GetMapping("/test")
+    public ApiResponse<TempResponse.TempTestDTO> testAPI(){
+
+        return ApiResponse.onSuccess(TempConverter.toTempTestDTO());
+    }
+}
