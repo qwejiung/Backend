@@ -1,5 +1,6 @@
-package LittlePet.UMC.Entity;
+package LittlePet.UMC.domain;
 
+import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,12 +9,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 
 //소동물 정보 - 먹이정보,생활환경,필수템 등
-@Getter
+@Getter @Setter @ToString
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Petinfo {
+public class Petinfo extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,16 +41,8 @@ public class Petinfo {
 
     private String featureImagePath;
 
-    @Column(nullable = false)
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SmallCategory_Id")
+    @JoinColumn(name = "smallcategory_id")
     private PetSmallCategory smallcategory;
 
     // Getters and Setters

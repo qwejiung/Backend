@@ -1,5 +1,6 @@
-package LittlePet.UMC.Entity;
+package LittlePet.UMC.domain;
 
+import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,12 +10,12 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-@Getter
+@Getter @Setter @ToString
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class PostCategory {
+public class PostCategory extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

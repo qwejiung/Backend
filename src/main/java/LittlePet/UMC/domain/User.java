@@ -1,7 +1,9 @@
-package LittlePet.UMC.Entity;
+package LittlePet.UMC.domain;
 
-import LittlePet.UMC.Entity.Enum.Gender;
-import LittlePet.UMC.Entity.Enum.SocialProvider;
+import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
+import LittlePet.UMC.domain.enums.Gender;
+import LittlePet.UMC.domain.enums.RoleStatus;
+import LittlePet.UMC.domain.enums.SocialProvider;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,52 +14,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 //유저 이름,성별,소셜로그인 등
-@Getter
+@Getter @Setter @ToString
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "Name")
+    @Column(name = "Name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "Phone")
+    @Column(name = "Phone", nullable = false, length = 10)
     private String phone;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "Gender")
     private Gender gender;
 
-    @Column(name = "Email")
     private String email;
 
-    @Column(name = "Password")
     private String password;
 
-    @Column(name = "Introducion")
     private String introduction;
 
-    @Column(name = "ProfilePhoto")
     private String profilePhoto;
 
-    @Column(name = "social_id")
     private String socialId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "social_provider")
     private SocialProvider socialProvider;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private RoleStatus role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<HealthRecord> healthrecordList = new ArrayList<>();

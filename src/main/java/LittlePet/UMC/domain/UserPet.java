@@ -1,5 +1,6 @@
-package LittlePet.UMC.Entity;
+package LittlePet.UMC.domain;
 
+import LittlePet.UMC.domain.enums.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -37,14 +38,6 @@ public class UserPet {
 
     @Column(name = "ProfilePhoto")
     private String profilePhoto;
-
-    @Column(nullable = false)
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_Id")

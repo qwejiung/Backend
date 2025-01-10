@@ -1,17 +1,18 @@
-package LittlePet.UMC.Entity;
+package LittlePet.UMC.domain;
 import java.time.LocalDateTime;
-import java.util.Date;
+
+import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-@Getter
+@Getter @Setter @ToString
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class PostMedia {
+public class PostMedia extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

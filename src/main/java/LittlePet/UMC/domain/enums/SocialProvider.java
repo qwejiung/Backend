@@ -1,4 +1,4 @@
-package LittlePet.UMC.Entity.Enum;
+package LittlePet.UMC.domain.enums;
 
 public enum SocialProvider {
     NAVER,

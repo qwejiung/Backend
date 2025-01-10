@@ -1,16 +1,17 @@
-package LittlePet.UMC.Entity;
+package LittlePet.UMC.domain;
 
+import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-@Getter
+@Getter @Setter @ToString
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class PetSmallCategory {
+public class PetSmallCategory extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +25,7 @@ public class PetSmallCategory {
     @OneToOne(mappedBy = "smallcategory", cascade = CascadeType.ALL)
     private Petinfo petinfo;
 
-    @OneToMany(mappedBy = "smallcategory", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "petsmallcategory", cascade = CascadeType.ALL)
     private List<Post> postList = new ArrayList<>();
 
     // Getters and Setters

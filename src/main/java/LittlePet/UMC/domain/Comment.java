@@ -1,32 +1,24 @@
-package LittlePet.UMC.Entity;
+package LittlePet.UMC.domain;
 
+import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
-@Getter
+@Getter @Setter @ToString
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-public class Comment {
+public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
-
-    @Column(nullable = false)
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private String content;;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_Id")
