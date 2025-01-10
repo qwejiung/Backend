@@ -1,55 +1,59 @@
-package LittlePet.UMC.domain;
+package LittlePet.UMC.domain.userEntity;
 
-import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
+import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
+import LittlePet.UMC.domain.petEntity.mapping.HealthRecord;
+import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
+import LittlePet.UMC.domain.postEntity.Post;
+import LittlePet.UMC.domain.postEntity.mapping.Comment;
+import LittlePet.UMC.domain.postEntity.mapping.PostLike;
 import LittlePet.UMC.domain.enums.Gender;
 import LittlePet.UMC.domain.enums.RoleStatus;
-import LittlePet.UMC.domain.enums.SocialProvider;
+import LittlePet.UMC.domain.enums.SocialProviderEnum;
+import LittlePet.UMC.domain.hospitalEntity.mapping.Review;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 //유저 이름,성별,소셜로그인 등
-@Getter @Setter @ToString
+@Getter @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@Table(name = "`user`")
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "Name", nullable = false, length = 50)
+    @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(name = "Phone", nullable = false, length = 10)
+    @Column(nullable = false)
     private String phone;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(nullable = false, length = 30)
     private String email;
 
-    private String password;
-
-    private String introduction;
-
-    private String profilePhoto;
-
+    @Column(nullable = false)
     private String socialId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "social_provider")
-    private SocialProvider socialProvider;
+    @Column(nullable = false)
+    private SocialProviderEnum socialProvider;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RoleStatus role;
+
+    private String introduction;
+
+    private String profilePhoto;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<HealthRecord> healthrecordList = new ArrayList<>();

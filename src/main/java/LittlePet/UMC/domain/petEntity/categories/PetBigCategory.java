@@ -1,6 +1,6 @@
-package LittlePet.UMC.domain;
+package LittlePet.UMC.domain.petEntity.categories;
 
-import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
+import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //소동물 대분류 - 설치류 , 파충류
-@Getter @Setter @ToString
+@Getter @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -19,11 +19,11 @@ public class PetBigCategory extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Enum으로 관리
-    private String category_name;
+    @Column(nullable = false)
+    private String categoryName;
 
-    @OneToMany(mappedBy = "bigcategory", cascade = CascadeType.ALL)
-    private List<PetSmallCategory> small_categories = new ArrayList<>();
+    @OneToMany(mappedBy = "petBigCategory", cascade = CascadeType.ALL)
+    private List<PetCategory> petCategoryList = new ArrayList<>();
 
     // Getters and Setters
 }

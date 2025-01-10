@@ -1,6 +1,6 @@
 package LittlePet.UMC.domain.enums;
 
-public enum SocialProvider {
+public enum SocialProviderEnum {
     NAVER,
     KAKAO,
     GOOGLE,

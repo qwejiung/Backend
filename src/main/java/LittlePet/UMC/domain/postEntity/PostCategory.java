@@ -1,6 +1,7 @@
-package LittlePet.UMC.domain;
+package LittlePet.UMC.domain.postEntity;
 
-import LittlePet.UMC.domain.Auditing.BaseTimeEntity;
+import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
+import LittlePet.UMC.domain.enums.PostCategoryEnum;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,7 +11,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
-@Getter @Setter @ToString
+@Getter @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -20,10 +21,9 @@ public class PostCategory extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String category;
+    @Column(nullable = false)
+    private PostCategoryEnum category;
 
-    @OneToMany(mappedBy = "postcategory", cascade = CascadeType.ALL)
-    private List<Post > postList= new ArrayList<>();
-
-    // Getters, Setters, Constructors
+    @OneToMany(mappedBy = "postCategory", cascade = CascadeType.ALL)
+    private List<Post> postList= new ArrayList<>();
 }

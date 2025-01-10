@@ -1,4 +1,4 @@
-package LittlePet.UMC.domain.Auditing;
+package LittlePet.UMC.domain.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
