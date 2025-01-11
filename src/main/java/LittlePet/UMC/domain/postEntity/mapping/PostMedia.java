@@ -20,6 +20,7 @@ public class PostMedia extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private MediaTypeEnum mediaType;
 
     @Column(nullable = false)

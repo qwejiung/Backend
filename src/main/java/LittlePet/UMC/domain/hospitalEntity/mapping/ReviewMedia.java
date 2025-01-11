@@ -19,6 +19,7 @@ public class ReviewMedia extends BaseTimeEntity {
     private String mediaUrl;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private MediaTypeEnum mediaType;
 
     @ManyToOne

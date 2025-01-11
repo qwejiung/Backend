@@ -26,12 +26,15 @@ public class HealthRecord extends BaseTimeEntity {
     private Double weight;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private MealAmountEnum mealAmount;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private FecesStatusEnum fecesStatus;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private HealthStatusEnum healthStatus;
 
     private String abnormalSymptoms;
