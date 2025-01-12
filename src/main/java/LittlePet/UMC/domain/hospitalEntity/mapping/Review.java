@@ -1,6 +1,7 @@
 package LittlePet.UMC.domain.hospitalEntity.mapping;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
+import LittlePet.UMC.domain.enums.Gender;
 import LittlePet.UMC.domain.hospitalEntity.Hospital;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.userEntity.User;
@@ -14,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@ToString
 public class Review extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +28,8 @@ public class Review extends BaseTimeEntity {
     private int rating;
 
     @Column(nullable = false)
-    private String petGender;
+    @Enumerated(EnumType.STRING)
+    private Gender petGender;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="category_id",nullable = false)

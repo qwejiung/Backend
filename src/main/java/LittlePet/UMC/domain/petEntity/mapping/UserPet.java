@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@ToString
 public class UserPet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

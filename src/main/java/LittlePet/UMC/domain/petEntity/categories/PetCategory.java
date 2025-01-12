@@ -1,17 +1,15 @@
 package LittlePet.UMC.domain.petEntity.categories;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
-import LittlePet.UMC.domain.postEntity.Post;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
 @Getter @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
+@ToString
 public class PetCategory extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
