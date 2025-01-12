@@ -17,7 +17,7 @@ public class PetCategory extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String species;
 
     @Column(nullable = false)
@@ -41,6 +41,7 @@ public class PetCategory extends BaseTimeEntity {
     @Column(nullable = false)
     private String mustHaveItemCage;
 
+    @Column(nullable = false)
     private String featureImagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
