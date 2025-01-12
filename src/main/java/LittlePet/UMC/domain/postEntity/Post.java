@@ -1,6 +1,7 @@
 package LittlePet.UMC.domain.postEntity;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
+import LittlePet.UMC.domain.postEntity.mapping.PostClipping;
 import LittlePet.UMC.domain.userEntity.User;
 import LittlePet.UMC.domain.postEntity.mapping.Comment;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
@@ -53,4 +54,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostMedia> postMediaList= new ArrayList<>();
     // Getters, Setters, Constructors
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<PostClipping> postClippingList= new ArrayList<>();
+
 }

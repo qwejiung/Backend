@@ -33,6 +33,9 @@ public class UserPet {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(nullable = false)
+    private Double weight;
+
     private String profilePhoto;
 
     @ManyToOne(fetch = FetchType.LAZY)
