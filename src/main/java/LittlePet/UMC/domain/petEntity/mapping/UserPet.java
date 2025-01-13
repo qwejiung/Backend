@@ -36,6 +36,9 @@ public class UserPet {
     @Column(nullable = false)
     private Double weight;
 
+    @Column(nullable = false)
+    private int age;
+
     private String profilePhoto;
 
     @ManyToOne(fetch = FetchType.LAZY)
