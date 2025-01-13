@@ -53,10 +53,6 @@ public class UserPetRepositoryTest {
         UserPet userpet = CreateEntity.createUserPet(petCategory,user);
         UserPet savedUserPet = userPetRepository.save(userpet);
         System.out.println("savedUserPet = " + savedUserPet);
-
-
-
-
     }
 
 }

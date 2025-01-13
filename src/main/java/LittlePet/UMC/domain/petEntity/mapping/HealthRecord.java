@@ -39,6 +39,9 @@ public class HealthRecord extends BaseTimeEntity {
     private HealthStatusEnum healthStatus;
 
     private String abnormalSymptoms;
+    private String diagnosisName;
+    private String prescription;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id",nullable = false)

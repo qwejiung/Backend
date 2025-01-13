@@ -3,7 +3,6 @@ package LittlePet.UMC.domain.petEntity.mapping;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.userEntity.User;
 import LittlePet.UMC.domain.enums.Gender;
-import LittlePet.UMC.domain.hospitalEntity.mapping.MedicalHistory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -48,9 +47,6 @@ public class UserPet {
     @ManyToOne(fetch = FetchType.LAZY)  //소분류 카테고리로 바꿔도 됨
     @JoinColumn(name = "pet_category_id",nullable = false)
     private PetCategory petCategory;
-
-    @OneToMany(mappedBy = "userPet", cascade = CascadeType.ALL)
-    private List<MedicalHistory> medicalHistoryList = new ArrayList<>();
 
     @OneToMany(mappedBy = "userPet", cascade = CascadeType.ALL)
     private List<HealthRecord> healthRecordList= new ArrayList<>();
