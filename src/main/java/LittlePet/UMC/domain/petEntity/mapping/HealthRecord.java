@@ -42,12 +42,10 @@ public class HealthRecord extends BaseTimeEntity {
     private String diagnosisName;
     private String prescription;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id",nullable = false)
     private UserPet userPet;
 
-    //User가 꼭 필요할까 user Pet 내에도 user_id가 있긴 해
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

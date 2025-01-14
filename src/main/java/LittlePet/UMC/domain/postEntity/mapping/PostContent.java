@@ -21,11 +21,8 @@ public class PostContent extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MediaTypeEnum mediaType;
 
-    @Column//Type이 Text일 경우
+    @Column(nullable = false)
     private String content;
-
-    @Column // IMAGE나 VIDEO 타입일 경우 파일 경로
-    private String filePath;
 
     @Column(nullable = false)
     private Integer sequence;       //블로그 형식처럼 글 -> 사진 -> 글 하기위한 순서번호
