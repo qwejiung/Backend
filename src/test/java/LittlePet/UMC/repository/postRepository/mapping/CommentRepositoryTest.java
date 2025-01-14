@@ -6,6 +6,7 @@ import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
+import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.postEntity.PostCategory;
 import LittlePet.UMC.domain.postEntity.mapping.Comment;
@@ -43,7 +44,8 @@ public class CommentRepositoryTest {
         User user = CreateEntity.createUser();
         PetBigCategory petBigCategory = CreateEntity.createPetBigCategory();
         PetCategory petCategory = CreateEntity.createPetCategory(petBigCategory);
-        Post post = CreateEntity.creatPost(postCategory,user,petCategory);
+        UserPet userpet = CreateEntity.createUserPet(petCategory,user);
+        Post post = CreateEntity.creatPost(postCategory,user,userpet);
 
         // 엔티티 저장
         postCategoryRepository.save(postCategory);
