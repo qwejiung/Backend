@@ -6,13 +6,13 @@ import LittlePet.UMC.domain.postEntity.Post;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@ToString
-public class PostMedia extends BaseTimeEntity {
+public class PostContent extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +22,10 @@ public class PostMedia extends BaseTimeEntity {
     private MediaTypeEnum mediaType;
 
     @Column(nullable = false)
-    private String filePath;
+    private String content;
+
+    @Column(nullable = false)
+    private Integer sequence;       //블로그 형식처럼 글 -> 사진 -> 글 하기위한 순서번호
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)

@@ -1,7 +1,6 @@
 package LittlePet.UMC.domain.hospitalEntity;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
-import LittlePet.UMC.domain.hospitalEntity.mapping.MedicalHistory;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
 import LittlePet.UMC.domain.hospitalEntity.mapping.Review;
 import jakarta.persistence.*;
@@ -36,8 +35,8 @@ public class Hospital extends BaseTimeEntity {
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
     private List<HospitalPref> hospitalPrefList= new ArrayList<>();
 
-    @OneToMany(mappedBy = "hospital") //cascade 안 되도록
-    private List<MedicalHistory> medicalHistoryList = new ArrayList<>();
+//    @OneToMany(mappedBy = "hospital") //cascade 안 되도록
+//    private List<MedicalHistory> medicalHistoryList = new ArrayList<>();
 
     // Getters, Setters, Constructors
 }

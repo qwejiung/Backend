@@ -1,12 +1,12 @@
 package LittlePet.UMC.domain.postEntity;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
+import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.postEntity.mapping.PostClipping;
+import LittlePet.UMC.domain.postEntity.mapping.PostContent;
 import LittlePet.UMC.domain.userEntity.User;
 import LittlePet.UMC.domain.postEntity.mapping.Comment;
-import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.postEntity.mapping.PostLike;
-import LittlePet.UMC.domain.postEntity.mapping.PostMedia;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,9 +27,6 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private String content;
-
     @Column(nullable = false, columnDefinition = "BIGINT default 0")
     private Long views;
 
@@ -42,8 +39,8 @@ public class Post extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_small_category_id", nullable = false)
-    private PetCategory petSmallCategory;
+    @JoinColumn(name = "userpet_id", nullable = false)
+    private UserPet userpet;        //게시물의 성별이 필요한 것으로 판단 PetCategory -> UserPet
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> commentList= new ArrayList<>();
@@ -52,7 +49,7 @@ public class Post extends BaseTimeEntity {
     private List<PostLike> postLikeList= new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<PostMedia> postMediaList= new ArrayList<>();
+    private List<PostContent> postcontentList= new ArrayList<>();
     // Getters, Setters, Constructors
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostClipping> postClippingList= new ArrayList<>();

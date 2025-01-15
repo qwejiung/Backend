@@ -3,6 +3,7 @@ package LittlePet.UMC.repository.postRepository.mapping;
 import LittlePet.UMC.UmcApplication;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
+import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.postEntity.PostCategory;
 import LittlePet.UMC.domain.postEntity.mapping.PostLike;
@@ -37,7 +38,8 @@ public class PostLikeRepositoryTest {
         User user = CreateEntity.createUser();
         PetBigCategory petBigCategory = CreateEntity.createPetBigCategory();
         PetCategory petCategory = CreateEntity.createPetCategory(petBigCategory);
-        Post post = CreateEntity.creatPost(postCategory,user,petCategory);
+        UserPet userpet = CreateEntity.createUserPet(petCategory,user);
+        Post post = CreateEntity.creatPost(postCategory,user,userpet);
 
         // 엔티티 저장
         postCategoryRepository.save(postCategory);
@@ -48,7 +50,6 @@ public class PostLikeRepositoryTest {
 
         //PostLike 엔티티 생성 및 저장
         PostLike postlike = PostLike.builder()
-                .num(0L)
                 .post(post)
                 .user(user)
                 .build();

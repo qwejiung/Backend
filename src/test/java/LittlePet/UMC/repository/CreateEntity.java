@@ -58,13 +58,12 @@ public class CreateEntity {
                 .build();
     }
 
-    public static Post creatPost(PostCategory postCategory, User user, PetCategory petCategory) {
+    public static Post creatPost(PostCategory postCategory, User user, UserPet userPet) {
         return Post.builder()
                 .title("안녕하세요")
-                .content("저는 이번에 처음 토끼를 키우게 된 ...")
                 .views(0L)
                 .postCategory(postCategory)
-                .petSmallCategory(petCategory)
+                .userpet(userPet)
                 .user(user)
                 .build();
     }
@@ -74,6 +73,8 @@ public class CreateEntity {
                 .name("오늘이")
                 .birthDay(LocalDate.of(2024, 1, 12))
                 .gender(Gender.MALE)
+                .weight(12.5)
+                .age(2)
                 .profilePhoto("profile_photo.jpg")
                 .petCategory(petCategory)
                 .user(user)

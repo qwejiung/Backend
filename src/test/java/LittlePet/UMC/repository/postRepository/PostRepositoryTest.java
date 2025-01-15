@@ -7,6 +7,7 @@ import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
+import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.postEntity.PostCategory;
 import LittlePet.UMC.domain.userEntity.User;
@@ -46,6 +47,8 @@ public class PostRepositoryTest {
         User user = CreateEntity.createUser();
         PetBigCategory petBigCategory = CreateEntity.createPetBigCategory();
         PetCategory petCategory = CreateEntity.createPetCategory(petBigCategory);
+        UserPet userpet = CreateEntity.createUserPet(petCategory,user);
+
 
         // 엔티티 저장
         postCategoryRepository.save(postCategory);
@@ -54,8 +57,7 @@ public class PostRepositoryTest {
         petCategoryRepository.save(petCategory);
 
         // Post 엔티티 생성 및 저장
-        Post post = CreateEntity.creatPost(postCategory,user,petCategory);
-
+        Post post = CreateEntity.creatPost(postCategory,user,userpet);
         Post savedPost = postRepository.save(post);
         System.out.println(savedPost);
     }
