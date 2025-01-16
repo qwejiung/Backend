@@ -43,15 +43,12 @@ public class CommentRepositoryTest {
         PostCategory postCategory = CreateEntity.createPostCategory();
         User user = CreateEntity.createUser();
         PetBigCategory petBigCategory = CreateEntity.createPetBigCategory();
-        PetCategory petCategory = CreateEntity.createPetCategory(petBigCategory);
-        UserPet userpet = CreateEntity.createUserPet(petCategory,user);
-        Post post = CreateEntity.creatPost(postCategory,user,userpet);
+        Post post = CreateEntity.creatPost(postCategory,user,petBigCategory);
 
         // 엔티티 저장
         postCategoryRepository.save(postCategory);
         userRepository.save(user);
         petBigCategoryRepository.save(petBigCategory);
-        petCategoryRepository.save(petCategory);
         postRepository.save(post);
 
         //Comment 엔티티 생성 및 저장

@@ -61,7 +61,6 @@ public class HealthRecordRepositoryTest {
                 .healthStatus(HealthStatusEnum.COUGH)
                 .abnormalSymptoms("이상 증세 딱히 없음")
                 .userPet(userpet)
-                .user(user)
                 .build();
 
         HealthRecord savedHealthRecord = healthRecordRepository.save(healthRecord);

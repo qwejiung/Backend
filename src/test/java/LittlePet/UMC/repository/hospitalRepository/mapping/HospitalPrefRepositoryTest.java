@@ -37,7 +37,7 @@ public class HospitalPrefRepositoryTest {
         userRepository.save(user);
         hospitalRepository.save(hospital);
 
-        //HospitalPref 엔티티 생성 및 저장
+//        HospitalPref 엔티티 생성 및 저장
         HospitalPref hospitalPref = HospitalPref.builder()
                 .user(user)
                 .hospital(hospital)
