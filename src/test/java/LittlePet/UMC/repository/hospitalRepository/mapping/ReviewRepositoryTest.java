@@ -1,9 +1,8 @@
 package LittlePet.UMC.repository.hospitalRepository.mapping;
 
 import LittlePet.UMC.UmcApplication;
-import LittlePet.UMC.domain.enums.Gender;
 import LittlePet.UMC.domain.hospitalEntity.Hospital;
-import LittlePet.UMC.domain.hospitalEntity.mapping.Review;
+import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalStarRating;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.userEntity.User;
@@ -12,14 +11,12 @@ import LittlePet.UMC.repository.UserRepository;
 import LittlePet.UMC.repository.hospitalRepository.HospitalRepository;
 import LittlePet.UMC.repository.petRepository.categories.PetBigCategoryRepository;
 import LittlePet.UMC.repository.petRepository.categories.PetCategoryRepository;
-import LittlePet.UMC.repository.petRepository.mapping.UserPetRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest(classes = UmcApplication.class)
 public class ReviewRepositoryTest {
@@ -44,9 +41,9 @@ public class ReviewRepositoryTest {
         petCategoryRepository.save(petCategory);
 
 
-        Review review = CreateEntity.createReview(petCategory, user, hospital);
+        HospitalStarRating review = CreateEntity.createReview(petCategory, user, hospital);
 
-        Review savedreview = reviewRepository.save(review);
+        HospitalStarRating savedreview = reviewRepository.save(review);
         System.out.println("savedreview = " + savedreview);
     }
 

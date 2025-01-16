@@ -5,7 +5,7 @@ import LittlePet.UMC.domain.enums.PostType;
 import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.hospitalEntity.Hospital;
-import LittlePet.UMC.domain.hospitalEntity.mapping.Review;
+import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalStarRating;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
@@ -89,8 +89,8 @@ public class CreateEntity {
                 .build();
     }
 
-    public static Review createReview(PetCategory petCategory,User user,Hospital hospital) {
-        return Review.builder()
+    public static HospitalStarRating createReview(PetCategory petCategory, User user, Hospital hospital) {
+        return HospitalStarRating.builder()
                 .content("간호사 선생님이 친절해요!")
                 .rating(5)
                 .petGender(Gender.FEMALE)

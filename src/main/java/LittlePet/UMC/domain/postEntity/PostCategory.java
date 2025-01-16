@@ -22,8 +22,8 @@ public class PostCategory extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private PostType posttype;
+    @Column(nullable = false)
+    private String category;
 
     @OneToMany(mappedBy = "postCategory", cascade = CascadeType.ALL)
     private List<Post> postList= new ArrayList<>();

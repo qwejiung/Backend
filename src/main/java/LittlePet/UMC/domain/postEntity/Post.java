@@ -1,6 +1,7 @@
 package LittlePet.UMC.domain.postEntity;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
+import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.postEntity.mapping.PostClipping;
 import LittlePet.UMC.domain.postEntity.mapping.PostContent;
@@ -39,8 +40,8 @@ public class Post extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userpet_id", nullable = false)
-    private UserPet userpet;        //게시물의 성별이 필요한 것으로 판단 PetCategory -> UserPet
+    @JoinColumn(name = "pet_big_category", nullable = false)
+    private PetBigCategory petBigCategory;        //게시물의 성별이 필요한 것으로 판단 PetCategory -> UserPet
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> commentList= new ArrayList<>();
