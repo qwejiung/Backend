@@ -1,5 +1,6 @@
 package LittlePet.UMC.repository.hospitalRepository;
 
+import LittlePet.UMC.Hospital.repository.HospitalRepository;
 import LittlePet.UMC.UmcApplication;
 import LittlePet.UMC.domain.hospitalEntity.Hospital;
 import LittlePet.UMC.repository.CreateEntity;
