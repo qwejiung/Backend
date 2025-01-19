@@ -43,20 +43,15 @@ jobs:
 
       # 5. DockerHub 로그인
       - name: Log in to Docker Hub
-        id: docker-login
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      # 로그인 실패 확인
-      - name: Check Docker Login
+      # 로그인 확인
+      - name: Verify Docker Login
         run: |
-          if [ -z "$(docker info | grep Username)" ]; then
-            echo "DockerHub 로그인 실패"
-            exit 1
-          fi
-        shell: bash
+          docker info | grep Username || exit 1
 
       # 6. Docker Buildx 설치
       - name: Set up Docker Buildx
@@ -80,26 +75,29 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 22
           script: |
-            # 1. Docker 네트워크 생성
+            # DockerHub 로그인
+            echo "${{ secrets.DOCKER_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+            # Docker 네트워크 생성
             if [ -z "$(sudo docker network ls --filter name=${{ secrets.DOCKER_NETWORK }} -q)" ]; then
               sudo docker network create ${{ secrets.DOCKER_NETWORK }}
             fi
 
-            # 2. Docker 이미지 Pull
+            # Docker 이미지 Pull
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/littlepet:latest
 
-            # 3. 기존 컨테이너 중지 및 제거
+            # 기존 컨테이너 중지 및 제거
             EXISTING_CONTAINER=$(sudo docker ps -q --filter "name=littlepet-container")
             if [ ! -z "$EXISTING_CONTAINER" ]; then
               sudo docker stop $EXISTING_CONTAINER
               sudo docker rm $EXISTING_CONTAINER
             fi
 
-            # 4. 종료된 컨테이너 모두 제거
+            # 종료된 컨테이너 모두 제거
             sudo docker rm $(sudo docker ps -a -q --filter "status=exited") || true
 
-            # 5. 컨테이너 실행
+            # 컨테이너 실행
             sudo docker run -d --env-file ~/.env --name littlepet-container -p 8080:8080 --net ${{ secrets.DOCKER_NETWORK }} -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/littlepet:latest
 
-            # 6. 사용하지 않는 이미지 제거
+            # 사용하지 않는 이미지 제거
             sudo docker image prune -a -f
