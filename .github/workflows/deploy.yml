@@ -97,7 +97,15 @@ jobs:
             sudo docker rm $(sudo docker ps -a -q --filter "status=exited") || true
 
             # 컨테이너 실행
-            sudo docker run -d --env-file ~/.env --name littlepet-container -p 8080:8080 --net ${{ secrets.DOCKER_NETWORK }} -e TZ=Asia/Seoul ${{ secrets.DOCKER_USERNAME }}/littlepet:latest
+            sudo docker run -d \
+              --name littlepet-container \
+              -p 8080:8080 \
+              -e DB_URL=${{ secrets.DB_URL }} \
+              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              --net ${{ secrets.DOCKER_NETWORK }} \
+              -e TZ=Asia/Seoul \
+              ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
 
             # 사용하지 않는 이미지 제거
             sudo docker image prune -a -f
