@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //유저 이름,성별,소셜로그인 등
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -29,8 +29,9 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 50)
     private String name;
+
 
     private String phone;
 
@@ -72,5 +73,12 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<HospitalPref> hospitalprefList = new ArrayList<>();
+
+    @PrePersist
+    public void setDefaultRole() {
+        if (this.role == null) {
+            this.role = RoleStatus.USER; // 기본값 설정
+        }
+    }
     // Getters and Setters
 }
