@@ -25,18 +25,10 @@ public class UserPet {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private LocalDate birthDay;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-    @Column(nullable = false)
-    private Double weight;
-
-    @Column(nullable = false)
-    private int age;
 
     private String profilePhoto;
 
