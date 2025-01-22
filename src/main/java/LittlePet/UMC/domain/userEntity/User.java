@@ -1,6 +1,6 @@
 package LittlePet.UMC.domain.userEntity;
 
-import LittlePet.UMC.domain.BadgeEntity.UserBadge;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //유저 이름,성별,소셜로그인 등
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

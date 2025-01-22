@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //유저가 등록한 소동물들 - 처음 등록할때 종,체중,프로필사진 등
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
