@@ -90,7 +90,27 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/docs/**","/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/docs/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/auth/login",
+                                "/auth/sign-in",
+                                "/quiz",
+                                "/users/**",
+                                "/animal-categories",
+                                "/animal-categories/**",
+                                "/hospitals",
+                                "/hospitals/**",
+                                "/community",
+                                "/community/**",
+                                "/challenger",
+                                "/health/records",
+                                "/health/records/**",
+                                "/badge",
+                                "/badge/**"
+                        ).permitAll()
                         .anyRequest().authenticated());
 
         http.sessionManagement(session -> session

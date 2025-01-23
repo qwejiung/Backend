@@ -7,7 +7,8 @@ public enum SocialProviderEnum {
 //    OTHER;
 
     NAVER("naver"),
-    GOOGLE("google");
+    GOOGLE("google"),
+    KAKAO("kakao");
 
     private final String provider;
 

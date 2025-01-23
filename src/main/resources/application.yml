@@ -45,7 +45,13 @@ spring:
             scope:
               - email
               - profile
-
+          kakao: # 카카오 설정
+            client-id: ${KAKAO_CLIENT_ID} # 카카오 REST API 키를 입력
+            client-secret: ${KAKAO_CLIENT_SECRET} # 필요하지 않으면 생략 가능
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao # 리다이렉트 URI
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
 
         provider:
           naver:
@@ -58,3 +64,8 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+          kakao: # 카카오 프로바이더 설정
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id # 카카오 응답 JSON에서 유니크 ID로 사용할 필드

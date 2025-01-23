@@ -29,24 +29,44 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
+        System.out.println("[DEBUG] OAuth2UserRequest: " + userRequest);
+        System.out.println("[DEBUG] ClientRegistration ID: " + userRequest.getClientRegistration().getRegistrationId());
         System.out.println("[DEBUG] Access Token: " + userRequest.getAccessToken().getTokenValue());
+        OAuth2User oAuth2User;
 
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-        System.out.println("OAuth2User attributes: " + oAuth2User.getAttributes());
-
-        // 클라이언트 제공자 확인
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        OAuth2Response oAuth2Response=null;
-        if ("naver".equals(registrationId)) {
-            oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
-        } else if ("google".equals(registrationId)) {
-            oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-            System.out.println("ㅇㅇㅇㅇ"+oAuth2Response);
-        } else {
-            throw new OAuth2AuthenticationException("Unsupported registration provider: " + registrationId);
+        try {
+            oAuth2User = super.loadUser(userRequest);
+            System.out.println("[DEBUG] OAuth2User attributes: " + oAuth2User.getAttributes());
+        } catch (Exception e) {
+            System.err.println("[ERROR] Failed to load user: " + e.getMessage());
+            e.printStackTrace();
+            throw new NullPointerException();
         }
 
-        // 소셜 제공자 이름 확인 및 변환
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        System.out.println("[DEBUG] Registration ID: " + registrationId);
+
+        OAuth2Response oAuth2Response;
+
+        try {
+            if ("google".equals(registrationId)) {
+                oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
+                System.out.println("[DEBUG] GoogleResponse: " + oAuth2Response);
+            } else if ("naver".equals(registrationId)) {
+                oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
+                System.out.println("[DEBUG] NaverResponse: " + oAuth2Response);
+            } else {
+                throw new OAuth2AuthenticationException("Unsupported registration provider: " + registrationId);
+            }
+        } catch (Exception e) {
+            System.err.println("[ERROR] Failed to parse response: " + e.getMessage());
+            e.printStackTrace();
+            throw new NullPointerException();
+        }
+
+
+
         String provider = oAuth2Response.getProvider();
         System.out.println("Provider: " + provider);
 
@@ -57,9 +77,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationException("Unknown provider: " + provider);
         }
 
-        // 소셜 ID로 사용자 조회
         String socialId = oAuth2Response.getProviderId();
+        System.out.println("[DEBUG] Checking existing user with socialId: " + socialId);
         User existingUser = userRepository.findBySocialId(socialId);
+        System.out.println("[DEBUG] Existing user: " + existingUser);
+
+        if (socialId == null || socialProvider == null) {
+            throw new IllegalArgumentException("[ERROR] Missing essential fields: socialId or socialProvider is null");
+        }
 
         if (existingUser == null) {
             // 새로운 사용자 등록
@@ -73,6 +98,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .build();
 
             userRepository.save(newUser);
+
+            System.out.println("[DEBUG] Saved new user: " + newUser);
 
             // DTO 생성
             UserDTO.UserJoinDTO userDTO = UserDTO.UserJoinDTO.builder()
