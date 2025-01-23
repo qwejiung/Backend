@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //소동물 대분류 - 설치류 , 파충류
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
