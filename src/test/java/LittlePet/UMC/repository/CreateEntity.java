@@ -1,11 +1,12 @@
 package LittlePet.UMC.repository;
 
+import LittlePet.UMC.domain.BadgeEntity.Badge;
 import LittlePet.UMC.domain.enums.Gender;
 import LittlePet.UMC.domain.enums.PostType;
 import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.hospitalEntity.Hospital;
-import LittlePet.UMC.domain.hospitalEntity.mapping.Review;
+import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalStarRating;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
@@ -19,7 +20,7 @@ public class CreateEntity {
     // 테스트 데이터 설정 메소드
     public static PostCategory createPostCategory() {
         return PostCategory.builder()
-                .posttype(PostType.Q_A)
+                .category("Q_A")
                 .build();
     }
 
@@ -44,9 +45,6 @@ public class CreateEntity {
                 .foodInfo("토끼의 정보")
                 .environment("키우는 환경")
                 .playMethods("놀이방법")
-                .mustHaveItemFood("필수템 - 사료")
-                .mustHaveItemToys("필수템 - 장난감")
-                .mustHaveItemCage("필수템 - 케이지")
                 .featureImagePath("rabbit.jpg")
                 .petBigCategory(petBigCategory)
                 .build();
@@ -58,12 +56,12 @@ public class CreateEntity {
                 .build();
     }
 
-    public static Post creatPost(PostCategory postCategory, User user, UserPet userPet) {
+    public static Post creatPost(PostCategory postCategory, User user, PetBigCategory petBigCategory) {
         return Post.builder()
                 .title("안녕하세요")
                 .views(0L)
                 .postCategory(postCategory)
-                .userpet(userPet)
+                .petBigCategory(petBigCategory)
                 .user(user)
                 .build();
     }
@@ -73,8 +71,6 @@ public class CreateEntity {
                 .name("오늘이")
                 .birthDay(LocalDate.of(2024, 1, 12))
                 .gender(Gender.MALE)
-                .weight(12.5)
-                .age(2)
                 .profilePhoto("profile_photo.jpg")
                 .petCategory(petCategory)
                 .user(user)
@@ -89,14 +85,17 @@ public class CreateEntity {
                 .build();
     }
 
-    public static Review createReview(PetCategory petCategory,User user,Hospital hospital) {
-        return Review.builder()
-                .content("간호사 선생님이 친절해요!")
+    public static HospitalStarRating createHospitalStarRating(User user, Hospital hospital) {
+        return HospitalStarRating.builder()
                 .rating(5)
-                .petGender(Gender.FEMALE)
-                .petCategory(petCategory)
                 .user(user)
                 .hospital(hospital)
+                .build();
+    }
+
+    public static Badge createBadge(){
+        return Badge.builder()
+                .name("강건희")
                 .build();
     }
 }

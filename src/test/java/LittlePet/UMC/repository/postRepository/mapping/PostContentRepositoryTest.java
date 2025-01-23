@@ -44,56 +44,20 @@ public class PostContentRepositoryTest {
         PostCategory postCategory = CreateEntity.createPostCategory();
         User user = CreateEntity.createUser();
         PetBigCategory petBigCategory = CreateEntity.createPetBigCategory();
-        PetCategory petCategory = CreateEntity.createPetCategory(petBigCategory);
-        UserPet userpet = CreateEntity.createUserPet(petCategory,user);
-        Post post = CreateEntity.creatPost(postCategory,user,userpet);
+
+        Post post = CreateEntity.creatPost(postCategory,user,petBigCategory);
 
         // 엔티티 저장
         postCategoryRepository.save(postCategory);
         userRepository.save(user);
         petBigCategoryRepository.save(petBigCategory);
-        petCategoryRepository.save(petCategory);
-        userPetRepository.save(userpet);
         postRepository.save(post);
 
         //PostContent 엔티티 생성
         PostContent postContent = PostContent.builder()
                 .mediaType(MediaTypeEnum.Text)
                 .content("토끼가 밥을 안 먹어요 어쩌구..")
-                .filePath(null)
                 .sequence(1)
-                .post(post)
-                .build();
-
-        PostContent savedPostContent = postContentRepository.save(postContent);
-        System.out.println("savedPostContent: " + savedPostContent);
-    }
-
-    @Test
-    @DisplayName("PostContent-이미지")
-    public void PostContentImageRepositoryTest() {
-        //외래키 엔티티 생성
-        PostCategory postCategory = CreateEntity.createPostCategory();
-        User user = CreateEntity.createUser();
-        PetBigCategory petBigCategory = CreateEntity.createPetBigCategory();
-        PetCategory petCategory = CreateEntity.createPetCategory(petBigCategory);
-        UserPet userpet = CreateEntity.createUserPet(petCategory,user);
-        Post post = CreateEntity.creatPost(postCategory,user,userpet);
-
-        // 엔티티 저장
-        postCategoryRepository.save(postCategory);
-        userRepository.save(user);
-        petBigCategoryRepository.save(petBigCategory);
-        petCategoryRepository.save(petCategory);
-        userPetRepository.save(userpet);
-        postRepository.save(post);
-
-        //PostContent 엔티티 생성
-        PostContent postContent = PostContent.builder()
-                .mediaType(MediaTypeEnum.Text)
-                .content(null)
-                .filePath("DSfsdfsdfsdfsdfsdgsdgsdgsdfsdfafsdagg")
-                .sequence(2)
                 .post(post)
                 .build();
 
