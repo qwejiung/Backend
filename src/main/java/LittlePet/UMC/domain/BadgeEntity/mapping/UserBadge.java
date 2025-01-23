@@ -1,7 +1,7 @@
-package LittlePet.UMC.domain.BadgeEntity;
+package LittlePet.UMC.domain.BadgeEntity.mapping;
 
+import LittlePet.UMC.domain.BadgeEntity.Badge;
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
-import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.userEntity.User;
 import jakarta.persistence.*;
 import lombok.*;

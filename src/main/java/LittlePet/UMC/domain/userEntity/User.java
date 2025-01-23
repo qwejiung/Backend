@@ -1,6 +1,6 @@
 package LittlePet.UMC.domain.userEntity;
 
-import LittlePet.UMC.domain.BadgeEntity.UserBadge;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
