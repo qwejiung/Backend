@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class PetBigCategoryResponseDto {
 
     @Builder
