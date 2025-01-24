@@ -1,6 +1,6 @@
 package LittlePet.UMC.domain.userEntity;
 
-import LittlePet.UMC.domain.BadgeEntity.UserBadge;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
@@ -19,20 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 //유저 이름,성별,소셜로그인 등
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@ToString
+
 @Table(name = "`user`")
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 50)
     private String name;
+
 
     private String phone;
 
@@ -74,6 +75,13 @@ public class User extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<HospitalPref> hospitalprefList = new ArrayList<>();
+
+    @PrePersist
+    public void setDefaultRole() {
+        if (this.role == null) {
+            this.role = RoleStatus.USER; // 기본값 설정
+        }
+    }
     // Getters and Setters
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
