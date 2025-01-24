@@ -39,8 +39,6 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        System.out.println("Incoming request URI: " + requestUri);
-        System.out.println("Incoming cookies: " + Arrays.toString(request.getCookies()));
 
         // Authorization 쿠키 추출
         Cookie[] cookies = request.getCookies();

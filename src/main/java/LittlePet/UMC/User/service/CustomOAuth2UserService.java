@@ -24,7 +24,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     public CustomOAuth2UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        System.out.println("[DEBUG] CustomOAuth2UserService initialized");
+
     }
 
     @Override
