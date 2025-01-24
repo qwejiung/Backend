@@ -90,4 +90,10 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserBadge> userBadgeList= new ArrayList<>();
 
+    public void updateProfile(String name, String phone, String introduction) {
+        this.name = name;
+        this.phone = phone;
+        this.introduction = introduction;
+    }
+
 }
