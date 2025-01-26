@@ -43,5 +43,11 @@ public class UserPet extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "userPet", cascade = CascadeType.ALL)
     private List<HealthRecord> healthRecordList= new ArrayList<>();
+
+    public void updatePetInfo(String name, LocalDate birthDay, Gender gender) {
+        this.name = name;
+        this.birthDay = birthDay;
+        this.gender = gender;
+    }
 }
 

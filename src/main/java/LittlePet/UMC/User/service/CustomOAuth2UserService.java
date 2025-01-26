@@ -1,12 +1,10 @@
 package LittlePet.UMC.User.service;
 
-import LittlePet.UMC.User.dto.*;
+import LittlePet.UMC.User.dto.Login.*;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.userEntity.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;

@@ -1,6 +1,6 @@
 package LittlePet.UMC.User.oauth2;
 
-import LittlePet.UMC.User.dto.CustomOAuth2User;
+import LittlePet.UMC.User.dto.Login.CustomOAuth2User;
 import LittlePet.UMC.User.jwt.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.ServletException;
@@ -14,7 +14,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collection;
 
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {

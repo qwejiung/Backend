@@ -1,4 +1,4 @@
-package LittlePet.UMC.User.dto;
+package LittlePet.UMC.User.dto.UserResponse;
 
 import lombok.*;
 
@@ -26,9 +26,9 @@ public class UserProfileResponseDTO {
     @AllArgsConstructor
     @Builder
     public static class PetInfoDTO {
+        private Long petId;
         private String name;
         private String profilePhoto;
-        private String gender;
         private String petCategory;
     }
 

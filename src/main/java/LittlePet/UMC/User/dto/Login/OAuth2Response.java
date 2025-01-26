@@ -1,4 +1,4 @@
-package LittlePet.UMC.User.dto;
+package LittlePet.UMC.User.dto.Login;
 
 public interface OAuth2Response {
     //제공자 (Ex. naver, google, ...)

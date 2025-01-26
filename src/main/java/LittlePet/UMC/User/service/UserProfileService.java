@@ -1,9 +1,9 @@
 package LittlePet.UMC.User.service;
 
 import LittlePet.UMC.User.converter.UserProfileConverter;
-import LittlePet.UMC.User.dto.UserProfileRequestDTO;
-import LittlePet.UMC.User.dto.UserProfileResponseDTO;
-import LittlePet.UMC.User.dto.UserUpdateProfileResponseDTO;
+import LittlePet.UMC.User.dto.UserRequest.UserProfileRequestDTO;
+import LittlePet.UMC.User.dto.UserResponse.UserProfileResponseDTO;
+import LittlePet.UMC.User.dto.UserResponse.UserUpdateProfileResponseDTO;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
 import LittlePet.UMC.apiPayload.exception.handler.UserHandler;

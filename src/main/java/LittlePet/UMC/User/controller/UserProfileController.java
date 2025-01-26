@@ -1,8 +1,8 @@
 package LittlePet.UMC.User.controller;
 
-import LittlePet.UMC.User.dto.UserProfileRequestDTO;
-import LittlePet.UMC.User.dto.UserProfileResponseDTO;
-import LittlePet.UMC.User.dto.UserUpdateProfileResponseDTO;
+import LittlePet.UMC.User.dto.UserRequest.UserProfileRequestDTO;
+import LittlePet.UMC.User.dto.UserResponse.UserProfileResponseDTO;
+import LittlePet.UMC.User.dto.UserResponse.UserUpdateProfileResponseDTO;
 import LittlePet.UMC.User.service.UserProfileService;
 import LittlePet.UMC.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;

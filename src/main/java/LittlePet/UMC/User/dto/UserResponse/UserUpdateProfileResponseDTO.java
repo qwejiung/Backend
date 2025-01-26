@@ -1,4 +1,4 @@
-package LittlePet.UMC.User.dto;
+package LittlePet.UMC.User.dto.UserResponse;
 
 
 import lombok.AllArgsConstructor;
