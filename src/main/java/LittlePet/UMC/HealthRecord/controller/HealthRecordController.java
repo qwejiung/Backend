@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/{userId}/pets/{petId}/health-records")
+@RequestMapping("/pets/{petId}/health-records")
 @RequiredArgsConstructor
 public class HealthRecordController {
 
