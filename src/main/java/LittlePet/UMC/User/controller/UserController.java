@@ -21,16 +21,6 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping("/test")
-    public String testEndpoint() {
-        return "Test endpoint is working!";
-    }
-
-    @GetMapping("/")
-    @ResponseBody
-    public String mainAPI() {
-        return "main route";
-    }
 
     @GetMapping("/api/auth/status")
     public ResponseEntity<?> getAuthStatus(HttpServletRequest request) {
