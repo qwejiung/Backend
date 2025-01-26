@@ -1,4 +1,4 @@
-package LittlePet.UMC.User.dto;
+package LittlePet.UMC.User.dto.UserRequest;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

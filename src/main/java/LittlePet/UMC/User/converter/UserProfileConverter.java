@@ -1,7 +1,7 @@
 package LittlePet.UMC.User.converter;
 
-import LittlePet.UMC.User.dto.UserProfileResponseDTO;
-import LittlePet.UMC.User.dto.UserUpdateProfileResponseDTO;
+import LittlePet.UMC.User.dto.UserResponse.UserProfileResponseDTO;
+import LittlePet.UMC.User.dto.UserResponse.UserUpdateProfileResponseDTO;
 import LittlePet.UMC.domain.userEntity.User;
 
 import java.util.stream.Collectors;
@@ -21,9 +21,9 @@ public class UserProfileConverter {
                 .scrapCount(user.getPostClippingList().size())
                 .userPet(user.getUserPetList().stream()
                         .map(pet -> UserProfileResponseDTO.PetInfoDTO.builder()
+                                .petId(pet.getId())
                                 .name(pet.getName())
                                 .profilePhoto(pet.getProfilePhoto())
-                                .gender(pet.getGender().toString())
                                 .petCategory(pet.getPetCategory().getSpecies())
                                 .build())
                         .collect(Collectors.toList()))
