@@ -11,20 +11,14 @@ import java.util.List;
 @Component
 public class PetBigCategoryConverter {
 
-    public PetBigCategory toEntity(PetBigCategoryRequestDto dto) {
+    public static PetBigCategory toEntity(PetBigCategoryRequestDto.WriteDTO dto) {
         return PetBigCategory.builder()
                 .categoryName(dto.getCategoryName())
                 .build();
     }
 
-    public PetBigCategoryResponseDto.CreateAndUpdateDto toCreateAndUpdateDto(PetBigCategory entity) {
-        return PetBigCategoryResponseDto.CreateAndUpdateDto.builder()
-                .id(entity.getId())
-                .categoryName(entity.getCategoryName())
-                .build();
-    }
-
-    public PetBigCategoryResponseDto.GetDto toGetDto(PetBigCategory entity) {
+    //위에랑 합칠까..?
+    public static PetBigCategoryResponseDto.GetDto toGetDto(PetBigCategory entity) {
         List<PetCategoryResponseDto.SmallInfoDto> smallInfoDtoList =
                 entity.getPetCategoryList().stream()
                         .map(petCategory -> PetCategoryResponseDto.SmallInfoDto.builder()
