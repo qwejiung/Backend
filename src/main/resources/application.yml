@@ -1,7 +1,8 @@
-spring:
-  profiles:
-    active: local
+
+profiles:
+  active: local
 
 springdoc:
   swagger-ui:
     path: /docs
+
