@@ -1,5 +1,6 @@
 package LittlePet.UMC.User.repository;
 
+<<<<<<< Updated upstream
 
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 
