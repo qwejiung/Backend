@@ -4,7 +4,7 @@ import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -18,26 +18,13 @@ public class PetCategory extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String species;
 
-    @Column(nullable = false)
     private String features;
 
-    @Column(nullable = false)
     private String foodInfo;
 
-    @Column(nullable = false)
     private String environment;
 
-    @Column(nullable = false)
     private String playMethods;
-
-    @Column(nullable = false)
-    private String mustHaveItemFood;
-
-    @Column(nullable = false)
-    private String mustHaveItemToys;
-
-    @Column(nullable = false)
-    private String mustHaveItemCage;
 
     @Column(nullable = false)
     private String featureImagePath;

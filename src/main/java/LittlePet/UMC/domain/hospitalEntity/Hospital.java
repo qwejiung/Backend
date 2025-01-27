@@ -2,14 +2,14 @@ package LittlePet.UMC.domain.hospitalEntity;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
-import LittlePet.UMC.domain.hospitalEntity.mapping.Review;
+import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalStarRating;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -29,8 +29,12 @@ public class Hospital extends BaseTimeEntity {
     @Column(nullable = false)
     private String address;
 
+    private String closedDay;
+
+//    private String operationAt;
+
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
-    private List<Review> reviewList= new ArrayList<>();
+    private List<HospitalStarRating> hospitalStarRatingList= new ArrayList<>();
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
     private List<HospitalPref> hospitalPrefList= new ArrayList<>();

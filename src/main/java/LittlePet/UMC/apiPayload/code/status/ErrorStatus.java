@@ -22,9 +22,12 @@ public enum ErrorStatus implements BaseErrorCode {
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AUTH4012", "토큰이 만료되어 인증이 필요합니다."),
     TOKEN_BAD_REQUEST(HttpStatus.BAD_REQUEST, "AUTH4001", "잘못된 토큰 형식입니다."),
 
+
+
     // 멤버 관련 에러
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4041", "존재하지 않는 사용자입니다."),
     SOCIAL_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND,"MEMBER4042","소셜 로그인 토큰이 유효하지 않습니다."),
+    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "USER4091", "중복된 닉네임입니다."),
 
     // 커뮤니티 관련 에러
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4041", "존재하지 않는 게시물입니다."),
