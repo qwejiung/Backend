@@ -1,18 +1,14 @@
 package LittlePet.UMC.SmallPet.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PetBigCategoryResponseDto {
-//
-//    @Builder
-//    public static class WriteDto {
-//        private Long id;
-//        private String categoryName;
-//    }
 
+    @Getter
     @Builder
     public static class GetDto{
         private Long id;

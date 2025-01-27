@@ -11,12 +11,11 @@ import java.util.List;
 @Component
 public class PetBigCategoryConverter {
 
-    public static PetBigCategory toEntity(PetBigCategoryRequestDto.WriteDTO dto) {
+    public static PetBigCategory toEntity(PetBigCategoryRequestDto.PetBigCategoryWriteDTO dto) {
         return PetBigCategory.builder()
                 .categoryName(dto.getCategoryName())
                 .build();
     }
-
     //small pet info detail 제외.
     public static PetBigCategoryResponseDto.GetDto toGetDto(PetBigCategory entity) {
         List<PetCategoryResponseDto.SmallInfoDto> smallInfoDtoList =
@@ -35,6 +34,4 @@ public class PetBigCategoryConverter {
                 .petCategoryList(smallInfoDtoList)
                 .build();
     }
-
-
 }
