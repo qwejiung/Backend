@@ -1,6 +1,6 @@
-
-profiles:
-  active: local
+spring:
+  profiles:
+    active: local
 
 springdoc:
   swagger-ui:
