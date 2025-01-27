@@ -1,5 +1,6 @@
 package LittlePet.UMC.repository.badgeRepository;
 
+import LittlePet.UMC.Badge.repository.badgeRepository.BadgeRepository;
 import LittlePet.UMC.UmcApplication;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
 import org.junit.jupiter.api.DisplayName;

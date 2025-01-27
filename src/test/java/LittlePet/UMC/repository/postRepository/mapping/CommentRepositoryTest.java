@@ -1,6 +1,7 @@
 package LittlePet.UMC.repository.postRepository.mapping;
 
 import LittlePet.UMC.UmcApplication;
+import LittlePet.UMC.community.repository.CommentRepository;
 import LittlePet.UMC.domain.enums.Gender;
 import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
