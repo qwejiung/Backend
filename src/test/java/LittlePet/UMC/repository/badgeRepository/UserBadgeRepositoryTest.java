@@ -1,5 +1,7 @@
 package LittlePet.UMC.repository.badgeRepository;
 
+import LittlePet.UMC.Badge.repository.badgeRepository.BadgeRepository;
+import LittlePet.UMC.Badge.repository.badgeRepository.UserBadgeRepository;
 import LittlePet.UMC.UmcApplication;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
 import LittlePet.UMC.domain.BadgeEntity.UserBadge;

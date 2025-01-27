@@ -82,4 +82,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserBadge> userBadgeList= new ArrayList<>();
 
+    @Override
+    public String toString() {
+        return "User{id=" + id + ", username='" + name + "', email='" + email + "'}";
+    }
+
 }
