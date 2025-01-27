@@ -34,4 +34,3 @@ public class BadgeConverter {
 
     }
 }
-//List<BadgeType>
