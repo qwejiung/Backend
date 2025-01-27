@@ -1,5 +1,6 @@
 package LittlePet.UMC.domain.petEntity.mapping;
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
+import LittlePet.UMC.domain.enums.FecesColorStatusEnum;
 import LittlePet.UMC.domain.enums.FecesStatusEnum;
 import LittlePet.UMC.domain.enums.HealthStatusEnum;
 import LittlePet.UMC.domain.enums.MealAmountEnum;
@@ -9,7 +10,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -33,6 +34,10 @@ public class HealthRecord extends BaseTimeEntity {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FecesStatusEnum fecesStatus;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private FecesColorStatusEnum fecesColorStatus;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

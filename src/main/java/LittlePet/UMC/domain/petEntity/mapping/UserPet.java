@@ -1,5 +1,6 @@
 package LittlePet.UMC.domain.petEntity.mapping;
 
+import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.userEntity.User;
 import LittlePet.UMC.domain.enums.Gender;
@@ -11,13 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 //유저가 등록한 소동물들 - 처음 등록할때 종,체중,프로필사진 등
-@Getter @Setter
+@Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
 @ToString
-public class UserPet {
+public class UserPet extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,5 +43,11 @@ public class UserPet {
 
     @OneToMany(mappedBy = "userPet", cascade = CascadeType.ALL)
     private List<HealthRecord> healthRecordList= new ArrayList<>();
+
+    public void updatePetInfo(String name, LocalDate birthDay, Gender gender) {
+        this.name = name;
+        this.birthDay = birthDay;
+        this.gender = gender;
+    }
 }
 
