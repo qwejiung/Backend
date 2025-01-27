@@ -10,7 +10,7 @@ import LittlePet.UMC.community.repository.CommentRepository;
 import LittlePet.UMC.community.repository.PostLlikeRepository;
 import LittlePet.UMC.community.repository.PostRepository;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
-import LittlePet.UMC.domain.BadgeEntity.UserBadge;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import LittlePet.UMC.domain.userEntity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

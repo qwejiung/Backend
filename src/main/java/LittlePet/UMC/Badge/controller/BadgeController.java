@@ -8,7 +8,7 @@ import LittlePet.UMC.Badge.validation.annotation.ExistBadgeType;
 import LittlePet.UMC.Badge.validation.annotation.ExistUser;
 import LittlePet.UMC.apiPayload.ApiResponse;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
-import LittlePet.UMC.domain.BadgeEntity.UserBadge;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

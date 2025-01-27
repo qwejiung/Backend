@@ -2,7 +2,7 @@ package LittlePet.UMC.Badge.converter;
 
 import LittlePet.UMC.Badge.dto.BadgeResponseDTO;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
-import LittlePet.UMC.domain.BadgeEntity.UserBadge;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 
 import java.time.LocalDateTime;
 import java.util.List;

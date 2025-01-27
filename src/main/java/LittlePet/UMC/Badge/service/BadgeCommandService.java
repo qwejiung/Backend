@@ -1,7 +1,7 @@
 package LittlePet.UMC.Badge.service;
 
 import LittlePet.UMC.domain.BadgeEntity.Badge;
-import LittlePet.UMC.domain.BadgeEntity.UserBadge;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import LittlePet.UMC.domain.userEntity.User;
 
 import java.util.List;
