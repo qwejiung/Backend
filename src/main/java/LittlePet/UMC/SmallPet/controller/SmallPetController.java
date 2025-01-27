@@ -15,21 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/animal-categories")
+@RequestMapping("")
 @RequiredArgsConstructor
 public class SmallPetController {
-    private final PetBigCategoryService petBigCategoryService;
 
-    //Category Create
-    @GetMapping("")
-    public ApiResponse<List<PetBigCategoryResponseDto.GetDto>> getPetBigCategory() {
-        List<PetBigCategoryResponseDto.GetDto> res = petBigCategoryService.getPetBigCategories();
-        return ApiResponse.onSuccess(res);
-    }
-
-    @PostMapping("")
-    public ApiResponse<PetBigCategory> createPetBigCategory(@RequestBody PetBigCategoryRequestDto petBigCategoryRequestDto) {
-
-    }
 
 }

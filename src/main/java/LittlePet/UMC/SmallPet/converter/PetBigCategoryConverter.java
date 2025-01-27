@@ -17,7 +17,7 @@ public class PetBigCategoryConverter {
                 .build();
     }
 
-    //위에랑 합칠까..?
+    //small pet info detail 제외.
     public static PetBigCategoryResponseDto.GetDto toGetDto(PetBigCategory entity) {
         List<PetCategoryResponseDto.SmallInfoDto> smallInfoDtoList =
                 entity.getPetCategoryList().stream()

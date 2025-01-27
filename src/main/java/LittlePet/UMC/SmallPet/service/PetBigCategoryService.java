@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//response dto 처리를 controller에서 할지 생각 중 일단 다
 @Service
 @RequiredArgsConstructor
 public class PetBigCategoryService {
@@ -57,7 +58,7 @@ public class PetBigCategoryService {
     }
 
     @Transactional
-    public void deletePetBigCategory(Long id,PetBigCategoryRequestDto.WriteDTO request){
+    public void deletePetBigCategory(Long id){
         PetBigCategory petBigCategory = this.validId(id);
         petBigCategoryRepository.delete(petBigCategory);
     }
