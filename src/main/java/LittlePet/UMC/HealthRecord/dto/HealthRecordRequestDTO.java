@@ -1,5 +1,6 @@
 package LittlePet.UMC.HealthRecord.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,14 +13,14 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class HealthRecordRequestDTO {
+
     private String recordDate; // 날짜 (YYYY-MM-DD)
+    @NotBlank
     private Double weight;
     private String mealAmount;
     private String fecesStatus;
-    private String fecesType;
     private String fecesColorStatus;
-    private String abnormalSymptoms;
-    private List<String> symptoms; // 특이 증상
+    private List<String> atypicalSymptom; // 특이 증상
     private String healthStatus;
     private Boolean hospitalVisit; // 병원 내진 여부
     private String diagnosisName;  // 진단명

@@ -2,14 +2,13 @@ package LittlePet.UMC.HealthRecord.converter;
 
 import LittlePet.UMC.HealthRecord.dto.HealthRecordRequestDTO;
 import LittlePet.UMC.HealthRecord.dto.HealthRecordResponseDTO;
-import LittlePet.UMC.domain.enums.FecesColorStatusEnum;
-import LittlePet.UMC.domain.enums.FecesStatusEnum;
-import LittlePet.UMC.domain.enums.HealthStatusEnum;
-import LittlePet.UMC.domain.enums.MealAmountEnum;
+import LittlePet.UMC.domain.enums.*;
 import LittlePet.UMC.domain.petEntity.mapping.HealthRecord;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class HealthRecordConverter {
 
@@ -20,11 +19,18 @@ public class HealthRecordConverter {
             return HealthRecord.builder()
                     .recordDate(LocalDate.parse(request.getRecordDate()))
                     .weight(request.getWeight())
-                    .mealAmount(MealAmountEnum.valueOf(request.getMealAmount().toUpperCase()))
-                    .fecesStatus(FecesStatusEnum.valueOf(request.getFecesStatus().toUpperCase()))
-                    .fecesColorStatus(FecesColorStatusEnum.valueOf(request.getFecesColorStatus().toUpperCase()))
-                    .healthStatus(HealthStatusEnum.valueOf(request.getHealthStatus().toUpperCase()))
-                    .abnormalSymptoms(request.getAbnormalSymptoms())
+                    .mealAmount(MealAmountEnum.fromDescription(request.getMealAmount().toUpperCase()))
+                    .fecesStatus(FecesStatusEnum.fromDescription(request.getFecesStatus().toUpperCase()))
+                    .fecesColorStatus(FecesColorStatusEnum.fromDescription(request.getFecesColorStatus().toUpperCase()))
+                    .healthStatus(HealthStatusEnum.fromDescription(request.getHealthStatus()))
+                    .atypicalSymptom(
+                            request.getAtypicalSymptom() == null
+                                    ? Collections.emptyList()
+                                    : request.getAtypicalSymptom().stream()
+                                    // 예: "기침" -> AtypicalSymptomEnum.fromDescription("기침") 사용
+                                    .map(AtypicalSymptomEnum::fromDescription)
+                                    .collect(Collectors.toList())
+                    )
                     .diagnosisName(request.getDiagnosisName())
                     .prescription(request.getPrescription())
                     .userPet(pet)
@@ -57,15 +63,30 @@ public class HealthRecordConverter {
      * @return HealthRecordDetailDTO
      */
     private static HealthRecordResponseDTO.HealthRecordDetailDTO toHealthRecordDetailDTO(HealthRecord healthRecord) {
+        MealAmountEnum mealAmount = healthRecord.getMealAmount();
+        FecesStatusEnum fecesStatus = healthRecord.getFecesStatus();
+        FecesColorStatusEnum fecesColor = healthRecord.getFecesColorStatus();
+        HealthStatusEnum healthStatus = healthRecord.getHealthStatus();
+
+        // AtypicalSymptom (List<Enum>) -> List<String> (한글) 변환 예시
+        var atypicalList = healthRecord.getAtypicalSymptom() == null
+                ? Collections.<String>emptyList()
+                : healthRecord.getAtypicalSymptom().stream()
+                .map(AtypicalSymptomEnum::getDescription) // 예: COUGH -> "기침"
+                .collect(Collectors.toList());
+
         return HealthRecordResponseDTO.HealthRecordDetailDTO.builder()
-                .recordDate(healthRecord.getRecordDate().toString()) // 기록 날짜
-                .weight(healthRecord.getWeight()) // 체중
-                .mealAmount(healthRecord.getMealAmount().toString()) // 식사량
-                .fecesStatus(healthRecord.getFecesStatus().toString()) // 대변 상태
-                .healthStatus(healthRecord.getHealthStatus().toString()) // 건강 상태
-                .abnormalSymptoms(healthRecord.getAbnormalSymptoms()) // 이상 증상
-                .diagnosisName(healthRecord.getDiagnosisName()) // 진단명
-                .prescription(healthRecord.getPrescription()) // 처방 내역
+                .recordDate(healthRecord.getRecordDate().toString())
+                .weight(healthRecord.getWeight())
+                // 한글로 응답할 때는 getDescription() 사용
+                .mealAmount(mealAmount != null ? mealAmount.getDescription() : null)
+                .fecesStatus(fecesStatus != null ? fecesStatus.getDescription() : null)
+                .fecesColorStatus(fecesColor != null ? fecesColor.getDescription() : null)
+                .healthStatus(healthStatus != null ? healthStatus.getDescription() : null)
+                // 여러 증상이면 DTO 필드에도 List<String>으로 만들어 두시면 됩니다.
+                .atypicalSymptom(atypicalList)
+                .diagnosisName(healthRecord.getDiagnosisName())
+                .prescription(healthRecord.getPrescription())
                 .build();
     }
 }
