@@ -7,7 +7,7 @@ import lombok.Getter;
 public class PetCategoryResponseDto {
     @Getter
     @Builder
-    public static class SmallInfoDto {
+    public static class PetCategoryDTO {
         private Long id;
         private String species;
         private String imageUrl;
@@ -15,7 +15,7 @@ public class PetCategoryResponseDto {
 
     @Getter
     @Builder
-    public static class DTO {
+    public static class PetCategoryDetailDTO {
         private Long id;
         private String species;
 

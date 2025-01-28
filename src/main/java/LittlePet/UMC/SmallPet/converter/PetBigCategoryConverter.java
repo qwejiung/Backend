@@ -17,10 +17,10 @@ public class PetBigCategoryConverter {
                 .build();
     }
     //small pet info detail 제외.
-    public static PetBigCategoryResponseDto.GetDto toGetDto(PetBigCategory entity) {
-        List<PetCategoryResponseDto.SmallInfoDto> smallInfoDtoList =
+    public static PetBigCategoryResponseDto.PetBigCategoryGetDto toGetDto(PetBigCategory entity) {
+        List<PetCategoryResponseDto.PetCategoryDTO> petCategoryDTOList =
                 entity.getPetCategoryList().stream()
-                        .map(petCategory -> PetCategoryResponseDto.SmallInfoDto.builder()
+                        .map(petCategory -> PetCategoryResponseDto.PetCategoryDTO.builder()
                                 .id(petCategory.getId())
                                 .species(petCategory.getSpecies())
                                 .imageUrl(petCategory.getFeatureImagePath())
@@ -28,10 +28,10 @@ public class PetBigCategoryConverter {
                         )
                         .toList();
 
-        return PetBigCategoryResponseDto.GetDto.builder()
+        return PetBigCategoryResponseDto.PetBigCategoryGetDto.builder()
                 .id(entity.getId())
                 .categoryName(entity.getCategoryName())
-                .petCategoryList(smallInfoDtoList)
+                .petCategoryList(petCategoryDTOList)
                 .build();
     }
 }
