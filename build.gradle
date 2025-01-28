@@ -36,7 +36,7 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3' // JSON 처리용
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	// implementation 'com.h2database:h2' //test용 db
+	implementation 'com.h2database:h2' //test용 db
 
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'

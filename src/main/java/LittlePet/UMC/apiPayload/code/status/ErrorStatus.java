@@ -43,6 +43,7 @@ public enum ErrorStatus implements BaseErrorCode {
     PET_NOT_FOUND(HttpStatus.NOT_FOUND, "PET4041", "존재하지 않는 반려동물입니다."),
 
     // 카테고리 관련 에러
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4041", "존재하지 않는 카테고리입니다."),
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "CATEGORY4003", "유효하지 않은 카테고리입니다."),
 
     // 테스트용

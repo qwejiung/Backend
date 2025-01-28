@@ -5,7 +5,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/SmallPet")
+@RequestMapping("SmallPet")
 @RequiredArgsConstructor
 public class SmallPetController {
+
+
 }
