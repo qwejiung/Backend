@@ -1,10 +1,9 @@
 package LittlePet.UMC.User.service;
 
-import LittlePet.UMC.SmallPet.repository.SmallPetRepository;
 import LittlePet.UMC.User.converter.PetProfileConverter;
 import LittlePet.UMC.User.dto.PetProfileRequest.PetProfileRequestDTO;
 import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileResponseDTO;
-import LittlePet.UMC.User.repository.PetCategoryRepository;
+import LittlePet.UMC.User.repository.PetCategoryProfileRepository;
 import LittlePet.UMC.User.repository.UserPetRepository;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.domain.enums.Gender;
@@ -22,7 +21,7 @@ import java.time.LocalDate;
 public class PetProfileService {
 
     private final UserRepository userRepository;
-    private final PetCategoryRepository petCategoryRepository;
+    private final PetCategoryProfileRepository petCategoryRepository;
     private final UserPetRepository userPetRepository;
 
     @Transactional
