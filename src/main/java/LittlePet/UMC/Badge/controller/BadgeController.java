@@ -55,6 +55,7 @@ public class BadgeController {
         return ApiResponse.onSuccess(UserBadgeConverter.tochallengersDTO(challenger_userbadge));
     }
 
+
     /**
      * 유저의 뱃지 확인 API
      *
@@ -70,6 +71,7 @@ public class BadgeController {
         List<Badge> badges = badgeCommandService.getBadgesByUserId(userId);
         return ApiResponse.onSuccess(BadgeConverter.toGetBadgeResuletDTO(badges));
     }
+
 
     /**
      * 유저의 뱃지 삭제API
