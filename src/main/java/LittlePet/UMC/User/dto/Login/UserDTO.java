@@ -1,4 +1,4 @@
-package LittlePet.UMC.User.dto;
+package LittlePet.UMC.User.dto.Login;
 
 import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;

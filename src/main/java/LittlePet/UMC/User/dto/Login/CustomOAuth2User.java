@@ -1,6 +1,5 @@
-package LittlePet.UMC.User.dto;
+package LittlePet.UMC.User.dto.Login;
 
-import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 

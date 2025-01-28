@@ -1,7 +1,7 @@
 package LittlePet.UMC.User.jwt;
 
-import LittlePet.UMC.User.dto.CustomOAuth2User;
-import LittlePet.UMC.User.dto.UserDTO;
+import LittlePet.UMC.User.dto.Login.CustomOAuth2User;
+import LittlePet.UMC.User.dto.Login.UserDTO;
 import LittlePet.UMC.domain.enums.RoleStatus;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 
 @Component
@@ -39,8 +38,6 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        System.out.println("Incoming request URI: " + requestUri);
-        System.out.println("Incoming cookies: " + Arrays.toString(request.getCookies()));
 
         // Authorization 쿠키 추출
         Cookie[] cookies = request.getCookies();

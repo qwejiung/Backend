@@ -105,7 +105,8 @@ jobs:
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
               --net ${{ secrets.DOCKER_NETWORK }} \
               -e TZ=Asia/Seoul \
-              ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
+              ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest \
+              
 
             # 사용하지 않는 이미지 제거
             sudo docker image prune -a -f
