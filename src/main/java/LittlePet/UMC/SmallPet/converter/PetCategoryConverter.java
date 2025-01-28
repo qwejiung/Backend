@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PetCategoryConverter {
-    public static PetCategoryResponseDto.DTO toResponseDTO(PetCategory petCategory) {
-        return PetCategoryResponseDto.DTO.builder()
+    public static PetCategoryResponseDto.PetCategoryDetailDTO toResponseDTO(PetCategory petCategory) {
+        return PetCategoryResponseDto.PetCategoryDetailDTO.builder()
                 .id(petCategory.getId())
                 .species(petCategory.getSpecies())
                 .petBigCategoryId(petCategory.getPetBigCategory().getId())
