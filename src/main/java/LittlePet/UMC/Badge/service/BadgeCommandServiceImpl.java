@@ -133,12 +133,15 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
 
         Badge challengerBadge = badgeRepository.findByBadgeType("챌린저");
 
-        // 이미 챌린저 뱃지를 가진 유저 제거
-        userList.removeIf(user -> userBadgeRepository.existsByUserAndBadge(user, challengerBadge));
+        // 4. 이미 챌린저 배지를 가진 사용자 제거
+        List<UserBadge> UserBadgeList = userList.stream()
+                .filter(user -> !userBadgeRepository.existsByUserAndBadge(user, challengerBadge))
+                .map(user -> UserBadge.builder()
+                        .badge(challengerBadge)
+                        .user(user)
+                        .build())
+                .collect(Collectors.toList());
 
-        List<UserBadge> UserBadgeList  = UserBadgeConverter.toUserBadgeList(userList,challengerBadge);
-
-        UserBadgeList.forEach(UserBadge -> {UserBadge.setUser();});
 
         userRepository.saveAll(userList);
         return UserBadgeList;
