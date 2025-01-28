@@ -22,9 +22,12 @@ public enum ErrorStatus implements BaseErrorCode {
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "AUTH4012", "토큰이 만료되어 인증이 필요합니다."),
     TOKEN_BAD_REQUEST(HttpStatus.BAD_REQUEST, "AUTH4001", "잘못된 토큰 형식입니다."),
 
+
+
     // 멤버 관련 에러
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4041", "존재하지 않는 사용자입니다."),
     SOCIAL_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND,"MEMBER4042","소셜 로그인 토큰이 유효하지 않습니다."),
+    DUPLICATE_NICKNAME(HttpStatus.CONFLICT, "USER4091", "중복된 닉네임입니다."),
 
     // 커뮤니티 관련 에러
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4041", "존재하지 않는 게시물입니다."),
@@ -40,11 +43,19 @@ public enum ErrorStatus implements BaseErrorCode {
     PET_NOT_FOUND(HttpStatus.NOT_FOUND, "PET4041", "존재하지 않는 반려동물입니다."),
 
     // 카테고리 관련 에러
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4041", "존재하지 않는 카테고리입니다."),
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "CATEGORY4003", "유효하지 않은 카테고리입니다."),
 
     // 테스트용
-    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4004", "테스트입니다");
+    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4004", "테스트입니다"),
 
+    //유저 관련 에러
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4041","존재하지 않는 유저입니다."),
+
+    //뱃지 타입 관련 에러
+    BADGE_NOT_FOUND(HttpStatus.NOT_FOUND, "BADGE4041","존재하지 않는 뱃지입니다. '글쓰기마스터' , '소통천재', '소통응원왕','인기스타' 중 하나를 선택해주세요"),
+    BADGE_ALREADY_OWNED(HttpStatus.BAD_REQUEST, "BADGE4001", "이미 해당 뱃지를 보유하고 있습니다. '글쓰기마스터' , '소통천재', '소통응원왕','인기스타' 중 다른 뱃지를 선택해주세요"),
+    BADGE_NOT_QUALIFIED(HttpStatus.BAD_REQUEST, "BADGE4002","뱃지를 받을 조건이 충족되지않았습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

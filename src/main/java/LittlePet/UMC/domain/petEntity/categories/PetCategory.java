@@ -4,7 +4,7 @@ import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
+@Getter @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
