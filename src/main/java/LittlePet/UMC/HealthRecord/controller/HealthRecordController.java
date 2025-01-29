@@ -5,12 +5,9 @@ import LittlePet.UMC.HealthRecord.dto.HealthRecordResponseDTO;
 import LittlePet.UMC.HealthRecord.service.HealthRecordService;
 import LittlePet.UMC.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
