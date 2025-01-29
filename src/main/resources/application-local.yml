@@ -52,3 +52,15 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
+#local 테스트 시 AWS_ACCESS_KEY_ID와 QWS_SECRET_ACCESS_KEY를 다운 받아서 환경 변수 추가 후 테스트 부탁드립니다.
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: littlepet-bucket
