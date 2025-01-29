@@ -47,8 +47,10 @@ public class SecurityConfig {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration configuration = new CorsConfiguration();
 
-                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
+                configuration.setAllowedOrigins(Arrays.asList(
+                        "http://localhost:3000", // 로컬 개발 환경
+                        "http://54.180.205.177:8080" // EC2 서버 환경
+                ));
                 configuration.addAllowedMethod("*");
                 configuration.setAllowCredentials(true);
                 configuration.addAllowedHeader("*");
