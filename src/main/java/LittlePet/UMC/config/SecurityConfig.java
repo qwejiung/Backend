@@ -30,12 +30,14 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtUtil jwtUtil;
     private final CustomSuccessHandler customSuccessHandler;
+    private final OAuth2LoggingFilter oAuth2LoggingFilter;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtUtil jwtUtil) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtUtil jwtUtil,OAuth2LoggingFilter oAuth2LoggingFilter) {
 
         this.customOAuth2UserService = customOAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
         this.jwtUtil = jwtUtil;
+        this.oAuth2LoggingFilter = oAuth2LoggingFilter;
     }
 
     @Bean
@@ -121,6 +123,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
+        http.addFilterBefore(oAuth2LoggingFilter, OAuth2LoginAuthenticationFilter.class);
 
         return http.build();
     }
