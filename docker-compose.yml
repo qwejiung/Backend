@@ -10,10 +10,16 @@ services:
       - "8080:8080"
     networks:
       - my-network
+    env_file:
+      - .env   # <-- 환경 변수 파일 로드 추가
     environment:
       - DB_URL=${DB_URL}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
+      - NAVER_CLIENT_ID=${NAVER_CLIENT_ID}
+      - NAVER_CLIENT_SECRET=${NAVER_CLIENT_SECRET}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - TZ=Asia/Seoul
 
   # Nginx Reverse Proxy 서비스
