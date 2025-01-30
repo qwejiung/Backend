@@ -1,0 +1,9 @@
+FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+RUN apk add --no-cache certbot && \
+    mkdir -p /etc/letsencrypt/live/ec2-54-180-205-177.ap-northeast-2.compute.amazonaws.com/
+
+COPY /path/to/ssl/certs/fullchain.pem /etc/letsencrypt/live/ec2-54-180-205-177.ap-northeast-2.compute.amazonaws.com/fullchain.pem
+COPY /path/to/ssl/certs/privkey.pem /etc/letsencrypt/live/ec2-54-180-205-177.ap-northeast-2.compute.amazonaws.com/privkey.pem
