@@ -69,7 +69,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             System.out.println("[DEBUG] JWT cookie added: " + jwtCookie.getValue());
 
             // 클라이언트로 리다이렉트
-            response.sendRedirect("http://localhost:5173/");
+            response.sendRedirect("http://localhost:3000/");
         } catch (ExpiredJwtException e) {
             System.err.println("[ERROR] JWT expired. Refreshing token...");
             //handleExpiredJwt(response, authentication);
