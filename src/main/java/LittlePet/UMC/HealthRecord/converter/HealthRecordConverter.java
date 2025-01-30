@@ -3,6 +3,7 @@ package LittlePet.UMC.HealthRecord.converter;
 import LittlePet.UMC.HealthRecord.dto.HealthRecordRequestDTO;
 import LittlePet.UMC.HealthRecord.dto.HealthRecordResponseDTO;
 import LittlePet.UMC.domain.enums.*;
+import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.mapping.HealthRecord;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 
@@ -49,6 +50,8 @@ public class HealthRecordConverter {
     public static HealthRecordResponseDTO toHealthRecordResponseDTO(UserPet pet, String recentUpdate, HealthRecord latestRecord) {
         return HealthRecordResponseDTO.builder()
                 .petName(pet.getName()) // 반려동물 이름
+                .gender(pet.getGender().toString())
+                .petCategory(pet.getPetCategory().getSpecies() != null ? pet.getPetCategory().getSpecies() : null)
                 .profilePhoto(pet.getProfilePhoto()) // 반려동물 프로필 사진
                 .birthDay(pet.getBirthDay() != null ? pet.getBirthDay().toString() : null) // 반려동물 생년월일
                 .recentUpdate(recentUpdate) // 최근 업데이트 정보

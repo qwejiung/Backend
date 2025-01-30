@@ -13,6 +13,8 @@ public class HealthRecordResponseDTO {
     private String petName;
     private String profilePhoto;
     private String birthDay;
+    private String gender;
+    private String petCategory;
     private String recentUpdate; // 최근 업데이트 텍스트
     private HealthRecordDetailDTO latestRecord; // 최신 건강 기록의 세부 정보
 
