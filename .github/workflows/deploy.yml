@@ -82,31 +82,59 @@ jobs:
             if [ -z "$(sudo docker network ls --filter name=${{ secrets.DOCKER_NETWORK }} -q)" ]; then
               sudo docker network create ${{ secrets.DOCKER_NETWORK }}
             fi
+#
+#            # Docker 이미지 Pull
+#            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
+#
+#            # 기존 컨테이너 중지 및 제거
+#            EXISTING_CONTAINER=$(sudo docker ps -q --filter "name=littlepet-container")
+#            if [ ! -z "$EXISTING_CONTAINER" ]; then
+#              sudo docker stop $EXISTING_CONTAINER
+#              sudo docker rm $EXISTING_CONTAINER
+#            fi
+#
+#            # 종료된 컨테이너 모두 제거
+#            sudo docker rm $(sudo docker ps -a -q --filter "status=exited") || true
+#
+#            # 컨테이너 실행
+#            sudo docker run -d \
+#              --name littlepet-container \
+#              -p 8080:8080 \
+#              -e DB_URL=${{ secrets.DB_URL }} \
+#              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
+#              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+#              --net ${{ secrets.DOCKER_NETWORK }} \
+#              -e TZ=Asia/Seoul \
+#              ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest \
+#
 
-            # Docker 이미지 Pull
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
 
-            # 기존 컨테이너 중지 및 제거
-            EXISTING_CONTAINER=$(sudo docker ps -q --filter "name=littlepet-container")
-            if [ ! -z "$EXISTING_CONTAINER" ]; then
-              sudo docker stop $EXISTING_CONTAINER
-              sudo docker rm $EXISTING_CONTAINER
-            fi
-
-            # 종료된 컨테이너 모두 제거
-            sudo docker rm $(sudo docker ps -a -q --filter "status=exited") || true
-
-            # 컨테이너 실행
-            sudo docker run -d \
-              --name littlepet-container \
-              -p 8080:8080 \
-              -e DB_URL=${{ secrets.DB_URL }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              --net ${{ secrets.DOCKER_NETWORK }} \
-              -e TZ=Asia/Seoul \
-              ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest \
-              
-
+            # Spring Boot 컨테이너 업데이트
+                    sudo docker pull ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
+                    EXISTING_CONTAINER=$(sudo docker ps -q --filter "name=littlepet-container")
+                    if [ ! -z "$EXISTING_CONTAINER" ]; then
+                    sudo docker stop $EXISTING_CONTAINER
+                    sudo docker rm $EXISTING_CONTAINER
+                    fi
+                    sudo docker run -d \
+                    --name littlepet-container \
+                    -p 8080:8080 \
+                    --net ${{ secrets.DOCKER_NETWORK }} \
+                    -e TZ=Asia/Seoul \
+                    ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
+            
+            # Nginx 컨테이너 업데이트
+                    sudo docker build -t nginx-container -f Dockerfile.nginx .
+                    EXISTING_NGINX=$(sudo docker ps -q --filter "name=nginx-proxy")
+                    if [ ! -z "$EXISTING_NGINX" ]; then
+                    sudo docker stop $EXISTING_NGINX
+                    sudo docker rm $EXISTING_NGINX
+                    fi
+                    sudo docker run -d \
+                    --name nginx-proxy \
+                    -p 80:80 -p 443:443 \
+                    --net ${{ secrets.DOCKER_NETWORK }} \
+                    nginx-container
+                    
             # 사용하지 않는 이미지 제거
             sudo docker image prune -a -f
