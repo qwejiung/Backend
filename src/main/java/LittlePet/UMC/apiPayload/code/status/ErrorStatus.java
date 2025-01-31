@@ -2,6 +2,7 @@ package LittlePet.UMC.apiPayload.code.status;
 
 import LittlePet.UMC.apiPayload.code.BaseErrorCode;
 import LittlePet.UMC.apiPayload.code.ErrorReasonDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,10 @@ public enum ErrorStatus implements BaseErrorCode {
     _NULL_VALUE(HttpStatus.BAD_REQUEST, "COMMON4002", "필수 값이 누락되었습니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON4011","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON4031", "접근 권한이 없습니다."),
+
+    HOSPITAL_VISIT_ERROR(HttpStatus.BAD_REQUEST, "HOSPITAL4001", "병원 내진 여부가 true일 경우 진단명과 처방 내역은 필수입니다."),
+    HOSPITAL_VISIT_NULL_ERROR(HttpStatus.BAD_REQUEST, "HOSPITAL4002", "병원 내진 여부가 false일 경우 진단명과 처방 내역을 입력할 수 없습니다."),
+
 
     // JWT token error
     TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH4011", "토큰이 손상되었거나 유효하지 않은 값입니다."),
@@ -47,8 +52,15 @@ public enum ErrorStatus implements BaseErrorCode {
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "CATEGORY4003", "유효하지 않은 카테고리입니다."),
 
     // 테스트용
-    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4004", "테스트입니다");
+    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4004", "테스트입니다"),
 
+    //유저 관련 에러
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4041","존재하지 않는 유저입니다."),
+
+    //뱃지 타입 관련 에러
+    BADGE_NOT_FOUND(HttpStatus.NOT_FOUND, "BADGE4041","존재하지 않는 뱃지입니다. '글쓰기마스터' , '소통천재', '소통응원왕','인기스타' 중 하나를 선택해주세요"),
+    BADGE_ALREADY_OWNED(HttpStatus.BAD_REQUEST, "BADGE4001", "이미 해당 뱃지를 보유하고 있습니다. '글쓰기마스터' , '소통천재', '소통응원왕','인기스타' 중 다른 뱃지를 선택해주세요"),
+    BADGE_NOT_QUALIFIED(HttpStatus.BAD_REQUEST, "BADGE4002","뱃지를 받을 조건이 충족되지않았습니다.");
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

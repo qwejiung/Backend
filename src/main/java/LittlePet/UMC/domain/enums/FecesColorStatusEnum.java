@@ -13,12 +13,9 @@ public enum FecesColorStatusEnum {
     GREEN("GREEN", "초록색"),
     GRAY("GRAY", "회색");
 
-    private final String code;  // 영문 코드
+    private final String code;        // 영문 코드
     private final String description; // 한글 설명
 
-    /**
-     * 코드로 Enum 찾기
-     */
     public static FecesColorStatusEnum fromCode(String code) {
         for (FecesColorStatusEnum value : values()) {
             if (value.code.equalsIgnoreCase(code)) {
@@ -26,5 +23,14 @@ public enum FecesColorStatusEnum {
             }
         }
         throw new IllegalArgumentException("Unknown FecesColorStatusEnum code: " + code);
+    }
+
+    public static FecesColorStatusEnum fromDescription(String description) {
+        for (FecesColorStatusEnum value : values()) {
+            if (value.description.equals(description)) {
+                return value;
+            }
+        }
+        throw new IllegalArgumentException("Unknown FecesColorStatusEnum description: " + description);
     }
 }

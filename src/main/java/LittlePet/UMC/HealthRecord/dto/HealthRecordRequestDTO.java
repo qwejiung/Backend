@@ -1,5 +1,9 @@
 package LittlePet.UMC.HealthRecord.dto;
 
+import LittlePet.UMC.HealthRecord.validator.annotation.ExistHospital;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,16 +15,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ExistHospital
 public class HealthRecordRequestDTO {
+
     private String recordDate; // 날짜 (YYYY-MM-DD)
+    @NotNull(message = "몸무게는 필수 입력값입니다.")
     private Double weight;
+    @NotBlank
     private String mealAmount;
+    @NotBlank
     private String fecesStatus;
-    private String fecesType;
+    @NotBlank
     private String fecesColorStatus;
-    private String abnormalSymptoms;
-    private List<String> symptoms; // 특이 증상
+    @NotEmpty
+    private List<String> atypicalSymptom; // 특이 증상
+    @NotBlank
     private String healthStatus;
+    @NotNull(message = "병원 내진 여부는 필수 입력값입니다.") // 🚨 추가됨
     private Boolean hospitalVisit; // 병원 내진 여부
     private String diagnosisName;  // 진단명
     private String prescription;   // 검사 및 처방 내역

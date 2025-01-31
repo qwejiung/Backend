@@ -8,7 +8,6 @@ import lombok.*;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
@@ -25,4 +24,12 @@ public class UserBadge extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "badge_id",nullable = false)
     private Badge badge;
+    // 빌더에서 User와 UserBadge 간의 관계를 자동 설정
+
+    @Builder
+    public UserBadge(User user, Badge badge) {
+        this.user = user;
+        this.badge = badge;
+        user.getUserBadgeList().add(this); // 관계 설정
+    }
 }

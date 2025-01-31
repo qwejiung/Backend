@@ -30,12 +30,14 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtUtil jwtUtil;
     private final CustomSuccessHandler customSuccessHandler;
+    private final OAuth2LoggingFilter oAuth2LoggingFilter;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtUtil jwtUtil) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtUtil jwtUtil,OAuth2LoggingFilter oAuth2LoggingFilter) {
 
         this.customOAuth2UserService = customOAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
         this.jwtUtil = jwtUtil;
+        this.oAuth2LoggingFilter = oAuth2LoggingFilter;
     }
 
     @Bean
@@ -47,14 +49,16 @@ public class SecurityConfig {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration configuration = new CorsConfiguration();
 
-                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
-                configuration.addAllowedMethod("*");
+                configuration.setAllowedOrigins(Arrays.asList(
+                        "http://localhost:5173",
+                        "https://umclittlepet.shop"
+                ));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowCredentials(true);
-                configuration.addAllowedHeader("*");
+                configuration.setAllowedHeaders(Collections.singletonList("*"));
                 configuration.setMaxAge(3600L);
-                configuration.addExposedHeader("Set-Cookie");
-                configuration.addExposedHeader("Authorization");
+                configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
+
 
                 return configuration;
             }
@@ -109,7 +113,8 @@ public class SecurityConfig {
                                 "/health/records",
                                 "/health/records/**",
                                 "/badge",
-                                "/badge/**"
+                                "/badge/**",
+                                "/oauth2/authorization/**"
                         ).permitAll()
                         .anyRequest().authenticated());
 
@@ -117,6 +122,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
+        http.addFilterBefore(oAuth2LoggingFilter, OAuth2LoginAuthenticationFilter.class);
 
         return http.build();
     }
