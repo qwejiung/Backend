@@ -11,7 +11,6 @@ import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,7 +52,7 @@ public class PetCategoryController {
         return ApiResponse.onSuccess("delete pet big category successfully");
     }
 
-    @Operation(summary = "소동물 카테고리의 세부 정보 조회 ", description = "소동물 카테고리의 세부 정보를 조회할 수 있습니다. 쿼리를 통해 특정 소동물 카테고리를 조회할 수 있습니다.")
+    @Operation(summary = "소동물 카테고리의 세부 정보 조회 ", description = "소동물 카테고리의 세부 정보를 조회할 수 있습니다. query parameter를 통해 특정 소동물 카테고리를 조회할 수 있습니다.")
     @GetMapping("/species")
     public ApiResponse<Object> getPetCategory(@RequestParam(value = "species-id", required = false) Long speciesId) {
         Object res;
@@ -67,26 +66,25 @@ public class PetCategoryController {
         return ApiResponse.onSuccess(res);
     }
 
-    @Operation(summary = "소동물 카테고리 추가", description = "특정 소동물 카테고리를 추가할 수 있습니다. admin만 가능합니다. 스웨거로 테스트시 오류 -> 보완예정. (type 인식 문제.)")
-    @PostMapping(value = "/species", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "소동물 카테고리 추가 ", description = "특정 소동물 카테고리를 추가할 수 있습니다. admin만 가능합니다. (s3 구축 후 api 보완 예정. 우선 image 관련 처리 X)")
+    @PostMapping(value = "/species", consumes = {"multipart/form-data"})
     public ApiResponse<PetCategoryResponseDto.PetCategoryDetailDTO> createPetCategory(
-            @RequestPart("category-form") PetCategoryReqeustDto.PetCategoryWriteDTO request,
-            @RequestPart("image") MultipartFile image) throws IOException {
-        {
-            String imageUrl = s3Service.upload(image);
-
-            PetCategoryResponseDto.PetCategoryDetailDTO res = petCategoryService.createPetCategory(request,imageUrl);
-            return ApiResponse.onSuccess(res);
-        }
+            @RequestPart @Valid PetCategoryReqeustDto.PetCategoryWriteDTO request,
+            @RequestPart(value = "image", required = false) MultipartFile image // 이미지 (선택)
+    ) throws IOException {
+        String imageUrl = s3Service.upload(image);
+        PetCategoryResponseDto.PetCategoryDetailDTO res = petCategoryService.createPetCategory(request,imageUrl);
+        return ApiResponse.onSuccess(res);
     }
-    @Operation(summary = "소동물 카테고리 수정 ", description = "특정 소동물 카테고리를 수정할 수 있습니다. admin만 가능합니다.")
+
+    @Operation(summary = "소동물 카테고리 수정 ", description = "특정 소동물 카테고리를 수정할 수 있습니다. admin만 가능합니다. (s3 구축 후 api 보완 예정. 임시 image url 반환.)")
     @PutMapping("/species/{species-id}")
     public ApiResponse<PetCategoryResponseDto.PetCategoryDetailDTO> updatePetCategory(@PathVariable("species-id") Long speciesId , @RequestBody @Valid PetCategoryReqeustDto.PetCategoryWriteDTO request){
         PetCategoryResponseDto.PetCategoryDetailDTO res = petCategoryService.updatePetCategory(speciesId,request);
         return ApiResponse.onSuccess(res);
     }
 
-    @Operation(summary = "소동물 카테고리 삭제 ", description = "특정 소동물 카테고리를 삭제할 수 있습니다. admin만 가능합니다")
+    @Operation(summary = "소동물 카테고리 삭제 ", description = "특정 소동물 카테고리를 삭제할 수 있습니다. admin만 가능합니다. (s3 구축 후 api 보완 예정. 임시 image url 반환.)")
     @DeleteMapping("/species/{species-id}")
     public ApiResponse<String> deletePetCategory(@PathVariable("species-id") Long speciesId) {
         petCategoryService.deletePetCategory(speciesId);

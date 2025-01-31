@@ -18,8 +18,6 @@ public class PetCategory extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String species;
 
-    private String title;
-
     private String features;
 
     private String foodInfo;
