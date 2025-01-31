@@ -16,6 +16,8 @@ public class PetCategoryReqeustDto {
         @Size(max = 20, message = "종은 20자를 초과할 수 없습니다.")
         private String species;
 
+        private String title;
+
         private String features;
 
         private  String foodInfo;
@@ -26,7 +28,5 @@ public class PetCategoryReqeustDto {
 
         @NotNull(message = "상위 카테고리 ID(petBigCategoryId)는 필수로 입력해야 합니다.")
         private Long petBigCategoryId;
-
-        private MultipartFile image;
     }
 }

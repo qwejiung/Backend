@@ -25,6 +25,9 @@ public class PetCategoryResponseDto {
         private String species;
 
         @Nullable
+        private String title;
+
+        @Nullable
         private String features;
 
         @Nullable
@@ -45,7 +48,5 @@ public class PetCategoryResponseDto {
 
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-
-
     }
 }

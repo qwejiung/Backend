@@ -19,6 +19,7 @@ public class PetCategoryConverter {
                 .features(petCategory.getFeatures())
                 .playMethods(petCategory.getPlayMethods())
                 .foodInfo(petCategory.getFoodInfo())
+                .title(petCategory.getTitle())
                 .createdAt(petCategory.getCreatedAt())
                 .updatedAt(petCategory.getUpdatedAt())
                 .build();
@@ -42,6 +43,7 @@ public class PetCategoryConverter {
                 .petBigCategory(petBigCategory)
                 .featureImagePath(imagePathUrl)
                 .playMethods(dto.getPlayMethods())
+                .title(dto.getTitle())
                 .build();
     }
 }

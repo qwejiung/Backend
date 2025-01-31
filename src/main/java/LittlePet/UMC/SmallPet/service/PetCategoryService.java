@@ -16,6 +16,7 @@ import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -95,13 +96,10 @@ public class PetCategoryService {
 
 
     @Transactional
-    public PetCategoryResponseDto.PetCategoryDetailDTO createPetCategory(PetCategoryReqeustDto.PetCategoryWriteDTO request){
+    public PetCategoryResponseDto.PetCategoryDetailDTO createPetCategory(PetCategoryReqeustDto.PetCategoryWriteDTO request, String url){
         PetBigCategory bigCategory = this.isValidPetBigCategoryId(request.getPetBigCategoryId());
 
-        //image 저장 logic 여기 있어야 함. url 반환 받아야 함.
-        String imagePathUrl = "mock data";
-
-        PetCategory newEntity = PetCategoryConverter.toEntity(request,bigCategory,imagePathUrl);
+        PetCategory newEntity = PetCategoryConverter.toEntity(request,bigCategory,url);
         petCategoryRepository.save(newEntity);
 
         return PetCategoryConverter.toResponseDTO(newEntity);
