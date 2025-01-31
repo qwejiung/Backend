@@ -48,11 +48,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      # 로그인 확인
-      - name: Verify Docker Login
-        run: |
-          docker info | grep Username || exit 1
-
       # 6. Docker Buildx 설치
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.9.1
@@ -78,53 +73,40 @@ jobs:
             # DockerHub 로그인
             echo "${{ secrets.DOCKER_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
             
-            # Docker 네트워크 생성
-            if [ -z "$(sudo docker network ls --filter name=${{ secrets.DOCKER_NETWORK }} -q)" ]; then
-              sudo docker network create ${{ secrets.DOCKER_NETWORK }}
+            # Docker 네트워크 생성 (이미 존재하면 생성 안 함)
+            if [ -z "$(sudo docker network ls --filter name=my-network -q)" ]; then
+              sudo docker network create my-network
             fi
 
-            # Docker 이미지 Pull
+            # 최신 Spring Boot 이미지 Pull
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
 
-            # 기존 컨테이너 중지 및 제거
-            EXISTING_CONTAINER=$(sudo docker ps -q --filter "name=littlepet-container")
-            if [ ! -z "$EXISTING_CONTAINER" ]; then
-              sudo docker stop $EXISTING_CONTAINER
-              sudo docker rm $EXISTING_CONTAINER
-            fi
+            # 기존 컨테이너 중지 및 삭제
+            sudo docker stop littlepet-container || true
+            sudo docker rm littlepet-container || true
+            sudo docker stop nginx-proxy || true
+            sudo docker rm nginx-proxy || true
 
-            # 종료된 컨테이너 모두 제거
-            sudo docker rm $(sudo docker ps -a -q --filter "status=exited") || true
-
-            # 컨테이너 실행
+            # Spring Boot 컨테이너 실행
             sudo docker run -d \
               --name littlepet-container \
               -p 8080:8080 \
-              -e DB_URL=${{ secrets.DB_URL }} \
-              -e DB_USERNAME=${{ secrets.DB_USERNAME }} \
-              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              --net ${{ secrets.DOCKER_NETWORK }} \
+              --env-file .env \
+              --net my-network \
               -e TZ=Asia/Seoul \
               ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
-            
-            # 1. Nginx Docker 이미지 빌드 및 실행
+
+            # 최신 Nginx 이미지 빌드
             sudo docker build -t nginx-container -f Dockerfile.nginx .
 
-            # 2. 기존 Nginx 컨테이너 중지 및 제거
-            EXISTING_NGINX=$(sudo docker ps -q --filter "name=nginx-proxy")
-            if [ ! -z "$EXISTING_NGINX" ]; then
-              sudo docker stop $EXISTING_NGINX
-              sudo docker rm $EXISTING_NGINX
-            fi
-
-            # 3. Nginx 컨테이너 실행
+            # Nginx 컨테이너 실행
             sudo docker run -d \
               --name nginx-proxy \
               -p 80:80 -p 443:443 \
               -v /etc/letsencrypt:/etc/letsencrypt:ro \
-              -v /path/to/nginx.conf:/etc/nginx/nginx.conf:ro \
-              --net ${{ secrets.DOCKER_NETWORK }} \
+              -v /home/ubuntu/Backend/nginx.conf:/etc/nginx/nginx.conf:ro \
+              --net my-network \
               nginx-container
 
-            # 사용하지 않는 이미지 제거
-            sudo docker image prune -a -f
+            # 불필요한 이미지 정리 (실행 중인 이미지는 삭제 안 함)
+            sudo docker image prune -f
