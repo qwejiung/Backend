@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//response dto 처리를 controller에서 할지 생각 중 일단 다
 @Service
 @RequiredArgsConstructor
 public class PetCategoryService {
@@ -84,6 +83,16 @@ public class PetCategoryService {
 
         return PetCategoryConverter.toResponseDTO(petCategory);
     }
+
+    @Transactional(readOnly = true)
+    public List<PetCategoryResponseDto.PetCategoryDTO> getPetCategoryAll(){
+        List<PetCategory> petCategoryList = this.petCategoryRepository.findAll();
+
+        return petCategoryList.stream()
+                .map(PetCategoryConverter::toShortResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public PetCategoryResponseDto.PetCategoryDetailDTO createPetCategory(PetCategoryReqeustDto.PetCategoryWriteDTO request){

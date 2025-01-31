@@ -19,6 +19,17 @@ public class PetCategoryConverter {
                 .features(petCategory.getFeatures())
                 .playMethods(petCategory.getPlayMethods())
                 .foodInfo(petCategory.getFoodInfo())
+                .createdAt(petCategory.getCreatedAt())
+                .updatedAt(petCategory.getUpdatedAt())
+                .build();
+    }
+    public static PetCategoryResponseDto.PetCategoryDTO toShortResponseDTO(PetCategory petCategory) {
+        return PetCategoryResponseDto.PetCategoryDTO.builder()
+                .id(petCategory.getId())
+                .species(petCategory.getSpecies())
+                .imageUrl(petCategory.getFeatureImagePath())
+                .createdAt(petCategory.getCreatedAt())
+                .updatedAt(petCategory.getUpdatedAt())
                 .build();
     }
 
