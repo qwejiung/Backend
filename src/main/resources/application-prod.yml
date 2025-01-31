@@ -15,7 +15,7 @@ spring:
     expiration-time: 86400000 # 1일
   security:
     cors:
-      allowed-origins: "https://umclittlepet.shop, http://localhost:3000"
+      allowed-origins: "https://umclittlepet.shop, http://localhost:5173"
       allowed-methods: "*"
       allowed-headers: "*"
       allow-credentials: true

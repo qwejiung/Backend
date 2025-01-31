@@ -50,7 +50,7 @@ public class SecurityConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
 
                 configuration.setAllowedOrigins(Arrays.asList(
-                        "http://localhost:3000",
+                        "http://localhost:5173",
                         "https://umclittlepet.shop",// 로컬 개발 환경
                         "http://54.180.205.177:8080" // EC2 서버 환경
                 ));
