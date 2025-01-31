@@ -38,6 +38,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                     .findFirst()
                     .orElse("USER"); // 기본 권한
 
+
             if (principal instanceof CustomOAuth2User) {
                 // Naver 처리
                 CustomOAuth2User customUserDetails = (CustomOAuth2User) principal;
@@ -52,34 +53,41 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 throw new IllegalArgumentException("[ERROR] Unsupported principal type: " + principal.getClass().getName());
             }
 
+
+
             System.out.println("[DEBUG] Social ID: " + socialId);
             System.out.println("[DEBUG] Role: " + role);
+
 
             // JWT 생성
             String token = jwtUtil.createJwt(socialId, role, 60 * 60 * 24 * 1000L); // 1일 유효
             System.out.println("[DEBUG] Generated JWT: " + token);
 
-            // JWT를 Set-Cookie 헤더로 추가
-            addCookieWithSameSite(response, "Authorization", token);
-            System.out.println("[DEBUG] JWT cookie added with SameSite=None");
+            // JWT를 쿠키에 추가
+            Cookie jwtCookie = createCookie("Authorization", token);
+            response.addCookie(jwtCookie);
+            System.out.println("[DEBUG] JWT cookie added: " + jwtCookie.getValue());
 
             // 클라이언트로 리다이렉트
-            String origin = request.getHeader("Origin");
-            String redirectUrl = origin != null ? origin : "http://localhost:5173";
-            response.sendRedirect(redirectUrl + "/");
+            response.sendRedirect("http://localhost:5173/");
         } catch (ExpiredJwtException e) {
             System.err.println("[ERROR] JWT expired. Refreshing token...");
+            //handleExpiredJwt(response, authentication);
         } catch (Exception e) {
             System.err.println("[ERROR] Authentication error: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed");
         }
     }
 
-    private void addCookieWithSameSite(HttpServletResponse response, String key, String value) {
-        String cookieValue = String.format(
-                "%s=%s; Path=/; Max-Age=%d; HttpOnly; Secure; SameSite=None",
-                key, value, 60 * 60 * 24 // 1일
-        );
-        response.addHeader("Set-Cookie", cookieValue);
+    private Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(60 * 60 * 24); // 1일
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);// JavaScript에서 접근 금지
+        cookie.setPath("/");
+        cookie.setDomain("localhost"); // Domain 설정
+
+        System.out.println("[DEBUG] Created cookie: " + key + " = " + value);// 모든 경로에서 쿠키 사용 가능
+        return cookie;
     }
 }
