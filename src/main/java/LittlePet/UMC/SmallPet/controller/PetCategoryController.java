@@ -64,11 +64,11 @@ public class PetCategoryController {
         return ApiResponse.onSuccess(res);
     }
 
-    @Operation(summary = "소동물 카테고리 추가 ", description = "특정 소동물 카테고리를 추가할 수 있습니다. admin만 가능합니다. (s3 구축 후 api 보완 예정. 우선 image 관련 처리 X)")
-    @PostMapping(value = "/species", consumes = {"multipart/form-data"})
+    @Operation(summary = "소동물 카테고리 추가 ", description = "특정 소동물 카테고리를 추가할 수 있습니다. admin만 가능합니다. (s3 구축 후 api 보완 예정. 우선 image 관련 처리 X!!)")
+    @PostMapping(value = "/species")
     public ApiResponse<PetCategoryResponseDto.PetCategoryDetailDTO> createPetCategory(
-            @RequestPart @Valid PetCategoryReqeustDto.PetCategoryWriteDTO request,
-            @RequestPart(value = "image", required = false) MultipartFile image // 이미지 (선택)
+            @RequestBody PetCategoryReqeustDto.PetCategoryWriteDTO request
+            //@RequestPart(value = "image", required = false) MultipartFile image // 이미지 (선택)
     ){
         PetCategoryResponseDto.PetCategoryDetailDTO res = petCategoryService.createPetCategory(request);
         return ApiResponse.onSuccess(res);

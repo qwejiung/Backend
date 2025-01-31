@@ -26,15 +26,26 @@ public class PetCategoryResponseDto {
 
         @Nullable
         private String features;
+        @Nullable
+        private String featuresHeadLine;
 
+        //먹이정보
         @Nullable
         private String foodInfo;
+        @Nullable
+        private String foodInfoHeadLine;
 
+        //환경
         @Nullable
         private String environment;
+        @Nullable
+        private String environmentHeadLine;
 
+        //놀이방법
         @Nullable
         private String playMethods;
+        @Nullable
+        private String playMethodsHeadLine;
 
         @Nullable
         private String featureImagePath;

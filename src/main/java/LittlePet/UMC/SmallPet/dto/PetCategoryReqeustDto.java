@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 public class PetCategoryReqeustDto {
 
@@ -17,16 +16,21 @@ public class PetCategoryReqeustDto {
         private String species;
 
         private String features;
+        private String featuresHeadLine;
 
-        private  String foodInfo;
+        //먹이정보
+        private String foodInfo;
+        private String foodInfoHeadLine;
 
+        //환경
         private String environment;
+        private String environmentHeadLine;
 
+        //놀이방법
         private String playMethods;
+        private String playMethodsHeadLine;
 
         @NotNull(message = "상위 카테고리 ID(petBigCategoryId)는 필수로 입력해야 합니다.")
         private Long petBigCategoryId;
-
-        private MultipartFile image;
     }
 }
