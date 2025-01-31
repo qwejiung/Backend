@@ -24,6 +24,8 @@ public class PetBigCategoryConverter {
                                 .id(petCategory.getId())
                                 .species(petCategory.getSpecies())
                                 .imageUrl(petCategory.getFeatureImagePath())
+                                .createdAt(petCategory.getCreatedAt())
+                                .updatedAt(petCategory.getUpdatedAt())
                                 .build()
                         )
                         .toList();
@@ -32,6 +34,8 @@ public class PetBigCategoryConverter {
                 .id(entity.getId())
                 .categoryName(entity.getCategoryName())
                 .petCategoryList(petCategoryDTOList)
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .build();
     }
 }

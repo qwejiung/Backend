@@ -4,13 +4,18 @@ import jakarta.annotation.Nullable;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 public class PetCategoryResponseDto {
+
     @Getter
     @Builder
     public static class PetCategoryDTO {
         private Long id;
         private String species;
         private String imageUrl;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 
     @Getter
@@ -37,5 +42,10 @@ public class PetCategoryResponseDto {
         private Long petBigCategoryId;
 
         private String petBigCategoryName;
+
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+
     }
 }
