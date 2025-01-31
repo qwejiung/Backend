@@ -20,11 +20,7 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - TZ=Asia/Seoul
-    healthcheck:  # ✅ Spring Boot가 완전히 실행될 때까지 대기
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+
 
   nginx:  # ✅ Nginx Reverse Proxy 컨테이너
     build:
