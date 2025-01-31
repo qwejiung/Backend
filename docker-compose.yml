@@ -38,5 +38,6 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro  # ✅ SSL 인증서 마운트
 
 networks:
-  backend_my-network:  # ✅ 네트워크 명시
+  backend_my-network:
+    name: backend_my-network # <- 고정된 네트워크 이름 사용
     driver: bridge
