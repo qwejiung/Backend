@@ -19,10 +19,6 @@ public class PetCategoryConverter {
                 .features(petCategory.getFeatures())
                 .playMethods(petCategory.getPlayMethods())
                 .foodInfo(petCategory.getFoodInfo())
-                .environmentHeadLine(petCategory.getEnvironmentHeadLine())
-                .featuresHeadLine(petCategory.getFeaturesHeadLine())
-                .foodInfoHeadLine(petCategory.getFoodInfoHeadLine())
-                .playMethodsHeadLine(petCategory.getPlayMethodsHeadLine())
                 .createdAt(petCategory.getCreatedAt())
                 .updatedAt(petCategory.getUpdatedAt())
                 .build();

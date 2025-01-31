@@ -18,21 +18,13 @@ public class PetCategory extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String species;
 
-    //특징
     private String features;
-    private String featuresHeadLine;
 
-    //먹이정보
     private String foodInfo;
-    private String foodInfoHeadLine;
 
-    //환경
     private String environment;
-    private String environmentHeadLine;
 
-    //놀이방법
     private String playMethods;
-    private String playMethodsHeadLine;
 
     @Column(nullable = false)
     private String featureImagePath;

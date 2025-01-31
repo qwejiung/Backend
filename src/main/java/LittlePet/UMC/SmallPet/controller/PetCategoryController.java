@@ -1,5 +1,6 @@
 package LittlePet.UMC.SmallPet.controller;
 
+import LittlePet.UMC.S3Service;
 import LittlePet.UMC.SmallPet.dto.PetBigCategoryRequestDto;
 import LittlePet.UMC.SmallPet.dto.PetBigCategoryResponseDto;
 import LittlePet.UMC.SmallPet.dto.PetCategoryReqeustDto;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PetCategoryController {
     private final PetCategoryService petCategoryService;
-
+    private final S3Service s3Service;
     //Category Create
     @Operation(summary = "소동물 대분류 카테고리 조회", description = "소동물 대분류 카테고리 조회할 수 있는 카테고리입니다")
     @GetMapping("")
@@ -64,13 +66,14 @@ public class PetCategoryController {
         return ApiResponse.onSuccess(res);
     }
 
-    @Operation(summary = "소동물 카테고리 추가 ", description = "특정 소동물 카테고리를 추가할 수 있습니다. admin만 가능합니다. (s3 구축 후 api 보완 예정. 우선 image 관련 처리 X!!)")
-    @PostMapping(value = "/species")
+    @Operation(summary = "소동물 카테고리 추가 ", description = "특정 소동물 카테고리를 추가할 수 있습니다. admin만 가능합니다. (s3 구축 후 api 보완 예정. 우선 image 관련 처리 X)")
+    @PostMapping(value = "/species", consumes = {"multipart/form-data"})
     public ApiResponse<PetCategoryResponseDto.PetCategoryDetailDTO> createPetCategory(
-            @RequestBody PetCategoryReqeustDto.PetCategoryWriteDTO request
-            //@RequestPart(value = "image", required = false) MultipartFile image // 이미지 (선택)
-    ){
-        PetCategoryResponseDto.PetCategoryDetailDTO res = petCategoryService.createPetCategory(request);
+            @RequestPart @Valid PetCategoryReqeustDto.PetCategoryWriteDTO request,
+            @RequestPart(value = "image", required = false) MultipartFile image // 이미지 (선택)
+    ) throws IOException {
+        String imageUrl = s3Service.upload(image);
+        PetCategoryResponseDto.PetCategoryDetailDTO res = petCategoryService.createPetCategory(request,imageUrl);
         return ApiResponse.onSuccess(res);
     }
 
