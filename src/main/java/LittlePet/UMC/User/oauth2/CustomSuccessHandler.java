@@ -68,8 +68,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             response.addCookie(jwtCookie);
             System.out.println("[DEBUG] JWT cookie added: " + jwtCookie.getValue());
 
-            response.setHeader("Set-Cookie",
-                    "Authorization=" + token + "; Path=/; HttpOnly; Secure; SameSite=None");
+            String setCookieHeader = response.getHeader("Set-Cookie");
+            // "Authorization=xxxx; Path=/; HttpOnly; Max-Age=86400"
+
+            setCookieHeader = setCookieHeader + "; SameSite=None";
+            response.setHeader("Set-Cookie", setCookieHeader);
+
+//            response.setHeader("Set-Cookie",
+//                    "Authorization=" + token + "; Path=/; HttpOnly; Secure; SameSite=None");
 
             // 클라이언트로 리다이렉트
             response.sendRedirect("http://localhost:5173/");
@@ -88,7 +94,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setHttpOnly(true);
         cookie.setSecure(false);// JavaScript에서 접근 금지
         cookie.setPath("/");
-        cookie.setDomain("localhost"); // Domain 설정
+//        cookie.setDomain("localhost"); // Domain 설정
 
         System.out.println("[DEBUG] Created cookie: " + key + " = " + value);// 모든 경로에서 쿠키 사용 가능
         return cookie;
