@@ -102,6 +102,7 @@ public class SecurityConfig {
                                 "/auth/login",
                                 "/auth/sign-in",
                                 "/quiz",
+                                "/pets/**",
                                 "/users/**",
                                 "/animal-categories",
                                 "/animal-categories/**",
