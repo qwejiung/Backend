@@ -1,8 +1,7 @@
 version: "3.8"
 
 services:
-  # Spring Boot 서비스
-  spring-boot-app:
+  spring-boot-app:  # ✅ Spring Boot 컨테이너 (백엔드)
     image: seojaejun/littlepetdocker:latest
     container_name: littlepet-container
     restart: always
@@ -11,7 +10,7 @@ services:
     networks:
       - my-network
     env_file:
-      - .env   # <-- 환경 변수 파일 로드 추가
+      - .env  # ✅ DB 및 API 키 로드
     environment:
       - DB_URL=${DB_URL}
       - DB_USERNAME=${DB_USERNAME}
@@ -21,9 +20,13 @@ services:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - TZ=Asia/Seoul
+    healthcheck:  # ✅ Spring Boot가 완전히 실행될 때까지 대기
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Nginx Reverse Proxy 서비스
-  nginx:
+  nginx:  # ✅ Nginx Reverse Proxy 컨테이너
     build:
       context: .
       dockerfile: Dockerfile.nginx
@@ -33,12 +36,13 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - spring-boot-app
+      spring-boot-app:
+        condition: service_healthy  # ✅ Spring Boot 실행 후 Nginx 실행
     networks:
       - my-network
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - /etc/letsencrypt:/etc/letsencrypt
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro  # ✅ SSL 인증서 마운트
 
 networks:
   my-network:
