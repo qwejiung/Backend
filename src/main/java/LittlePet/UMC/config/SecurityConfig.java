@@ -115,8 +115,8 @@ public class SecurityConfig {
                                 "/badge",
                                 "/badge/**",
                                 "/oauth2/authorization/**"
-                        ).permitAll()
-                        .anyRequest().authenticated());
+                        ).permitAll());
+                        //.anyRequest().authenticated());
 
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
