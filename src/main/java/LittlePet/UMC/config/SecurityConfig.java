@@ -51,15 +51,14 @@ public class SecurityConfig {
 
                 configuration.setAllowedOrigins(Arrays.asList(
                         "http://localhost:5173",
-                        "https://umclittlepet.shop",// 로컬 개발 환경
-                        "http://54.180.205.177:8080" // EC2 서버 환경
+                        "https://umclittlepet.shop"
                 ));
-                configuration.addAllowedMethod("*");
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowCredentials(true);
-                configuration.addAllowedHeader("*");
+                configuration.setAllowedHeaders(Collections.singletonList("*"));
                 configuration.setMaxAge(3600L);
-                configuration.addExposedHeader("Set-Cookie");
-                configuration.addExposedHeader("Authorization");
+                configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
+
 
                 return configuration;
             }
