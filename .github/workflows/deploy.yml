@@ -70,43 +70,40 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 22
           script: |
-            # DockerHub 로그인
-            echo "${{ secrets.DOCKER_TOKEN }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-            
-            # Docker 네트워크 생성 (이미 존재하면 생성 안 함)
-            if [ -z "$(sudo docker network ls --filter name=my-network -q)" ]; then
-              sudo docker network create my-network
+            # 🔹 Docker 네트워크 생성 (이미 존재하면 생성 안 함)
+            if [ -z "$(sudo docker network ls --filter name=backend_my-network -q)" ]; then
+              sudo docker network create backend_my-network
             fi
 
-            # 최신 Spring Boot 이미지 Pull
+            # 🔹 최신 Spring Boot 이미지 Pull
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
 
-            # 기존 컨테이너 중지 및 삭제
+            # 🔹 기존 컨테이너 중지 및 삭제
             sudo docker stop littlepet-container || true
             sudo docker rm littlepet-container || true
             sudo docker stop nginx-proxy || true
             sudo docker rm nginx-proxy || true
 
-            # Spring Boot 컨테이너 실행
+            # 🔹 Spring Boot 컨테이너 실행
             sudo docker run -d \
               --name littlepet-container \
               -p 8080:8080 \
-              --env-file .env \
-              --net my-network \
+              --env-file /home/ubuntu/Backend/.env \
+              --net backend_my-network \  # 🔥 네트워크 변경
               -e TZ=Asia/Seoul \
               ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
 
-            # 최신 Nginx 이미지 빌드
+            # 🔹 최신 Nginx 이미지 빌드
             sudo docker build -t nginx-container -f Dockerfile.nginx .
 
-            # Nginx 컨테이너 실행
+            # 🔹 Nginx 컨테이너 실행
             sudo docker run -d \
               --name nginx-proxy \
               -p 80:80 -p 443:443 \
               -v /etc/letsencrypt:/etc/letsencrypt:ro \
               -v /home/ubuntu/Backend/nginx.conf:/etc/nginx/nginx.conf:ro \
-              --net my-network \
+              --net backend_my-network \  # 🔥 네트워크 변경
               nginx-container
 
-            # 불필요한 이미지 정리 (실행 중인 이미지는 삭제 안 함)
+            # 🔹 불필요한 이미지 정리
             sudo docker image prune -f
