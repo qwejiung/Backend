@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//response dto 처리를 controller에서 할지 생각 중 일단 다
 @Service
 @RequiredArgsConstructor
 public class PetCategoryService {
@@ -34,7 +33,7 @@ public class PetCategoryService {
 
     //모든 petbigcategory 가져오기.
     @Transactional(readOnly = true)
-    public List<PetBigCategoryResponseDto.GetDto> getPetBigCategories() {
+    public List<PetBigCategoryResponseDto.PetBigCategoryGetDto> getPetBigCategories() {
         return petBigCategoryRepository.findAll().stream()
                 .map(PetBigCategoryConverter::toGetDto)
                 .collect(Collectors.toList());
@@ -79,14 +78,24 @@ public class PetCategoryService {
     }
 
     @Transactional(readOnly = true)
-    public PetCategoryResponseDto.DTO getPetCategoryById(Long id){
+    public PetCategoryResponseDto.PetCategoryDetailDTO getPetCategoryById(Long id){
         PetCategory petCategory = this.isValidPetCategoryId(id);
 
         return PetCategoryConverter.toResponseDTO(petCategory);
     }
 
+    @Transactional(readOnly = true)
+    public List<PetCategoryResponseDto.PetCategoryDTO> getPetCategoryAll(){
+        List<PetCategory> petCategoryList = this.petCategoryRepository.findAll();
+
+        return petCategoryList.stream()
+                .map(PetCategoryConverter::toShortResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+
     @Transactional
-    public PetCategoryResponseDto.DTO createPetCategory(PetCategoryReqeustDto.PetCategoryWriteDTO request){
+    public PetCategoryResponseDto.PetCategoryDetailDTO createPetCategory(PetCategoryReqeustDto.PetCategoryWriteDTO request){
         PetBigCategory bigCategory = this.isValidPetBigCategoryId(request.getPetBigCategoryId());
 
         //image 저장 logic 여기 있어야 함. url 반환 받아야 함.
@@ -100,7 +109,7 @@ public class PetCategoryService {
 
     @Transactional
     //유효성 검증을 service에서만 처리할 수 있도록 하였습니다.
-    public PetCategoryResponseDto.DTO updatePetCategory(Long id, PetCategoryReqeustDto.PetCategoryWriteDTO request){
+    public PetCategoryResponseDto.PetCategoryDetailDTO updatePetCategory(Long id, PetCategoryReqeustDto.PetCategoryWriteDTO request){
         PetCategory petCategory = this.isValidPetCategoryId(id);
 
         if(request.getFeatures() != null){

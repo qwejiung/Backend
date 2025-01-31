@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PetCategoryConverter {
-    public static PetCategoryResponseDto.DTO toResponseDTO(PetCategory petCategory) {
-        return PetCategoryResponseDto.DTO.builder()
+    public static PetCategoryResponseDto.PetCategoryDetailDTO toResponseDTO(PetCategory petCategory) {
+        return PetCategoryResponseDto.PetCategoryDetailDTO.builder()
                 .id(petCategory.getId())
                 .species(petCategory.getSpecies())
                 .petBigCategoryId(petCategory.getPetBigCategory().getId())
@@ -19,6 +19,21 @@ public class PetCategoryConverter {
                 .features(petCategory.getFeatures())
                 .playMethods(petCategory.getPlayMethods())
                 .foodInfo(petCategory.getFoodInfo())
+                .environmentHeadLine(petCategory.getEnvironmentHeadLine())
+                .featuresHeadLine(petCategory.getFeaturesHeadLine())
+                .foodInfoHeadLine(petCategory.getFoodInfoHeadLine())
+                .playMethodsHeadLine(petCategory.getPlayMethodsHeadLine())
+                .createdAt(petCategory.getCreatedAt())
+                .updatedAt(petCategory.getUpdatedAt())
+                .build();
+    }
+    public static PetCategoryResponseDto.PetCategoryDTO toShortResponseDTO(PetCategory petCategory) {
+        return PetCategoryResponseDto.PetCategoryDTO.builder()
+                .id(petCategory.getId())
+                .species(petCategory.getSpecies())
+                .imageUrl(petCategory.getFeatureImagePath())
+                .createdAt(petCategory.getCreatedAt())
+                .updatedAt(petCategory.getUpdatedAt())
                 .build();
     }
 
