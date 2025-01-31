@@ -8,7 +8,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - my-network
+      - backend_my-network  # ✅ 네트워크 이름 변경
     env_file:
       - .env  # ✅ DB 및 API 키 로드
     environment:
