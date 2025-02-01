@@ -37,4 +37,8 @@ public class PetBigCategory extends BaseTimeEntity {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
+
+    public PetBigCategory(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }

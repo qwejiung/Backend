@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -29,4 +30,14 @@ public class PostContent extends BaseTimeEntity {
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    public static PostContent createPostContent(String mediaType, String content, Integer sequence, Post post) {
+        PostContent postContent = new PostContent();
+        postContent.setMediaType(MediaTypeEnum.WhatMediaType(mediaType));
+        postContent.setContent(content);
+        postContent.setSequence(sequence);
+        postContent.setPost(post);
+
+        return postContent;
+    }
 }

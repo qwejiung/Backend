@@ -26,4 +26,8 @@ public class PostCategory extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "postCategory", cascade = CascadeType.ALL)
     private List<Post> postList= new ArrayList<>();
+
+    public PostCategory(String category) {
+        this.category = category;
+    }
 }

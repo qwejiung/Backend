@@ -34,4 +34,9 @@ public class PetCategory extends BaseTimeEntity {
     private PetBigCategory petBigCategory;
 
     // Getters and Setters
+
+    public PetCategory(String species) {
+        this.species = species;
+    }
+
 }
