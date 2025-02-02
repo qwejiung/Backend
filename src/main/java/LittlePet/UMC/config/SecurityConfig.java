@@ -115,7 +115,8 @@ public class SecurityConfig {
                                 "/health/records/**",
                                 "/badge",
                                 "/badge/**",
-                                "/oauth2/authorization/**"
+                                "/oauth2/authorization/**",
+                                "/post/**"
                         ).permitAll());
                         //.anyRequest().authenticated());
 

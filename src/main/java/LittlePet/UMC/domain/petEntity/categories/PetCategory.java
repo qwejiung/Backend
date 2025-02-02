@@ -41,4 +41,14 @@ public class PetCategory extends BaseTimeEntity {
     private PetBigCategory petBigCategory;
 
     // Getters and Setters
+
+    public PetCategory(String species) {
+        this.species = species;
+    }
+
+    public PetCategory(String species, String featureImagePath, PetBigCategory petBigCategory) {
+        this.species = species;
+        this.featureImagePath = featureImagePath;
+        this.petBigCategory = petBigCategory;
+    }
 }

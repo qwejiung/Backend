@@ -2,6 +2,7 @@ package LittlePet.UMC.domain.postEntity;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
+import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.postEntity.mapping.PostClipping;
 import LittlePet.UMC.domain.postEntity.mapping.PostContent;
@@ -14,13 +15,14 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+@Getter @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
 @ToString
 public class Post extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -55,5 +57,32 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostClipping> postClippingList= new ArrayList<>();
 
+    @Transient // DB에는 저장되지 않음
+    private static int sequenceCounter = 1;
+
+    public static Post createPost(String title, long views, User user, PostCategory postCategory, PetCategory petCategory) {
+        Post post = new Post();
+        post.setTitle(title);
+        post.setUser(user);
+        post.setViews(views);
+        post.setPostCategory(postCategory);
+        post.setPetBigCategory(petCategory.getPetBigCategory());
+
+        return post;
+    }
+
+    public void addPostContent(List<PostContent> contents) {
+        for (PostContent content : contents) {
+            this.postcontentList.add(content);
+        }
+    }
+
+    public Integer getSequenceCounter() {
+        return sequenceCounter++;
+    }
+
+    public void resetSequenceCounter() {
+        sequenceCounter = 1;
+    }
 
 }

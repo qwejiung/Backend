@@ -13,12 +13,14 @@ import LittlePet.UMC.apiPayload.exception.handler.PetBigCategoryHandler;
 import LittlePet.UMC.apiPayload.exception.handler.PetCategoryHandler;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
+import LittlePet.UMC.domain.postEntity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -136,5 +138,11 @@ public class PetCategoryService {
     public void deletePetCategory(Long id){
         PetCategory petCategory = this.isValidPetCategoryId(id);
         petCategoryRepository.delete(petCategory);
+    }
+
+    public PetCategory findPetCategoryBySpecies(String species){
+        PetCategory petCategory = petCategoryRepository.findBySpecies(species)
+                .orElseThrow(() -> new IllegalArgumentException("PetCategory not found"));
+        return petCategory;
     }
 }

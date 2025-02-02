@@ -57,6 +57,12 @@ public enum ErrorStatus implements BaseErrorCode {
     //유저 관련 에러
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4041","존재하지 않는 유저입니다."),
 
+    //게시물 관련 에러
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND,"POST4041","존재하지 않는 게시물입니다."),
+
+    //게시물카테고리 관련 에러
+    POST_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"POSTCATEGORY4041","존재하지 않는 게시물 카테고리입니다."),
+
     //뱃지 타입 관련 에러
     BADGE_NOT_FOUND(HttpStatus.NOT_FOUND, "BADGE4041","존재하지 않는 뱃지입니다. '글쓰기마스터' , '소통천재', '소통응원왕','인기스타' 중 하나를 선택해주세요"),
     BADGE_ALREADY_OWNED(HttpStatus.BAD_REQUEST, "BADGE4001", "이미 해당 뱃지를 보유하고 있습니다. '글쓰기마스터' , '소통천재', '소통응원왕','인기스타' 중 다른 뱃지를 선택해주세요"),
