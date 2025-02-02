@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum FecesStatusEnum {
-    NORMAL("NORMAL", "정상"),
-    DIARRHEA("DIARRHEA", "설사"),
-    CONSTIPATION("CONSTIPATION", "변비"),
-    HARD("HARD", "단단함"),
-    ABNORMAL_COLOR("ABNORMAL_COLOR", "비정상 색상"),
-    BLOOD_IN_STOOL("BLOOD_IN_STOOL", "혈변");
+    NORMAL("NORMAL","적당한 무르기"),
+    HARD("HARD","딱딱한 똥"),
+    DIARRHEA("DIARRHEA","설사"),
+    BLOODY("BLOODY","혈변"),
+    NOT_DEFECATED("NOT_DEFECATED","대변 안 봄");
 
     private final String code;        // 영문 코드
     private final String description; // 한글 설명
