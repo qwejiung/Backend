@@ -17,6 +17,7 @@ public class PetCategoryConverter {
                 .environment(petCategory.getEnvironment())
                 .featureImagePath(petCategory.getFeatureImagePath())
                 .features(petCategory.getFeatures())
+                .title(petCategory.getTitle())
                 .playMethods(petCategory.getPlayMethods())
                 .foodInfo(petCategory.getFoodInfo())
                 .createdAt(petCategory.getCreatedAt())
