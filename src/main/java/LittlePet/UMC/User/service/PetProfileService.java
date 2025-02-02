@@ -34,7 +34,7 @@ public class PetProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         // PetCategory 검증
-        PetCategory category = petCategoryRepository.findById(petRequestDTO.getCategoryId())
+        PetCategory category = petCategoryRepository.findBySpecies(petRequestDTO.getCategoryName())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 반려동물 카테고리입니다."));
 
         // 반려동물 엔티티 생성
@@ -55,7 +55,7 @@ public class PetProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
 
         // PetCategory 검증
-        PetCategory category = petCategoryRepository.findById(petRequestDTO.getCategoryId())
+        PetCategory category = petCategoryRepository.findBySpecies(petRequestDTO.getCategoryName())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 반려동물 카테고리입니다."));
 
         // 반려동물 정보 업데이트
