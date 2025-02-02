@@ -1,4 +1,4 @@
-package LittlePet.UMC.community.repository;
+package LittlePet.UMC.community.repository.postRepository;
 
 import LittlePet.UMC.domain.postEntity.PostCategory;
 import LittlePet.UMC.domain.postEntity.mapping.PostLike;
