@@ -27,7 +27,7 @@ public class HealthRecordResponseDTO {
         private String fecesStatus;
         private String fecesColorStatus;
         private String healthStatus;
-        private List<String> atypicalSymptom;
+        private String atypicalSymptom;
         private String diagnosisName;
         private String prescription;
     }

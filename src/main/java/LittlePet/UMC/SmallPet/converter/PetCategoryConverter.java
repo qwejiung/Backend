@@ -17,6 +17,7 @@ public class PetCategoryConverter {
                 .environment(petCategory.getEnvironment())
                 .featureImagePath(petCategory.getFeatureImagePath())
                 .features(petCategory.getFeatures())
+                .title(petCategory.getTitle())
                 .playMethods(petCategory.getPlayMethods())
                 .foodInfo(petCategory.getFoodInfo())
                 .createdAt(petCategory.getCreatedAt())
@@ -35,13 +36,14 @@ public class PetCategoryConverter {
 
     public static PetCategory toEntity(PetCategoryReqeustDto.PetCategoryWriteDTO dto, PetBigCategory petBigCategory, String imagePathUrl ) {
         return PetCategory.builder()
-                .features(dto.getFeatures())
-                .environment(dto.getEnvironment())
-                .foodInfo(dto.getFoodInfo())
+                .features(dto.getFeatures().replace("\n", "<br><br>"))
+                .environment(dto.getEnvironment().replace("\n", "<br><br>"))
+                .foodInfo(dto.getFoodInfo().replace("\n", "<br><br>"))
                 .species(dto.getSpecies())
                 .petBigCategory(petBigCategory)
                 .featureImagePath(imagePathUrl)
-                .playMethods(dto.getPlayMethods())
+                .playMethods(dto.getPlayMethods().replace("\n", "<br><br>"))
+                .title(dto.getTitle())
                 .build();
     }
 }

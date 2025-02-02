@@ -21,7 +21,7 @@ public class PostContent extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MediaTypeEnum mediaType;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT",nullable = false)  // 컬럼 크기를 TEXT로 설정
     private String content;
 
     @Column(nullable = false)

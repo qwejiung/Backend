@@ -84,4 +84,5 @@ public class Post extends BaseTimeEntity {
     public void resetSequenceCounter() {
         sequenceCounter = 1;
     }
+
 }

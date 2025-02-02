@@ -20,7 +20,7 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,columnDefinition = "TEXT")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,8 +35,21 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> replies = new ArrayList<>();
+
+    @Builder
+    public Comment(String content, Post post, User user, Comment parent) {
+        this.content = content;
+        this.post = post;
+        this.user = user;
+        this.parent = parent;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
 
     // Getters, Setters, Constructors
 }
