@@ -124,4 +124,36 @@ public class PetProfileController {
         // ApiResponse로 감싸서 성공 응답
         return ApiResponse.onSuccess(petList);
     }
+
+
+    @Operation(
+            summary = "반려동물 단일 조회",
+            description = "특정 사용자(userId)와 반려동물(petId)에 해당하는 반려동물 정보를 조회합니다."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "반려동물 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PetProfileResponseDTO.class)
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "반려동물을 찾을 수 없음",
+                    content = @Content
+            )
+    })
+    @GetMapping("/{petId}")
+    public ApiResponse<PetProfileResponseDTO> getPetProfile(
+            @RequestParam Long userId, // 사용자 ID
+            @PathVariable Long petId   // 반려동물 ID
+    ) {
+        PetProfileResponseDTO response = petProfileService.getPetProfile(userId, petId);
+        return ApiResponse.onSuccess(response);
+    }
+
+
+
 }
