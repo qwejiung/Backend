@@ -6,9 +6,9 @@ import LittlePet.UMC.Badge.repository.badgeRepository.UserBadgeRepository;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
 import LittlePet.UMC.apiPayload.exception.handler.BadgeHandler;
-import LittlePet.UMC.community.repository.CommentRepository;
-import LittlePet.UMC.community.repository.PostLlikeRepository;
-import LittlePet.UMC.community.repository.PostRepository;
+import LittlePet.UMC.community.repository.commentRepository.CommentRepository;
+import LittlePet.UMC.community.repository.postRepository.PostLlikeRepository;
+import LittlePet.UMC.community.repository.postRepository.PostRepository;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
 import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import LittlePet.UMC.domain.userEntity.User;
@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

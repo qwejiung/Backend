@@ -7,12 +7,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
+:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
   jwt:
-    secret-key: "afdsjfkpoqjfelkjlknsadafdshsalfkjadfsjadfsjfadlkjfdsalkjsaflklsjklfk"
+    secret-key:
     expiration-time: 86400000 # 1일
 
 
