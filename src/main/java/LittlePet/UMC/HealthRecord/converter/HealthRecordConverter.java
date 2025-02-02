@@ -9,6 +9,7 @@ import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class HealthRecordConverter {
@@ -17,6 +18,22 @@ public class HealthRecordConverter {
      * HealthRecordRequestDTO를 HealthRecord Entity로 변환
      */
         public static HealthRecord toHealthRecordEntity(HealthRecordRequestDTO request, UserPet pet) {
+
+            List<AtypicalSymptomEnum> atypicalSymptomEnums = request.getAtypicalSymptom() == null
+                    ? Collections.emptyList()
+                    : request.getAtypicalSymptom().stream()
+                    .filter(description -> !description.startsWith("기타")) // "기타"로 시작하는 값 제외
+                    .map(AtypicalSymptomEnum::fromDescription) // Enum으로 변환
+                    .collect(Collectors.toList());
+
+            // "기타" 증상인지 확인하고 저장
+            String otherSymptom = request.getAtypicalSymptom().stream()
+                    .filter(description -> description.startsWith("기타")) // "기타"로 시작하는 값만 필터링
+                    .map(description -> description.replace("기타: ", "")) // "기타: " 제거
+                    .findFirst()
+                    .orElse(null); // 값이 없으면 null
+
+
             return HealthRecord.builder()
                     .recordDate(LocalDate.parse(request.getRecordDate()))
                     .weight(request.getWeight())
@@ -24,14 +41,8 @@ public class HealthRecordConverter {
                     .fecesStatus(FecesStatusEnum.fromDescription(request.getFecesStatus().toUpperCase()))
                     .fecesColorStatus(FecesColorStatusEnum.fromDescription(request.getFecesColorStatus().toUpperCase()))
                     .healthStatus(HealthStatusEnum.fromDescription(request.getHealthStatus()))
-                    .atypicalSymptom(
-                            request.getAtypicalSymptom() == null
-                                    ? Collections.emptyList()
-                                    : request.getAtypicalSymptom().stream()
-                                    // 예: "기침" -> AtypicalSymptomEnum.fromDescription("기침") 사용
-                                    .map(AtypicalSymptomEnum::fromDescription)
-                                    .collect(Collectors.toList())
-                    )
+                    .atypicalSymptom(atypicalSymptomEnums)
+                    .otherSymptom(otherSymptom)
                     .diagnosisName(request.getDiagnosisName())
                     .prescription(request.getPrescription())
                     .userPet(pet)
@@ -48,6 +59,18 @@ public class HealthRecordConverter {
      * @return HealthRecordResponseDTO
      */
     public static HealthRecordResponseDTO toHealthRecordResponseDTO(UserPet pet, String recentUpdate, HealthRecord latestRecord) {
+
+        List<String> atypicalList = latestRecord.getAtypicalSymptom() == null
+                ? Collections.emptyList()
+                : latestRecord.getAtypicalSymptom().stream()
+                .map(AtypicalSymptomEnum::getDescription)
+                .collect(Collectors.toList());
+
+        // "기타" 증상이 있으면 리스트에 추가
+        if (latestRecord.getOtherSymptom() != null && !latestRecord.getOtherSymptom().isEmpty()) {
+            atypicalList.add("기타: " + latestRecord.getOtherSymptom());
+        }
+
         return HealthRecordResponseDTO.builder()
                 .petName(pet.getName()) // 반려동물 이름
                 .gender(pet.getGender().toString())
@@ -55,7 +78,7 @@ public class HealthRecordConverter {
                 .profilePhoto(pet.getProfilePhoto()) // 반려동물 프로필 사진
                 .birthDay(pet.getBirthDay() != null ? pet.getBirthDay().toString() : null) // 반려동물 생년월일
                 .recentUpdate(recentUpdate) // 최근 업데이트 정보
-                .latestRecord(latestRecord != null ? toHealthRecordDetailDTO(latestRecord) : null) // 최신 건강 기록 정보
+                .latestRecord(latestRecord != null ? toHealthRecordDetailDTO(latestRecord, atypicalList) : null) // 최신 건강 기록 정보
                 .build();
     }
 
@@ -65,18 +88,12 @@ public class HealthRecordConverter {
      * @param healthRecord HealthRecord 객체
      * @return HealthRecordDetailDTO
      */
-    private static HealthRecordResponseDTO.HealthRecordDetailDTO toHealthRecordDetailDTO(HealthRecord healthRecord) {
+    private static HealthRecordResponseDTO.HealthRecordDetailDTO toHealthRecordDetailDTO(HealthRecord healthRecord, List<String> atypicalList) {
         MealAmountEnum mealAmount = healthRecord.getMealAmount();
         FecesStatusEnum fecesStatus = healthRecord.getFecesStatus();
         FecesColorStatusEnum fecesColor = healthRecord.getFecesColorStatus();
         HealthStatusEnum healthStatus = healthRecord.getHealthStatus();
 
-        // AtypicalSymptom (List<Enum>) -> List<String> (한글) 변환 예시
-        var atypicalList = healthRecord.getAtypicalSymptom() == null
-                ? Collections.<String>emptyList()
-                : healthRecord.getAtypicalSymptom().stream()
-                .map(AtypicalSymptomEnum::getDescription) // 예: COUGH -> "기침"
-                .collect(Collectors.toList());
 
         return HealthRecordResponseDTO.HealthRecordDetailDTO.builder()
                 .recordDate(healthRecord.getRecordDate().toString())

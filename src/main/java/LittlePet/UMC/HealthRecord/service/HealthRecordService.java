@@ -88,6 +88,7 @@ public class HealthRecordService {
                                 .fecesColorStatus(newRecord.getFecesColorStatus())
                                 .healthStatus(newRecord.getHealthStatus())
                                 .atypicalSymptom(newRecord.getAtypicalSymptom())
+                                .otherSymptom(newRecord.getOtherSymptom())
                                 .diagnosisName(newRecord.getDiagnosisName())
                                 .prescription(newRecord.getPrescription())
                                 .userPet(newRecord.getUserPet())

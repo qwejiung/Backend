@@ -29,6 +29,7 @@ public class HealthRecordRequestDTO {
     private String fecesColorStatus;
     @NotEmpty
     private List<String> atypicalSymptom; // 특이 증상
+    private String otherSymptom; // 사용자가 입력한 "기타" 증상 추가
     @NotBlank
     private String healthStatus;
     @NotNull(message = "병원 내진 여부는 필수 입력값입니다.") // 🚨 추가됨

@@ -49,6 +49,8 @@ public class HealthRecord extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private List<AtypicalSymptomEnum> atypicalSymptom;
 
+    private String otherSymptom; // "기타" 증상 필드 추가
+
     private String diagnosisName;
 
     private String prescription;
