@@ -15,18 +15,25 @@ public class PetCategory extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 50)
     private String species;
 
+    @Column(columnDefinition = "TEXT")
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String features;
 
+    @Column(columnDefinition = "TEXT")
     private String foodInfo;
 
+    @Column(columnDefinition = "TEXT")
     private String environment;
 
+    @Column(columnDefinition = "TEXT")
     private String playMethods;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT",nullable = false)
     private String featureImagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
