@@ -27,8 +27,7 @@ public class HealthRecordResponseDTO {
         private String fecesStatus;
         private String fecesColorStatus;
         private String healthStatus;
-        private List<String> atypicalSymptom;
-        //private String otherSymptom; // 사용자가 입력한 "기타" 증상 추가
+        private String atypicalSymptom;
         private String diagnosisName;
         private String prescription;
     }
