@@ -7,12 +7,13 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum AtypicalSymptomEnum {
+    POOR_APPETITE("POOR_APPETITE","식욕 부진"),
     LOSS_OF_APPETITE("LOSS_OF_APPETITE", "기력 저하"),
     MOUTH_ODOR("MOUTH_ODOR", "구토"),      // (주의: MOUTH_ODOR = '입 냄새'가 일반적이나, 코드상 '구토'로 되어 있음)
     COUGH("COUGH", "기침"),
     ABNORMAL_BEHAVIOR("ABNORMAL_BEHAVIOR", "이상 행동"),
     HAIR_LOSS("HAIR_LOSS", "털 빠짐"),
-    DECREASED_BODY_TEMP("DECREASED_BODY_TEMP", "체온 저하"),
+    DECREASED_BODY_TEMP("DECREASED_BODY_TEMP", "체온 감소"),
     INCREASED_BODY_TEMP("INCREASED_BODY_TEMP", "체온 상승"),
     DISCHARGE("DISCHARGE", "분비물"),
     OTHER("OTHER", "기타");
