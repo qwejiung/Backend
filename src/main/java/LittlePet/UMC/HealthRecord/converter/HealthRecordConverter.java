@@ -19,19 +19,24 @@ public class HealthRecordConverter {
      */
         public static HealthRecord toHealthRecordEntity(HealthRecordRequestDTO request, UserPet pet) {
 
-            List<AtypicalSymptomEnum> atypicalSymptomEnums = request.getAtypicalSymptom() == null
-                    ? Collections.emptyList()
-                    : request.getAtypicalSymptom().stream()
-                    .filter(description -> !description.startsWith("기타")) // "기타"로 시작하는 값 제외
-                    .map(AtypicalSymptomEnum::fromDescription) // Enum으로 변환
-                    .collect(Collectors.toList());
+            AtypicalSymptomEnum selectedSymptom = null;
+            String otherSymptom = null;
 
-            // "기타" 증상인지 확인하고 저장
-            String otherSymptom = request.getAtypicalSymptom().stream()
-                    .filter(description -> description.startsWith("기타")) // "기타"로 시작하는 값만 필터링
-                    .map(description -> description.replace("기타: ", "")) // "기타: " 제거
-                    .findFirst()
-                    .orElse(null); // 값이 없으면 null
+            // 🚨 `atypicalSymptom`이 NULL인지 체크 후 처리
+            if (request.getAtypicalSymptom() != null && request.getAtypicalSymptom().equals("기타")) {
+                // "기타"를 선택한 경우
+                if (request.getOtherSymptom() == null || request.getOtherSymptom().trim().isEmpty()) {
+                    throw new IllegalArgumentException("기타 증상을 선택했지만, 증상 내용을 입력하지 않았습니다.");
+                }
+                otherSymptom = request.getOtherSymptom();
+            } else if (request.getAtypicalSymptom() != null) {
+                try {
+                    // 🚨 Enum 변환 예외 처리
+                    selectedSymptom = AtypicalSymptomEnum.fromDescription(request.getAtypicalSymptom());
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("유효하지 않은 atypicalSymptom 값입니다: " + request.getAtypicalSymptom());
+                }
+            }
 
 
             return HealthRecord.builder()
@@ -41,7 +46,7 @@ public class HealthRecordConverter {
                     .fecesStatus(FecesStatusEnum.fromDescription(request.getFecesStatus().toUpperCase()))
                     .fecesColorStatus(FecesColorStatusEnum.fromDescription(request.getFecesColorStatus().toUpperCase()))
                     .healthStatus(HealthStatusEnum.fromDescription(request.getHealthStatus()))
-                    .atypicalSymptom(atypicalSymptomEnums)
+                    .atypicalSymptom(selectedSymptom)
                     .otherSymptom(otherSymptom)
                     .diagnosisName(request.getDiagnosisName())
                     .prescription(request.getPrescription())
@@ -60,16 +65,9 @@ public class HealthRecordConverter {
      */
     public static HealthRecordResponseDTO toHealthRecordResponseDTO(UserPet pet, String recentUpdate, HealthRecord latestRecord) {
 
-        List<String> atypicalList = latestRecord.getAtypicalSymptom() == null
-                ? Collections.emptyList()
-                : latestRecord.getAtypicalSymptom().stream()
-                .map(AtypicalSymptomEnum::getDescription)
-                .collect(Collectors.toList());
-
-        // "기타" 증상이 있으면 리스트에 추가
-        if (latestRecord.getOtherSymptom() != null && !latestRecord.getOtherSymptom().isEmpty()) {
-            atypicalList.add("기타: " + latestRecord.getOtherSymptom());
-        }
+        String atypicalSymptom = latestRecord.getAtypicalSymptom() != null
+                ? latestRecord.getAtypicalSymptom().getDescription() // 🚨 Enum 값 변환
+                : (latestRecord.getOtherSymptom() != null ? "기타: " + latestRecord.getOtherSymptom() : null); // 🚨 기타 입력 값이 있으면 추가
 
         return HealthRecordResponseDTO.builder()
                 .petName(pet.getName()) // 반려동물 이름
@@ -78,7 +76,7 @@ public class HealthRecordConverter {
                 .profilePhoto(pet.getProfilePhoto()) // 반려동물 프로필 사진
                 .birthDay(pet.getBirthDay() != null ? pet.getBirthDay().toString() : null) // 반려동물 생년월일
                 .recentUpdate(recentUpdate) // 최근 업데이트 정보
-                .latestRecord(latestRecord != null ? toHealthRecordDetailDTO(latestRecord, atypicalList) : null) // 최신 건강 기록 정보
+                .latestRecord(latestRecord != null ? toHealthRecordDetailDTO(latestRecord, atypicalSymptom) : null) // 최신 건강 기록 정보
                 .build();
     }
 
@@ -88,7 +86,7 @@ public class HealthRecordConverter {
      * @param healthRecord HealthRecord 객체
      * @return HealthRecordDetailDTO
      */
-    private static HealthRecordResponseDTO.HealthRecordDetailDTO toHealthRecordDetailDTO(HealthRecord healthRecord, List<String> atypicalList) {
+    private static HealthRecordResponseDTO.HealthRecordDetailDTO toHealthRecordDetailDTO(HealthRecord healthRecord, String atypicalSymptom) {
         MealAmountEnum mealAmount = healthRecord.getMealAmount();
         FecesStatusEnum fecesStatus = healthRecord.getFecesStatus();
         FecesColorStatusEnum fecesColor = healthRecord.getFecesColorStatus();
@@ -103,8 +101,7 @@ public class HealthRecordConverter {
                 .fecesStatus(fecesStatus != null ? fecesStatus.getDescription() : null)
                 .fecesColorStatus(fecesColor != null ? fecesColor.getDescription() : null)
                 .healthStatus(healthStatus != null ? healthStatus.getDescription() : null)
-                // 여러 증상이면 DTO 필드에도 List<String>으로 만들어 두시면 됩니다.
-                .atypicalSymptom(atypicalList)
+                .atypicalSymptom(atypicalSymptom)
                 .diagnosisName(healthRecord.getDiagnosisName())
                 .prescription(healthRecord.getPrescription())
                 .build();
