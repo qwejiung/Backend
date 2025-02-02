@@ -10,6 +10,4 @@ public class PostContentForm {
 
     @NotBlank
     private String content;
-    private int sequence;
-    private String mediaType;
 }

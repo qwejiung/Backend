@@ -2,9 +2,16 @@ package LittlePet.UMC.community.service;
 
 import LittlePet.UMC.SmallPet.repository.PetCategoryRepository;
 import LittlePet.UMC.User.repository.UserRepository;
+import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
+import LittlePet.UMC.apiPayload.exception.handler.PetCategoryHandler;
+import LittlePet.UMC.apiPayload.exception.handler.PostCategoryHandler;
+import LittlePet.UMC.apiPayload.exception.handler.PostHandler;
+import LittlePet.UMC.apiPayload.exception.handler.UserHandler;
 import LittlePet.UMC.community.dto.PostForm;
 import LittlePet.UMC.community.repository.PostCategoryRepository;
 import LittlePet.UMC.community.repository.PostRepository;
+import LittlePet.UMC.domain.enums.RoleStatus;
+import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.postEntity.Post;
@@ -29,25 +36,24 @@ public class PostService {
     private final PetCategoryRepository petCategoryRepository;
 
     @Transactional //위에서 readOnly해서 따로 해줘야 저장됨 : 디폴트가 false
-    public Post createPost(PostForm postForm, Long userId) {
+    public Post createPost(PostForm postForm, Long userId, String url) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
 
-        PetCategory petCategory = petCategoryRepository.findBySpecies(postForm.getSmallPetCategory())
-                .orElseThrow(() -> new IllegalArgumentException("해당 동물이 존재하지 않습니다."));
+        PetCategory petCategory = petCategoryRepository.findFirstBySpecies(postForm.getSmallPetCategory())
+                .orElseThrow(() ->  new PetCategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
 
-        PostCategory postCategory = postCategoryRepository.findByCategory(postForm.getPostCategory())
-                .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
-
+        PostCategory postCategory = postCategoryRepository.findFirstByCategory(postForm.getPostCategory())
+                .orElseThrow(() -> new PostCategoryHandler(ErrorStatus.POST_CATEGORY_NOT_FOUND));
+        //url은 종류가 image로 들어가면서 저장하면될듯?
 
         Post post = Post.createPost(postForm.getTitle(),0l,user,postCategory,petCategory);
 
         List<PostContent> contents = postForm.getContents().stream()
                 .map(contentForm -> PostContent.createPostContent(
-                        contentForm.getMediaType(),
                         contentForm.getContent(),
-                        contentForm.getSequence(),
+                        url,
                         post))
                 .collect(Collectors.toList());
 
@@ -58,33 +64,33 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long postId, PostForm postForm) {
+    public Post updatePost(Long postId, PostForm postForm,String url) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
-        if (postForm.getTitle() != null && !postForm.getTitle().isEmpty()) {
+        if (postForm.getTitle() != null && !postForm.getTitle().isEmpty() && !postForm.getTitle().equals("string")) {
             post.setTitle(postForm.getTitle());
         }
 
-        if (postForm.getPostCategory() != null) {
-            PostCategory postCategory = postCategoryRepository.findByCategory(postForm.getPostCategory())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 카테고리가 존재하지 않습니다."));
+        if (postForm.getPostCategory() != null && !postForm.getPostCategory().equals("string")) {
+            PostCategory postCategory = postCategoryRepository.findFirstByCategory(postForm.getPostCategory())
+                    .orElseThrow(() -> new PostCategoryHandler(ErrorStatus.POST_CATEGORY_NOT_FOUND));
             post.setPostCategory(postCategory);
 
         }
 
-        if (postForm.getSmallPetCategory() != null) {
-            PetCategory petCategory = petCategoryRepository.findBySpecies(postForm.getSmallPetCategory())
-                    .orElseThrow(() -> new IllegalArgumentException("해당 동물이 존재하지 않습니다."));
+        if (postForm.getSmallPetCategory() != null && !postForm.getSmallPetCategory().equals("string")) {
+            PetCategory petCategory = petCategoryRepository.findFirstBySpecies(postForm.getSmallPetCategory())
+                    .orElseThrow(() -> new PetCategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
             post.setPetBigCategory(petCategory.getPetBigCategory());
         }
 
-        if (postForm.getContents() != null && !postForm.getContents().isEmpty()) {
+        if (postForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
+            post.resetSequenceCounter();
             List<PostContent> contents = postForm.getContents().stream()
                     .map(contentForm -> PostContent.createPostContent(
-                            contentForm.getMediaType(),
                             contentForm.getContent(),
-                            contentForm.getSequence(),
+                            url,
                             post))
                     .collect(Collectors.toList());
 
@@ -95,10 +101,10 @@ public class PostService {
         return post;
     }
 
-
+    @Transactional
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post not found"));
+                .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
         postRepository.delete(post);
     }
 }

@@ -22,6 +22,7 @@ import java.util.List;
 @Entity
 @ToString
 public class Post extends BaseTimeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -56,6 +57,9 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostClipping> postClippingList= new ArrayList<>();
 
+    @Transient // DB에는 저장되지 않음
+    private static int sequenceCounter = 1;
+
     public static Post createPost(String title, long views, User user, PostCategory postCategory, PetCategory petCategory) {
         Post post = new Post();
         post.setTitle(title);
@@ -71,5 +75,13 @@ public class Post extends BaseTimeEntity {
         for (PostContent content : contents) {
             this.postcontentList.add(content);
         }
+    }
+
+    public Integer getSequenceCounter() {
+        return sequenceCounter++;
+    }
+
+    public void resetSequenceCounter() {
+        sequenceCounter = 1;
     }
 }

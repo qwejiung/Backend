@@ -39,4 +39,9 @@ public class PetCategory extends BaseTimeEntity {
         this.species = species;
     }
 
+    public PetCategory(String species, String featureImagePath, PetBigCategory petBigCategory) {
+        this.species = species;
+        this.featureImagePath = featureImagePath;
+        this.petBigCategory = petBigCategory;
+    }
 }

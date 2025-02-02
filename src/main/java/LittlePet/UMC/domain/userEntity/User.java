@@ -103,5 +103,9 @@ public class User extends BaseTimeEntity {
 
     }
 
-
+    public User(String socialId, SocialProviderEnum socialProvider, RoleStatus role) {
+        this.socialId = socialId;
+        this.socialProvider = socialProvider;
+        this.role = role;
+    }
 }
