@@ -1,5 +1,4 @@
 spring:
-<<<<<<< Updated upstream
   profiles:
     active: local
 springdoc:
