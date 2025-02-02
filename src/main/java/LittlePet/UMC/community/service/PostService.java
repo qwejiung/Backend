@@ -9,7 +9,7 @@ import LittlePet.UMC.apiPayload.exception.handler.PostHandler;
 import LittlePet.UMC.apiPayload.exception.handler.UserHandler;
 import LittlePet.UMC.community.dto.PostForm;
 import LittlePet.UMC.community.repository.PostCategoryRepository;
-import LittlePet.UMC.community.repository.PostRepository;
+import LittlePet.UMC.community.repository.postRepository.PostRepository;
 import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
