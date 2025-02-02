@@ -1,15 +1,20 @@
 package LittlePet.UMC.User.controller;
 
 import LittlePet.UMC.User.dto.PetProfileRequest.PetProfileRequestDTO;
+import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileAllResponseDTO;
 import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileResponseDTO;
 import LittlePet.UMC.User.service.PetProfileService;
 import LittlePet.UMC.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users/{userId}/pets")
@@ -83,5 +88,40 @@ public class PetProfileController {
     ) {
         petProfileService.deletePetProfile(userId, petId);
         return ApiResponse.onSuccess("반려동물 프로필이 성공적으로 삭제되었습니다.");
+    }
+
+    @Operation(
+            summary = "사용자별 반려동물 목록 조회",
+            description = "특정 userId에 대해 등록된 모든 반려동물 정보를 조회합니다."
+    )
+    @ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "반려동물 목록 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = PetProfileAllResponseDTO.class)
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "해당 사용자가 존재하지 않음",
+                    content = @Content
+            )
+    })
+    @GetMapping("/All")
+    public ApiResponse<List<PetProfileAllResponseDTO>> getUserPets(
+            @Parameter(
+                    name = "userId",
+                    description = "반려동물을 조회할 사용자 ID",
+                    example = "1"
+            )
+            @PathVariable Long userId
+    ) {
+        // Service 호출 -> 해당 userId에 대한 반려동물 리스트를 가져옴
+        List<PetProfileAllResponseDTO> petList = petProfileService.getPetsByUserId(userId);
+
+        // ApiResponse로 감싸서 성공 응답
+        return ApiResponse.onSuccess(petList);
     }
 }

@@ -55,4 +55,5 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostClipping> postClippingList= new ArrayList<>();
 
+
 }

@@ -1,10 +1,10 @@
 package LittlePet.UMC.User.service;
 
-import LittlePet.UMC.SmallPet.repository.SmallPetRepository;
 import LittlePet.UMC.User.converter.PetProfileConverter;
 import LittlePet.UMC.User.dto.PetProfileRequest.PetProfileRequestDTO;
+import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileAllResponseDTO;
 import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileResponseDTO;
-import LittlePet.UMC.User.repository.PetCategoryRepository;
+import LittlePet.UMC.User.repository.PetCategoryProfileRepository;
 import LittlePet.UMC.User.repository.UserPetRepository;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.domain.enums.Gender;
@@ -16,13 +16,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class PetProfileService {
 
     private final UserRepository userRepository;
-    private final PetCategoryRepository petCategoryRepository;
+    private final PetCategoryProfileRepository petCategoryRepository;
     private final UserPetRepository userPetRepository;
 
     @Transactional
@@ -87,4 +89,15 @@ public class PetProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
         userPetRepository.delete(pet);
     }
+
+
+
+    public List<PetProfileAllResponseDTO> getPetsByUserId(Long userId){
+        List<UserPet> userPets = userPetRepository.findByUserId(userId);
+
+        return userPets.stream()
+                .map(PetProfileConverter::toPetHealthRecordResponseDTO)
+                .collect(Collectors.toList());
+    }
+
 }

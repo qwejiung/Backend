@@ -5,10 +5,7 @@ import LittlePet.UMC.HealthRecord.dto.HealthRecordRequestDTO;
 import LittlePet.UMC.HealthRecord.dto.HealthRecordResponseDTO;
 import LittlePet.UMC.HealthRecord.repository.HealthRecordRepository;
 import LittlePet.UMC.User.repository.UserPetRepository;
-import LittlePet.UMC.domain.enums.FecesColorStatusEnum;
-import LittlePet.UMC.domain.enums.FecesStatusEnum;
-import LittlePet.UMC.domain.enums.HealthStatusEnum;
-import LittlePet.UMC.domain.enums.MealAmountEnum;
+import LittlePet.UMC.domain.enums.*;
 import LittlePet.UMC.domain.petEntity.mapping.HealthRecord;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import jakarta.transaction.Transactional;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -65,36 +63,51 @@ public class HealthRecordService {
     /**
      * 새로운 건강 기록 등록 또는 수정
      */
+    @Transactional
     public HealthRecordResponseDTO createOrUpdateHealthRecord(Long petId, HealthRecordRequestDTO request) {
         UserPet pet = userPetRepository.findById(petId)
-                .orElseThrow(() -> new IllegalArgumentException("반려동물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
 
-        // 기존 기록 조회
-        Optional<HealthRecord> existingRecord = healthRecordRepository.findByUserPetAndRecordDate(pet, LocalDate.parse(request.getRecordDate()));
+        // 1) 새로 들어온 DTO -> Entity 변환(기본적으로는 "새 레코드"라고 가정)
+        HealthRecord newRecord = HealthRecordConverter.toHealthRecordEntity(request, pet);
 
-        // 빌더 패턴으로 새 객체 생성
-        HealthRecord updatedRecord = HealthRecord.builder()
-                .id(existingRecord.map(HealthRecord::getId).orElse(null)) // 기존 ID 유지
-                .recordDate(LocalDate.parse(request.getRecordDate()))
-                .weight(request.getWeight())
-                .mealAmount(MealAmountEnum.valueOf(request.getMealAmount().toUpperCase()))
-                .fecesStatus(FecesStatusEnum.valueOf(request.getFecesStatus().toUpperCase()))
-                .fecesColorStatus(FecesColorStatusEnum.valueOf(request.getFecesColorStatus().toUpperCase()))
-                .healthStatus(HealthStatusEnum.valueOf(request.getHealthStatus().toUpperCase()))
-                .abnormalSymptoms(request.getAbnormalSymptoms())
-                .diagnosisName(request.getDiagnosisName())
-                .prescription(request.getPrescription())
-                .userPet(pet)
-                .build();
+        // 2) 날짜로 기존 레코드 존재 여부 확인
+        LocalDate recordDate = LocalDate.parse(request.getRecordDate());
+        Optional<HealthRecord> existingRecord = healthRecordRepository.findByUserPetAndRecordDate(pet, recordDate);
 
-        // 저장
-        healthRecordRepository.save(updatedRecord);
+        // 3) 기존 레코드가 있으면 → 그 레코드 ID를 재사용하여 '업데이트용' 엔티티 빌드
+        HealthRecord finalRecord = existingRecord
+                .map(oldRecord ->
+                        // 빌더로 새 인스턴스를 만들지만, id만 oldRecord의 id를 사용
+                        HealthRecord.builder()
+                                .id(oldRecord.getId())                 // 기존 ID 유지
+                                .recordDate(newRecord.getRecordDate()) // 이하 필드는 새로 들어온 newRecord 값들 그대로
+                                .weight(newRecord.getWeight())
+                                .mealAmount(newRecord.getMealAmount())
+                                .fecesStatus(newRecord.getFecesStatus())
+                                .fecesColorStatus(newRecord.getFecesColorStatus())
+                                .healthStatus(newRecord.getHealthStatus())
+                                .atypicalSymptom(newRecord.getAtypicalSymptom())
+                                .otherSymptom(newRecord.getOtherSymptom())
+                                .diagnosisName(newRecord.getDiagnosisName())
+                                .prescription(newRecord.getPrescription())
+                                .userPet(newRecord.getUserPet())
+                                .build()
+                )
+                // 4) 기존 레코드가 없으면 그대로 newRecord 사용
+                .orElse(newRecord);
 
-        // 응답 반환
-        String recentUpdate = calculateRecentUpdate(updatedRecord.getRecordDate());
-        return HealthRecordConverter.toHealthRecordResponseDTO(pet, recentUpdate, updatedRecord);
+        // 5) 저장
+        HealthRecord savedRecord = healthRecordRepository.save(finalRecord);
+
+        // 6) 응답 DTO 변환
+        String recentUpdate = calculateRecentUpdate(savedRecord.getRecordDate());
+        return HealthRecordConverter.toHealthRecordResponseDTO(pet, recentUpdate, savedRecord);
     }
 
+    /**
+     * 해당 반려동물의 모든 기록 날짜 목록
+     */
     public List<LocalDate> getRecordDates(Long petId) {
         UserPet pet = userPetRepository.findById(petId)
                 .orElseThrow(() -> new IllegalArgumentException("반려동물을 찾을 수 없습니다."));

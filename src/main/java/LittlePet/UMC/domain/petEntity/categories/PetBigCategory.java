@@ -33,4 +33,8 @@ public class PetBigCategory extends BaseTimeEntity {
 //    private List<Post> postList= new ArrayList<>();
 
     // Getters and Setters
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }
