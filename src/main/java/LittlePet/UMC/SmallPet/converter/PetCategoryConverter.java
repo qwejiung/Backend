@@ -43,6 +43,7 @@ public class PetCategoryConverter {
                 .petBigCategory(petBigCategory)
                 .featureImagePath(imagePathUrl)
                 .playMethods(dto.getPlayMethods())
+                .title(dto.getTitle())
                 .build();
     }
 }
