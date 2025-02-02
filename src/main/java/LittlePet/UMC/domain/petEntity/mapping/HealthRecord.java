@@ -41,14 +41,11 @@ public class HealthRecord extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private HealthStatusEnum healthStatus;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(
-            name = "health_record_atypical_symptoms",  // 매핑될 테이블명
-            joinColumns = @JoinColumn(name = "health_record_id")
-    )
-    @Enumerated(EnumType.STRING)
-    private List<AtypicalSymptomEnum> atypicalSymptom;
 
+    @Enumerated(EnumType.STRING)
+    private AtypicalSymptomEnum atypicalSymptom;
+
+    @Column(nullable = true)
     private String otherSymptom; // "기타" 증상 필드 추가
 
     private String diagnosisName;

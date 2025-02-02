@@ -1,9 +1,7 @@
 package LittlePet.UMC.HealthRecord.dto;
 
 import LittlePet.UMC.HealthRecord.validator.annotation.ExistHospital;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,25 +13,37 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ExistHospital
 public class HealthRecordRequestDTO {
 
     private String recordDate; // 날짜 (YYYY-MM-DD)
+
     @NotNull(message = "몸무게는 필수 입력값입니다.")
     private Double weight;
-    @NotBlank
+
+    @NotBlank(message = "식사량은 필수 입력값입니다.")
     private String mealAmount;
-    @NotBlank
+
+    @NotBlank(message = "배변 상태는 필수 입력값입니다.")
     private String fecesStatus;
-    @NotBlank
+
+    @NotBlank(message = "배변 색상은 필수 입력값입니다.")
     private String fecesColorStatus;
-    @NotEmpty
-    private List<String> atypicalSymptom; // 특이 증상
-    private String otherSymptom; // 사용자가 입력한 "기타" 증상 추가
-    @NotBlank
+
+    private String atypicalSymptom; // 특이 증상 (기타일 경우 입력)
+
+    @Size(min = 1, max = 50, message = "특이 증상(기타)는 최소 1자 이상, 최대 50자 이하여야 합니다.")
+    @Pattern(regexp = "^[가-힣a-zA-Z0-9 ]{1,50}$", message = "특이 증상(기타)는 특수문자를 포함할 수 없습니다.") // 🚨 특수문자 제외
+    private String otherSymptom;
+
+    @NotBlank(message = "건강 상태는 필수 입력값입니다.")
     private String healthStatus;
-    @NotNull(message = "병원 내진 여부는 필수 입력값입니다.") // 🚨 추가됨
-    private Boolean hospitalVisit; // 병원 내진 여부
-    private String diagnosisName;  // 진단명
-    private String prescription;   // 검사 및 처방 내역
+
+    @NotNull(message = "병원 내진 여부는 필수 입력값입니다.")
+    private Boolean hospitalVisit;
+
+    @Size(min = 1, max = 20, message = "진단명은 최소 1자 이상, 최대 20자 이하여야 합니다.")
+    private String diagnosisName; // 🚨 특수문자 가능 → 별도 패턴 제한 없음
+
+    @Size(min = 1, max = 300, message = "처방 내용은 최소 1자 이상, 최대 300자 이하여야 합니다.")
+    private String prescription; // 🚨 특수문자 가능 → 별도 패턴 제한 없음
 }
