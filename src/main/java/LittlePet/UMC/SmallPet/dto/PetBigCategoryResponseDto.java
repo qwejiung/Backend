@@ -1,5 +1,6 @@
 package LittlePet.UMC.SmallPet.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,7 +16,11 @@ public class PetBigCategoryResponseDto {
         private Long id;
         private String categoryName;
         private List<PetCategoryResponseDto.PetCategoryDTO> petCategoryList = new ArrayList<>();
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
         private LocalDateTime createdAt;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
         private LocalDateTime updatedAt;
     }
 }
