@@ -95,10 +95,15 @@ jobs:
             # 🔹 기존 컨테이너 중지 및 삭제
             docker-compose down
 
+
+           # 🔹 기존 이미지 삭제 (캐시 문제 방지)
+            docker rmi -f $(docker images seojaejun/littlepetdocker -q)
+            
+            docker pull seojaejun/littlepetdocker:latest
+            
             # 🔹 사용하지 않는 네트워크 삭제
             docker network prune -f
-            
-            docker-compose pull
+          
 
             # 🔹 Docker Compose 실행 (컨테이너 전체 재배포)
             docker-compose up -d --build
