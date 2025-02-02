@@ -1,14 +1,12 @@
 package LittlePet.UMC.domain.petEntity.mapping;
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
-import LittlePet.UMC.domain.enums.FecesColorStatusEnum;
-import LittlePet.UMC.domain.enums.FecesStatusEnum;
-import LittlePet.UMC.domain.enums.HealthStatusEnum;
-import LittlePet.UMC.domain.enums.MealAmountEnum;
+import LittlePet.UMC.domain.enums.*;
 import LittlePet.UMC.domain.userEntity.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Builder
@@ -43,7 +41,15 @@ public class HealthRecord extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private HealthStatusEnum healthStatus;
 
-    private String abnormalSymptoms;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(
+            name = "health_record_atypical_symptoms",  // 매핑될 테이블명
+            joinColumns = @JoinColumn(name = "health_record_id")
+    )
+    @Enumerated(EnumType.STRING)
+    private List<AtypicalSymptomEnum> atypicalSymptom;
+
+    private String otherSymptom; // "기타" 증상 필드 추가
 
     private String diagnosisName;
 

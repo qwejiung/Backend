@@ -2,6 +2,7 @@ package LittlePet.UMC.apiPayload.code.status;
 
 import LittlePet.UMC.apiPayload.code.BaseErrorCode;
 import LittlePet.UMC.apiPayload.code.ErrorReasonDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,10 @@ public enum ErrorStatus implements BaseErrorCode {
     _NULL_VALUE(HttpStatus.BAD_REQUEST, "COMMON4002", "필수 값이 누락되었습니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON4011","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON4031", "접근 권한이 없습니다."),
+
+    HOSPITAL_VISIT_ERROR(HttpStatus.BAD_REQUEST, "HOSPITAL4001", "병원 내진 여부가 true일 경우 진단명과 처방 내역은 필수입니다."),
+    HOSPITAL_VISIT_NULL_ERROR(HttpStatus.BAD_REQUEST, "HOSPITAL4002", "병원 내진 여부가 false일 경우 진단명과 처방 내역을 입력할 수 없습니다."),
+
 
     // JWT token error
     TOKEN_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH4011", "토큰이 손상되었거나 유효하지 않은 값입니다."),
@@ -43,6 +48,7 @@ public enum ErrorStatus implements BaseErrorCode {
     PET_NOT_FOUND(HttpStatus.NOT_FOUND, "PET4041", "존재하지 않는 반려동물입니다."),
 
     // 카테고리 관련 에러
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "CATEGORY4041", "존재하지 않는 카테고리입니다."),
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "CATEGORY4003", "유효하지 않은 카테고리입니다."),
 
     // 테스트용

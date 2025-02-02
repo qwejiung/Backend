@@ -68,8 +68,17 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             response.addCookie(jwtCookie);
             System.out.println("[DEBUG] JWT cookie added: " + jwtCookie.getValue());
 
+            String setCookieHeader = response.getHeader("Set-Cookie");
+            // "Authorization=xxxx; Path=/; HttpOnly; Max-Age=86400"
+
+            setCookieHeader = setCookieHeader + "; SameSite=None";
+            response.setHeader("Set-Cookie", setCookieHeader);
+
+//            response.setHeader("Set-Cookie",
+//                    "Authorization=" + token + "; Path=/; HttpOnly; Secure; SameSite=None");
+
             // 클라이언트로 리다이렉트
-            response.sendRedirect("http://localhost:3000/");
+            response.sendRedirect("http://localhost:5173/");
         } catch (ExpiredJwtException e) {
             System.err.println("[ERROR] JWT expired. Refreshing token...");
             //handleExpiredJwt(response, authentication);
@@ -83,8 +92,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60 * 60 * 24); // 1일
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);// JavaScript에서 접근 금지
+        cookie.setSecure(false);// JavaScript에서 접근 금지
         cookie.setPath("/");
+//        cookie.setDomain("localhost"); // Domain 설정
+
         System.out.println("[DEBUG] Created cookie: " + key + " = " + value);// 모든 경로에서 쿠키 사용 가능
         return cookie;
     }
