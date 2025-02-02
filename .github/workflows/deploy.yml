@@ -81,7 +81,7 @@ jobs:
               sudo docker network create backend_my-network
             fi
 
-      # 9. EC2 서버에서 Docker Compose 실행 (이 단계가 핵심!)
+      # 9. EC2 서버에서 Docker Compose 실행 (최신 이미지 강제 적용)
       - name: Restart with Docker Compose
         uses: appleboy/ssh-action@master
         with:
@@ -95,15 +95,16 @@ jobs:
             # 🔹 기존 컨테이너 중지 및 삭제
             docker-compose down
 
+            # 🔹 기존 이미지 삭제 (기존 이미지가 있는 경우에만)
+            if [ "$(docker images -q seojaejun/littlepetdocker:latest)" ]; then
+              docker rmi -f $(docker images seojaejun/littlepetdocker -q)
+            fi
 
-           # 🔹 기존 이미지 삭제 (캐시 문제 방지)
-            docker rmi -f $(docker images seojaejun/littlepetdocker -q)
-            
+            # 🔹 최신 Docker 이미지 가져오기
             docker pull seojaejun/littlepetdocker:latest
-            
+
             # 🔹 사용하지 않는 네트워크 삭제
             docker network prune -f
-          
 
-            # 🔹 Docker Compose 실행 (컨테이너 전체 재배포)
+            # 🔹 최신 컨테이너 실행
             docker-compose up -d --build
