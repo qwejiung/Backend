@@ -28,4 +28,22 @@ public class PetCategoryReqeustDto {
         @NotNull(message = "상위 카테고리 ID(petBigCategoryId)는 필수로 입력해야 합니다.")
         private Long petBigCategoryId;
     }
+    @Getter
+    @Setter
+    public static class PetCategoryPuTDTO {
+        private String species;
+
+        private String title;
+
+        private String features;
+
+        private String foodInfo;
+
+        private String environment;
+
+        private String playMethods;
+
+        private Long petBigCategoryId;
+    }
+
 }

@@ -13,14 +13,12 @@ import LittlePet.UMC.apiPayload.exception.handler.PetBigCategoryHandler;
 import LittlePet.UMC.apiPayload.exception.handler.PetCategoryHandler;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
-import LittlePet.UMC.domain.postEntity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +48,7 @@ public class PetCategoryService {
 
         return newEntity;
     }
-//
+    //
     //PetBig Category 수정에 따른 service 로직 추가
     //validation을 따로 둘지 아니면 그냥 service에서 처리할지 고민.
     //일단 validation하는 게 두 곳에 존재하는게 보기 싫
@@ -109,7 +107,7 @@ public class PetCategoryService {
 
     @Transactional
     //유효성 검증을 service에서만 처리할 수 있도록 하였습니다.
-    public PetCategoryResponseDto.PetCategoryDetailDTO updatePetCategory(Long id, PetCategoryReqeustDto.PetCategoryWriteDTO request){
+    public PetCategoryResponseDto.PetCategoryDetailDTO updatePetCategory(Long id, PetCategoryReqeustDto.PetCategoryPuTDTO request,String url){
         PetCategory petCategory = this.isValidPetCategoryId(id);
 
         if(request.getFeatures() != null){
@@ -131,6 +129,9 @@ public class PetCategoryService {
         if(request.getFoodInfo() != null){
             petCategory.setFoodInfo(request.getFoodInfo());
         }
+        if(url != null){
+            petCategory.setFeatureImagePath(url);
+        }
 
         return PetCategoryConverter.toResponseDTO(petCategory);
     }
@@ -138,11 +139,5 @@ public class PetCategoryService {
     public void deletePetCategory(Long id){
         PetCategory petCategory = this.isValidPetCategoryId(id);
         petCategoryRepository.delete(petCategory);
-    }
-
-    public PetCategory findPetCategoryBySpecies(String species){
-        PetCategory petCategory = petCategoryRepository.findBySpecies(species)
-                .orElseThrow(() -> new IllegalArgumentException("PetCategory not found"));
-        return petCategory;
     }
 }
