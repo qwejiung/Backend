@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum MealAmountEnum {
-    LIGHT("LIGHT", "적음"),
-    NORMAL("NORMAL", "보통"),
-    HEAVY("HEAVY", "많음");
+    LIGHT("LIGHT", "감소"),
+    NORMAL("NORMAL", "정상"),
+    HEAVY("HEAVY", "증가");
 
     private final String code;        // 영문 코드
     private final String description; // 한글 설명
