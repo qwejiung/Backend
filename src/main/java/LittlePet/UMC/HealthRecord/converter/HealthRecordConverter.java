@@ -38,13 +38,20 @@ public class HealthRecordConverter {
                 }
             }
 
+            FecesStatusEnum fecesStatus = FecesStatusEnum.fromDescription(request.getFecesStatus().toUpperCase());
+            FecesColorStatusEnum fecesColorStatus = null;  // 기본적으로 null로 설정
+
+            if (fecesStatus != FecesStatusEnum.NOT_DEFECATED) {
+                fecesColorStatus = FecesColorStatusEnum.fromDescription(request.getFecesColorStatus().toUpperCase());
+            }
+
 
             return HealthRecord.builder()
                     .recordDate(LocalDate.parse(request.getRecordDate()))
                     .weight(request.getWeight())
                     .mealAmount(MealAmountEnum.fromDescription(request.getMealAmount().toUpperCase()))
-                    .fecesStatus(FecesStatusEnum.fromDescription(request.getFecesStatus().toUpperCase()))
-                    .fecesColorStatus(FecesColorStatusEnum.fromDescription(request.getFecesColorStatus().toUpperCase()))
+                    .fecesStatus(fecesStatus)
+                    .fecesColorStatus(fecesColorStatus)
                     .healthStatus(HealthStatusEnum.fromDescription(request.getHealthStatus()))
                     .atypicalSymptom(selectedSymptom)
                     .otherSymptom(otherSymptom)
