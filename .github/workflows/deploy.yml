@@ -53,8 +53,8 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
-          cache-from: type=registry
-          cache-to: type=inline
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/littlepetdocker:cache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/littlepetdocker:cache,mode=max
 
       - name: Update Code & Restart Docker on EC2
         uses: appleboy/ssh-action@master
