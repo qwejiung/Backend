@@ -12,18 +12,15 @@ jobs:
       contents: read
 
     steps:
-      # 1. 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. JDK 설정
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'corretto'
 
-      # 3. Gradle 캐싱
       - name: Gradle Caching
         uses: actions/cache@v3
         with:
@@ -34,25 +31,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # 4. Gradle 빌드
       - name: Build with Gradle
         run: |
           chmod +x gradlew
           ./gradlew clean build -x test
         shell: bash
 
-      # 5. DockerHub 로그인
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      # 6. Docker Buildx 설치
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2.9.1
 
-      # 7. Docker 이미지 빌드 및 푸시
       - name: Docker Image Build & Push
         uses: docker/build-push-action@v5
         with:
@@ -60,9 +53,10 @@ jobs:
           file: Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/littlepetdocker:latest
+          cache-from: type=registry
+          cache-to: type=inline
 
-      # 8. EC2 서버에서 최신 코드 가져오기 및 네트워크 설정
-      - name: Update Code & Set Network
+      - name: Update Code & Restart Docker on EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -72,39 +66,22 @@ jobs:
           script: |
             cd /home/ubuntu/Backend
 
-            # 🔹 최신 코드 가져오기
-            git reset --hard  # 기존 변경 사항 초기화
-            git pull origin main  # 최신 코드 가져오기
+            # 최신 코드 가져오기 (강제 리셋)
+            git reset --hard origin/main
+            git pull origin main
 
-            # 🔹 Docker 네트워크 생성 (이미 존재하면 생성 안 함)
-            if [ -z "$(sudo docker network ls --filter name=backend_my-network -q)" ]; then
-              sudo docker network create backend_my-network
-            fi
-
-      # 9. EC2 서버에서 Docker Compose 실행 (최신 이미지 강제 적용)
-      - name: Restart with Docker Compose
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          port: 22
-          script: |
-            cd /home/ubuntu/Backend
-
-            # 🔹 기존 컨테이너 중지 및 삭제
+            # 기존 컨테이너 중지 및 삭제
             docker-compose down
 
-            # 🔹 기존 이미지 삭제 (기존 이미지가 있는 경우에만)
-            if [ "$(docker images -q seojaejun/littlepetdocker:latest)" ]; then
-              docker rmi -f $(docker images seojaejun/littlepetdocker -q)
-            fi
+            # 기존 이미지 삭제
+            docker rmi -f $(docker images seojaejun/littlepetdocker -q) || true
 
-            # 🔹 최신 Docker 이미지 가져오기
+            # 최신 Docker 이미지 가져오기
             docker pull seojaejun/littlepetdocker:latest
 
-            # 🔹 사용하지 않는 네트워크 삭제
+            # 사용하지 않는 네트워크 삭제
             docker network prune -f
 
-            # 🔹 최신 컨테이너 실행
+            # 최신 Docker Compose 설정 적용
+            docker-compose pull
             docker-compose up -d --build
