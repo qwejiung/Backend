@@ -33,7 +33,7 @@ public class HealthRecord extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private FecesStatusEnum fecesStatus;
 
-    @Column(nullable = false)
+    
     @Enumerated(EnumType.STRING)
     private FecesColorStatusEnum fecesColorStatus;
 
