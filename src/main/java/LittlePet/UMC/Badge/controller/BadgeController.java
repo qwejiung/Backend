@@ -19,7 +19,7 @@ import java.util.List;
 //validation 및 errorstatus 추가해야됨
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/badge")
+@RequestMapping("/api/badge")
 @Validated
 public class BadgeController {
 
