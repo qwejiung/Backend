@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/community/{postId}/comments")
+@RequestMapping("/api/community/{postId}/comments")
 @RequiredArgsConstructor
 @Tag(name = "댓글 API", description = "게시물 댓글 및 대댓글 관리 API")
 public class CommentController {

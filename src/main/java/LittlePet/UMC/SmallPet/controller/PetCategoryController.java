@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/animal-categories")
+@RequestMapping("/api/animal-categories")
 @RequiredArgsConstructor
 public class PetCategoryController {
     private final PetCategoryService petCategoryService;
