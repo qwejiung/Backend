@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users/{userId}/pets")
+@RequestMapping("/api/users/{userId}/pets")
 @RequiredArgsConstructor
 public class PetProfileController {
 
