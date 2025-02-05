@@ -99,24 +99,8 @@ public class SecurityConfig {
                                 "/docs/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
-                                "/auth/login",
-                                "/auth/sign-in",
-                                "/quiz",
-                                "/pets/**",
-                                "/users/**",
-                                "/animal-categories",
-                                "/animal-categories/**",
-                                "/hospitals",
-                                "/hospitals/**",
-                                "/community",
-                                "/community/**",
-                                "/challenger",
-                                "/health/records",
-                                "/health/records/**",
-                                "/badge",
-                                "/badge/**",
                                 "/oauth2/authorization/**",
-                                "/post/**"
+                                "/api/**"
                         ).permitAll());
                         //.anyRequest().authenticated());
 
