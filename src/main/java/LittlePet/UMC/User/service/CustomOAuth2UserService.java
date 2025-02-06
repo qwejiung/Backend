@@ -54,7 +54,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             } else if ("naver".equals(registrationId)) {
                 oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
                 System.out.println("[DEBUG] NaverResponse: " + oAuth2Response);
-            } else {
+            } else if ("kakao".equals(registrationId)) {
+                oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
+                System.out.println("[DEBUG] KakaoResponse: " + oAuth2Response);
+            }
+            else {
                 throw new OAuth2AuthenticationException("Unsupported registration provider: " + registrationId);
             }
         } catch (Exception e) {
