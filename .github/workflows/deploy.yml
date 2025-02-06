@@ -79,6 +79,8 @@ jobs:
           script: |
             cd /home/ubuntu        # docker-compose.yml이 위치한 경로
             docker-compose stop spring-boot-app
+            
+            docker-compose rm -f spring-boot-app
 
             # 기존 이미지 삭제 (옵션)
             docker rmi -f $(docker images ${{ secrets.DOCKER_USERNAME }}/littlepet_backend:latest -q) || true
