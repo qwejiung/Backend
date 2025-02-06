@@ -61,7 +61,7 @@ jobs:
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v5
         with:
-          context: ./Backend             # 백엔드 소스 위치 (예시)
+          context: .             # 백엔드 소스 위치 (예시)
           file: Dockerfile               # Dockerfile 이름
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/littlepet_backend:latest
