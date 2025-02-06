@@ -1,5 +1,6 @@
 package LittlePet.UMC.User.service;
 
+import LittlePet.UMC.HealthRecord.repository.HealthRecordRepository;
 import LittlePet.UMC.User.converter.PetProfileConverter;
 import LittlePet.UMC.User.dto.PetProfileRequest.PetProfileRequestDTO;
 import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileAllResponseDTO;
@@ -26,6 +27,7 @@ public class PetProfileService {
     private final UserRepository userRepository;
     private final PetCategoryProfileRepository petCategoryRepository;
     private final UserPetRepository userPetRepository;
+    private final HealthRecordRepository healthRecordRepository;
 
     @Transactional
     public PetProfileResponseDTO addPetProfile(Long userId, PetProfileRequestDTO petRequestDTO) {
@@ -87,6 +89,9 @@ public class PetProfileService {
     public void deletePetProfile(Long userId, Long petId) {
         UserPet pet = userPetRepository.findByIdAndUserId(petId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
+
+        healthRecordRepository.deleteByUserPet(pet);
+
         userPetRepository.delete(pet);
     }
 
