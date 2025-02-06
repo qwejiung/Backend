@@ -55,7 +55,7 @@ public class HealthRecordController {
         return ApiResponse.onSuccess(response);
     }
 
-    @Operation(summary = "건강 기록 날짜 조회", description = "특정 반려동물의 건강 기록이 있는 날짜를 반환합니다....")
+    @Operation(summary = "건강 기록 날짜 조회", description = "특정 반려동물의 건강 기록이 있는 날짜를 반환합니다..")
     @GetMapping("/record-dates")
     public ApiResponse<List<LocalDate>> getRecordDates(@PathVariable Long petId) {
         List<LocalDate> recordDates = healthRecordService.getRecordDates(petId);
