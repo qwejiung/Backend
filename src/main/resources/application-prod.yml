@@ -41,6 +41,14 @@ spring:
             scope:
               - email
               - profile
+          kakao:
+            client-name: kakao
+            client-id: ${KAKAO_CLIENT_ID}
+            redirect-uri: https://umclittlepet.shop/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
@@ -52,6 +60,11 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 cloud:
   aws:
     credentials:
