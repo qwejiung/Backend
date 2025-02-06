@@ -1,5 +1,6 @@
 package LittlePet.UMC.HealthRecord.controller;
 
+import LittlePet.UMC.HealthRecord.dto.HealthRecordDateResponseDTO;
 import LittlePet.UMC.HealthRecord.dto.HealthRecordRequestDTO;
 import LittlePet.UMC.HealthRecord.dto.HealthRecordResponseDTO;
 import LittlePet.UMC.HealthRecord.service.HealthRecordService;
@@ -48,12 +49,12 @@ public class HealthRecordController {
      */
     @Operation(summary = "특정 날짜 건강 기록 조회", description = "특정 반려동물의 특정 날짜 또는 전체 건강 기록을 반환합니다.")
     @GetMapping
-    public ApiResponse<HealthRecordResponseDTO.HealthRecordDetailDTO> getHealthRecords(
+    public ApiResponse<HealthRecordDateResponseDTO> getHealthRecords(
             @PathVariable Long petId,
             @RequestParam(required = false) String localDate) {
         LocalDate date = localDate != null ? LocalDate.parse(localDate) : null;
-        HealthRecordResponseDTO response = healthRecordService.getHealthRecords(petId, date);
-        return ApiResponse.onSuccess(response.getLatestRecord());
+        HealthRecordDateResponseDTO response = healthRecordService.getHealthRecords(petId, date);
+        return ApiResponse.onSuccess(response);
     }
 
     /**
