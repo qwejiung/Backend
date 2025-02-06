@@ -64,11 +64,14 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu
+            cd /home/ubuntu/Backend
 
             # 최신 코드 가져오기 (강제 리셋)
             git reset --hard origin/main
             git pull origin main
+            
+            cd /home/ubuntu  # ✅ 다시 루트로 이동 (docker-compose 실행)
+
 
             # 기존 컨테이너 중지 및 삭제
             docker-compose stop spring-boot-app
@@ -78,8 +81,6 @@ jobs:
 
             # 최신 Docker 이미지 가져오기
             docker pull seojaejun/littlepetdocker:latest
-
-        
 
             # 최신 Docker Compose 설정 적용
             docker-compose pull seojaejun/littlepetdocker:latest
