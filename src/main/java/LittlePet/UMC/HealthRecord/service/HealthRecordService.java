@@ -60,6 +60,18 @@ public class HealthRecordService {
         return HealthRecordConverter.toHealthRecordResponseDTO(pet, recentUpdate, record.orElse(null));
     }
 
+    // ✅ 특정 날짜의 건강 기록 삭제
+    @Transactional
+    public void deleteHealthRecordByDate(Long petId, LocalDate recordDate) {
+        UserPet pet = userPetRepository.findById(petId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
+
+        HealthRecord record = healthRecordRepository.findByUserPetAndRecordDate(pet, recordDate)
+                .orElseThrow(() -> new IllegalArgumentException("해당 날짜의 건강 기록을 찾을 수 없습니다."));
+
+        healthRecordRepository.delete(record);
+    }
+
     /**
      * 새로운 건강 기록 등록 또는 수정
      */

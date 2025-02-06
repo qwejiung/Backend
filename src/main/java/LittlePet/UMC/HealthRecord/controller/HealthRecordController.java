@@ -31,6 +31,19 @@ public class HealthRecordController {
     }
 
     /**
+     * 특정 날짜 건강 기록 삭제
+     */
+    @Operation(summary = "특정 날짜 건강 기록 삭제", description = "특정 반려동물의 특정 날짜 건강 기록을 삭제합니다.")
+    @DeleteMapping
+    public ApiResponse<String> deleteHealthRecordByDate(
+            @PathVariable Long petId,
+            @RequestParam String localDate) {
+        LocalDate date = LocalDate.parse(localDate);
+        healthRecordService.deleteHealthRecordByDate(petId, date);
+        return ApiResponse.onSuccess(localDate + " 건강 기록이 삭제되었습니다.");
+    }
+
+    /**
      * 특정 날짜의 건강 기록 조회
      */
     @Operation(summary = "특정 날짜 건강 기록 조회", description = "특정 반려동물의 특정 날짜 또는 전체 건강 기록을 반환합니다.")
