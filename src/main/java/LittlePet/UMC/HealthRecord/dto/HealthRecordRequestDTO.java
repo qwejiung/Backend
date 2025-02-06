@@ -1,6 +1,7 @@
 package LittlePet.UMC.HealthRecord.dto;
 
 import LittlePet.UMC.HealthRecord.validator.annotation.ExistHospital;
+import LittlePet.UMC.HealthRecord.validator.annotation.ValidFecesColorStatus;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,7 @@ public class HealthRecordRequestDTO {
     @NotBlank(message = "배변 상태는 필수 입력값입니다.")
     private String fecesStatus;
 
-    @NotBlank(message = "배변 색상은 필수 입력값입니다.")
+    //@NotBlank(message = "배변 색상은 상태는 필수 입력값입니다.")
     private String fecesColorStatus;
 
     private String atypicalSymptom; // 특이 증상 (기타일 경우 입력)

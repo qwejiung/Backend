@@ -1,6 +1,7 @@
 package LittlePet.UMC.HealthRecord.service;
 
 import LittlePet.UMC.HealthRecord.converter.HealthRecordConverter;
+import LittlePet.UMC.HealthRecord.dto.HealthRecordDateResponseDTO;
 import LittlePet.UMC.HealthRecord.dto.HealthRecordRequestDTO;
 import LittlePet.UMC.HealthRecord.dto.HealthRecordResponseDTO;
 import LittlePet.UMC.HealthRecord.repository.HealthRecordRepository;
@@ -33,19 +34,46 @@ public class HealthRecordService {
         UserPet pet = userPetRepository.findById(petId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
 
+        //Optional<HealthRecord> latestRecord = healthRecordRepository.findFirstByUserPetOrderByRecordDateDesc(pet);
+
         Optional<HealthRecord> latestRecord = healthRecordRepository.findFirstByUserPetOrderByRecordDateDesc(pet);
+
+        // 이전 기록
+        Optional<HealthRecord> previousRecord = latestRecord.flatMap(record ->
+                healthRecordRepository.findFirstByUserPetAndRecordDateBeforeOrderByRecordDateDesc(pet, record.getRecordDate())
+        );
+
+        // 체중 변화 계산 (최신 체중 - 이전 체중)
+        Double weightDifference = null;
+        if (latestRecord.isPresent() && previousRecord.isPresent()) {
+            weightDifference = latestRecord.get().getWeight() - previousRecord.get().getWeight();
+        }
 
         String recentUpdate = latestRecord
                 .map(record -> calculateRecentUpdate(record.getRecordDate()))
                 .orElse("최근 업데이트 없음");
 
-        return HealthRecordConverter.toHealthRecordResponseDTO(pet, recentUpdate, latestRecord.orElse(null));
+        //return HealthRecordConverter.toHealthRecordResponseDTO(pet, recentUpdate, latestRecord.orElse(null));
+
+        return HealthRecordResponseDTO.builder()
+                .petName(pet.getName())
+                .profilePhoto(pet.getProfilePhoto())
+                .birthDay(pet.getBirthDay() != null ? pet.getBirthDay().toString() : null)
+                .gender(pet.getGender().toString())
+                .petCategory(pet.getPetCategory().getSpecies() != null ? pet.getPetCategory().getSpecies() : null)
+                .weightDifference(weightDifference)
+                .recentUpdate(recentUpdate)
+                .latestRecord(latestRecord.map(record -> HealthRecordConverter.toHealthRecordDetailDTO(record, record.getAtypicalSymptom().getDescription())).orElse(null))
+                .build();
+
     }
+
+
 
     /**
      * 특정 날짜 또는 모든 건강 기록 조회
      */
-    public HealthRecordResponseDTO getHealthRecords(Long petId, LocalDate localDate) {
+    public HealthRecordDateResponseDTO getHealthRecords(Long petId, LocalDate localDate) {
         UserPet pet = userPetRepository.findById(petId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
 
@@ -56,8 +84,22 @@ public class HealthRecordService {
         String recentUpdate = record
                 .map(r -> calculateRecentUpdate(r.getRecordDate()))
                 .orElse("최근 업데이트 없음");
+        if (record.isEmpty()) {
+            throw new IllegalArgumentException("해당 날짜의 건강 기록을 찾을 수 없습니다.");
+        }
 
-        return HealthRecordConverter.toHealthRecordResponseDTO(pet, recentUpdate, record.orElse(null));
+        // ✅ 최신 기록
+        HealthRecord latestRecord = record.get();
+
+        // ✅ 이전 기록 조회 (latestRecord보다 과거의 기록 중 가장 최신)
+        Optional<HealthRecord> previousRecord = healthRecordRepository
+                .findFirstByUserPetAndRecordDateBeforeOrderByRecordDateDesc(pet, latestRecord.getRecordDate());
+
+        // ✅ 체중 변화 계산 (최신 체중 - 이전 체중)
+        Double weightDifference = previousRecord.map(prev -> latestRecord.getWeight() - prev.getWeight()).orElse(null);
+
+        return HealthRecordConverter.toHealthRecordResponseDateDTO(pet, latestRecord, weightDifference);
+
     }
 
     // ✅ 특정 날짜의 건강 기록 삭제
