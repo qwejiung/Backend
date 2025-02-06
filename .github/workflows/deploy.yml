@@ -84,4 +84,4 @@ jobs:
 
             # 최신 Docker Compose 설정 적용
             docker-compose pull seojaejun/littlepetdocker:latest
-            docker-compose up -d --build spring-boot-app
+            docker-compose up -d spring-boot-app
