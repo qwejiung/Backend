@@ -43,6 +43,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
+      # **Buildx 설정에서 driver를 docker-container로 지정**
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver: docker-container
+          driver-opts: image=moby/buildkit:latest
+          install: true
+          use: true
 
         # 6) Docker 이미지 빌드 & Push
       - name: Build & Push Backend Image
