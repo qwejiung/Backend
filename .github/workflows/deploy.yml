@@ -71,7 +71,7 @@ jobs:
             git pull origin main
 
             # 기존 컨테이너 중지 및 삭제
-            docker-compose down
+            docker-compose stop spring-boot-app
 
             # 기존 이미지 삭제
             docker rmi -f $(docker images seojaejun/littlepetdocker -q) || true
@@ -79,9 +79,8 @@ jobs:
             # 최신 Docker 이미지 가져오기
             docker pull seojaejun/littlepetdocker:latest
 
-            # 사용하지 않는 네트워크 삭제
-            docker network prune -f
+        
 
             # 최신 Docker Compose 설정 적용
-            docker-compose pull
+            docker-compose pull seojaejun/littlepetdocker:latest
             docker-compose up -d --build spring-boot-app
