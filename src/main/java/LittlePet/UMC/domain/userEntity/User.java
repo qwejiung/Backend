@@ -20,7 +20,7 @@ import java.util.List;
 
 //유저 이름,성별,소셜로그인 등
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity

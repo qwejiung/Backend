@@ -1,5 +1,6 @@
 package LittlePet.UMC.User.controller;
 
+import LittlePet.UMC.S3Service;
 import LittlePet.UMC.User.dto.PetProfileRequest.PetProfileRequestDTO;
 import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileAllResponseDTO;
 import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileResponseDTO;
@@ -13,7 +14,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,6 +25,8 @@ import java.util.List;
 public class PetProfileController {
 
     private final PetProfileService petProfileService;
+    private final S3Service s3Service;  // S3Service 주입
+
 
     /**
      * 반려동물 프로필 등록 API
@@ -36,14 +41,30 @@ public class PetProfileController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음", content = @Content(mediaType = "application/json")),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청 데이터", content = @Content(mediaType = "application/json"))
     })
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     public ApiResponse<PetProfileResponseDTO> addPetProfile(
             @PathVariable Long userId,
-            @RequestBody @Valid PetProfileRequestDTO request
-    ) {
-        PetProfileResponseDTO response = petProfileService.addPetProfile(userId, request);
+            @RequestPart("petProfileRequest") @Valid PetProfileRequestDTO request,
+            @RequestPart(value = "profileImage", required = false) MultipartFile file
+    ) throws IOException {
+        // 파일이 있으면 S3에 업로드 후 URL을 요청 DTO에 반영
+        String imageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            imageUrl = s3Service.upload(file);
+
+        }
+        PetProfileResponseDTO response = petProfileService.addPetProfile(userId, request,imageUrl);
         return ApiResponse.onSuccess(response);
     }
+
+//    @PostMapping(consumes = {"multipart/form-data"})
+//    public ApiResponse<PetProfileResponseDTO> addPetProfile(
+//            @PathVariable Long userId,
+//            @RequestBody @Valid PetProfileRequestDTO request
+//    ) {
+//        PetProfileResponseDTO response = petProfileService.addPetProfile(userId, request);
+//        return ApiResponse.onSuccess(response);
+//    }
 
     /**
      * 반려동물 프로필 수정 API
@@ -59,13 +80,18 @@ public class PetProfileController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "사용자 또는 반려동물을 찾을 수 없음", content = @Content(mediaType = "application/json")),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청 데이터", content = @Content(mediaType = "application/json"))
     })
-    @PutMapping("/{petId}")
+    @PutMapping(value = "/{petId}", consumes = {"multipart/form-data"} )
     public ApiResponse<PetProfileResponseDTO> updatePetProfile(
             @PathVariable Long userId,
             @PathVariable Long petId,
-            @RequestBody @Valid PetProfileRequestDTO request
-    ) {
-        PetProfileResponseDTO response = petProfileService.updatePetProfile(userId, petId, request);
+            @RequestPart("petProfileRequest") @Valid PetProfileRequestDTO request,
+            @RequestPart(value = "profileImage", required = false) MultipartFile file
+    )throws IOException{
+        String imageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            imageUrl = s3Service.upload(file);
+        }
+        PetProfileResponseDTO response = petProfileService.updatePetProfile(userId, petId, request,imageUrl);
         return ApiResponse.onSuccess(response);
     }
 
