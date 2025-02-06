@@ -38,7 +38,6 @@ public class PetProfileConverter {
                 .name(petRequestDTO.getName())
                 .birthDay(LocalDate.parse(petRequestDTO.getBirthDay())) // String -> LocalDate 변환
                 .gender(Gender.valueOf(petRequestDTO.getGender().toUpperCase())) // Enum 변환
-                .profilePhoto(petRequestDTO.getProfilePhoto())
                 .user(user)
                 .petCategory(category)
                 .build();

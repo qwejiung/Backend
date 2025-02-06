@@ -20,4 +20,5 @@ public class UserProfileRequestDTO {
 
     @Size(max = 50, message = "자기소개는 최대 50자까지 가능합니다.")
     private String introduction;
+
 }
