@@ -1,15 +1,21 @@
 package LittlePet.UMC.User.controller;
 
 import LittlePet.UMC.S3Service;
+import LittlePet.UMC.User.dto.PetProfileRequest.PetProfileRequestDTO;
 import LittlePet.UMC.User.dto.UserRequest.UserProfileRequestDTO;
 import LittlePet.UMC.User.dto.UserResponse.UserProfileResponseDTO;
 import LittlePet.UMC.User.dto.UserResponse.UserUpdateProfileResponseDTO;
 import LittlePet.UMC.User.service.UserProfileService;
 import LittlePet.UMC.apiPayload.ApiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,14 +49,24 @@ public class UserProfileController {
     @PostMapping(value = "/{userId}",consumes = {"multipart/form-data"})
     public ApiResponse<UserUpdateProfileResponseDTO> updateProfile(
             @PathVariable Long userId,
-            @RequestPart("userProfileRequest") @Valid UserProfileRequestDTO request,
-            @RequestPart(value = "profileImage", required = false) MultipartFile file
+            @RequestPart(value = "request", required = true) String requestJson, // JSON 요청 문자열
+            @RequestPart(value = "file", required = false) MultipartFile file // 이미지 (선택)
     ) throws IOException {
-        String profileImageUrl = null;
-        if (file != null && !file.isEmpty()) {
-            profileImageUrl = s3Service.upload(file);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        UserProfileRequestDTO request;
+        try {
+            request = objectMapper.readValue(requestJson, UserProfileRequestDTO.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid JSON format: " + e.getMessage());
         }
-        UserUpdateProfileResponseDTO response = userProfileService.updateProfile(userId, request,profileImageUrl);
+
+        String ImageUrl = null;
+        if (file != null && !file.isEmpty()) {
+            ImageUrl = s3Service.upload(file);
+            System.out.println("Uploaded Image URL: " + ImageUrl);
+        }
+        UserUpdateProfileResponseDTO response = userProfileService.updateProfile(userId, request,ImageUrl);
         return ApiResponse.onSuccess(response);
     }
 

@@ -18,7 +18,7 @@ public class PetProfileConverter {
                 .birthDay(userPet.getBirthDay().toString())
                 .gender(userPet.getGender().toString())
                 .profilePhoto(userPet.getProfilePhoto())
-                .categoryName(userPet.getPetCategory().getSpecies()) // PetCategory 이름
+                .categorySpecies(userPet.getPetCategory().getSpecies()) // PetCategory 이름
                 .build();
     }
 

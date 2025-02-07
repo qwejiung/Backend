@@ -28,7 +28,7 @@ public class UserProfileService {
     }
 
     @Transactional
-    public UserUpdateProfileResponseDTO updateProfile(Long userId, UserProfileRequestDTO request,String profileImageUrl) {
+    public UserUpdateProfileResponseDTO updateProfile(Long userId, UserProfileRequestDTO request,String ImageUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -43,8 +43,12 @@ public class UserProfileService {
                 .name(request.getNickname())
                 .phone(request.getPhone())
                 .introduction(request.getIntroduction())
-                .profilePhoto(profileImageUrl != null ? profileImageUrl : user.getProfilePhoto())
+                .profilePhoto(user.getProfilePhoto())
                 .build();
+
+        userRepository.save(updatedUser);
+
+
 
         return UserProfileConverter.toUpdateResponse(updatedUser);
     }
