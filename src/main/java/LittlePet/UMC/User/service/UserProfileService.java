@@ -28,7 +28,7 @@ public class UserProfileService {
     }
 
     @Transactional
-    public UserUpdateProfileResponseDTO updateProfile(Long userId, UserProfileRequestDTO request) {
+    public UserUpdateProfileResponseDTO updateProfile(Long userId, UserProfileRequestDTO request,String profileImageUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -38,8 +38,14 @@ public class UserProfileService {
         }
 
         // 사용자 정보 업데이트
-        user.updateProfile(request.getNickname(), request.getPhone(), request.getIntroduction());
+        // toBuilder()를 사용해 기존 엔티티의 값을 유지하면서 업데이트할 필드만 변경
+        User updatedUser = user.toBuilder()
+                .name(request.getNickname())
+                .phone(request.getPhone())
+                .introduction(request.getIntroduction())
+                .profilePhoto(profileImageUrl != null ? profileImageUrl : user.getProfilePhoto())
+                .build();
 
-        return UserProfileConverter.toUpdateResponse(user);
+        return UserProfileConverter.toUpdateResponse(updatedUser);
     }
 }
