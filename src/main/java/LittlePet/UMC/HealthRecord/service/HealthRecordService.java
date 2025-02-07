@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Collections;
@@ -46,7 +48,7 @@ public class HealthRecordService {
         // 체중 변화 계산 (최신 체중 - 이전 체중)
         Double weightDifference = null;
         if (latestRecord.isPresent() && previousRecord.isPresent()) {
-            weightDifference = latestRecord.get().getWeight() - previousRecord.get().getWeight();
+            weightDifference = Math.round((latestRecord.get().getWeight() - previousRecord.get().getWeight()) * 10.0) / 10.0;
         }
 
         String recentUpdate = latestRecord
@@ -63,7 +65,7 @@ public class HealthRecordService {
                 .petCategory(pet.getPetCategory().getSpecies() != null ? pet.getPetCategory().getSpecies() : null)
                 .weightDifference(weightDifference)
                 .recentUpdate(recentUpdate)
-                .latestRecord(latestRecord.map(record -> HealthRecordConverter.toHealthRecordDetailDTO(record, record.getAtypicalSymptom().getDescription())).orElse(null))
+                .latestRecord(latestRecord.map(record -> HealthRecordConverter.toHealthRecordDetailDTO(record)).orElse(null))
                 .build();
 
     }
@@ -95,8 +97,12 @@ public class HealthRecordService {
         Optional<HealthRecord> previousRecord = healthRecordRepository
                 .findFirstByUserPetAndRecordDateBeforeOrderByRecordDateDesc(pet, latestRecord.getRecordDate());
 
-        // ✅ 체중 변화 계산 (최신 체중 - 이전 체중)
-        Double weightDifference = previousRecord.map(prev -> latestRecord.getWeight() - prev.getWeight()).orElse(null);
+        // ✅ 체중 변화 계산 (소수점 1자리까지 반올림 후 Double 타입 유지)
+        Double weightDifference = previousRecord
+                .map(prev -> BigDecimal.valueOf(latestRecord.getWeight() - prev.getWeight())
+                        .setScale(1, RoundingMode.HALF_UP) // 소수점 1자리까지 반올림
+                        .doubleValue()) // Double 타입으로 변환
+                .orElse(null);
 
         return HealthRecordConverter.toHealthRecordResponseDateDTO(pet, latestRecord, weightDifference);
 

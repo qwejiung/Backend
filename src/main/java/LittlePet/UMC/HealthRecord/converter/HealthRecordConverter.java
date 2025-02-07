@@ -80,26 +80,6 @@ public class HealthRecordConverter {
      */
     public static HealthRecordResponseDTO toHealthRecordResponseDTO(UserPet pet, String recentUpdate, HealthRecord latestRecord) {
 
-        String atypicalSymptom = null;
-//        String atypicalSymptom = latestRecord.getAtypicalSymptom() != null
-//                ? latestRecord.getAtypicalSymptom().getDescription() // 🚨 Enum 값 변환
-//                : (latestRecord.getOtherSymptom() != null ? "기타: " + latestRecord.getOtherSymptom() : null); // 🚨 기타 입력 값이 있으면 추가
-
-        // 최신 기록이 있는 경우 처리
-        if (latestRecord != null) {
-            if (latestRecord.getAtypicalSymptom() != null) {
-                // Enum 값이 `OTHER`인 경우 "기타: <otherSymptom>" 처리
-                if (latestRecord.getAtypicalSymptom() == AtypicalSymptomEnum.OTHER && latestRecord.getOtherSymptom() != null) {
-                    atypicalSymptom = "기타: " + latestRecord.getOtherSymptom();
-                } else {
-                    // 기타가 아닌 경우 Enum의 description 값 사용
-                    atypicalSymptom = latestRecord.getAtypicalSymptom().getDescription();
-                }
-            } else if (latestRecord.getOtherSymptom() != null) {
-                // Enum 값이 없고, 기타 설명이 있는 경우 처리
-                atypicalSymptom = "기타: " + latestRecord.getOtherSymptom();
-            }
-        }
 
         return HealthRecordResponseDTO.builder()
                 .petName(pet.getName()) // 반려동물 이름
@@ -108,7 +88,7 @@ public class HealthRecordConverter {
                 .profilePhoto(pet.getProfilePhoto()) // 반려동물 프로필 사진
                 .birthDay(pet.getBirthDay() != null ? pet.getBirthDay().toString() : null) // 반려동물 생년월일
                 .recentUpdate(recentUpdate) // 최근 업데이트 정보
-                .latestRecord(latestRecord != null ? toHealthRecordDetailDTO(latestRecord, atypicalSymptom) : null) // 최신 건강 기록 정보
+                .latestRecord(latestRecord != null ? toHealthRecordDetailDTO(latestRecord) : null) // 최신 건강 기록 정보
                 .build();
     }
 
@@ -119,9 +99,24 @@ public class HealthRecordConverter {
      * @param healthRecord HealthRecord 객체
      * @return HealthRecordDetailDTO
      */
-    public static HealthRecordResponseDTO.HealthRecordDetailDTO toHealthRecordDetailDTO(HealthRecord healthRecord, String atypicalSymptom) {
+    public static HealthRecordResponseDTO.HealthRecordDetailDTO toHealthRecordDetailDTO(HealthRecord healthRecord) {
         MealAmountEnum mealAmount = healthRecord.getMealAmount();
         HealthStatusEnum healthStatus = healthRecord.getHealthStatus();
+
+        String atypicalSymptom = null;
+        String otherSymptom = healthRecord.getOtherSymptom(); // ✅ `otherSymptom` 유지
+
+        // ✅ `AtypicalSymptomEnum` 값 변환
+        if (healthRecord.getAtypicalSymptom() != null) {
+            if (healthRecord.getAtypicalSymptom() == AtypicalSymptomEnum.OTHER && otherSymptom != null) {
+                atypicalSymptom = "기타: " + otherSymptom;
+            } else {
+                atypicalSymptom = healthRecord.getAtypicalSymptom().getDescription();
+            }
+        } else if (otherSymptom != null) {
+            // ✅ `AtypicalSymptomEnum` 값이 없고, `otherSymptom`만 존재하는 경우
+            atypicalSymptom = "기타: " + otherSymptom;
+        }
 
 
         return HealthRecordResponseDTO.HealthRecordDetailDTO.builder()
@@ -131,7 +126,7 @@ public class HealthRecordConverter {
                 .mealAmount(mealAmount != null ? mealAmount.getDescription() : null)
                 .healthStatus(healthStatus != null ? healthStatus.getDescription() : null)
                 .atypicalSymptom(atypicalSymptom)
-                .otherSymptom(healthRecord.getOtherSymptom())
+                .otherSymptom(otherSymptom)
                 .diagnosisName(healthRecord.getDiagnosisName())
                 .prescription(healthRecord.getPrescription())
                 .build();
@@ -145,6 +140,7 @@ public class HealthRecordConverter {
         HealthStatusEnum healthStatus = healthRecord.getHealthStatus();
 
         String atypicalSymptom = null;
+        String otherSymptom = healthRecord.getOtherSymptom(); // ✅ otherSymptom을 따로 유지
 
         if (healthRecord.getAtypicalSymptom() != null) {
             if (healthRecord.getAtypicalSymptom() == AtypicalSymptomEnum.OTHER && healthRecord.getOtherSymptom() != null) {
@@ -152,8 +148,6 @@ public class HealthRecordConverter {
             } else {
                 atypicalSymptom = healthRecord.getAtypicalSymptom().getDescription();
             }
-        } else if (healthRecord.getOtherSymptom() != null) {
-            atypicalSymptom = "기타: " + healthRecord.getOtherSymptom();
         }
 
         String fecesCondition;
@@ -174,6 +168,7 @@ public class HealthRecordConverter {
                 .fecesStatusProfile(fecesCondition)
                 .healthStatus(healthStatus != null ? healthStatus.getDescription() : null)
                 .atypicalSymptom(atypicalSymptom)
+                .otherSymptom(otherSymptom)
                 .diagnosisName(healthRecord.getDiagnosisName())
                 .prescription(healthRecord.getPrescription())
                 .build();
