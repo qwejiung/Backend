@@ -28,20 +28,6 @@ public class PostController {
     private final PetCategoryService petCategoryService;
     private final S3Service s3Service;
 
-//    @Operation(summary = "커뮤니티 게시물 생성", description = "커뮤니티에 새로운 게시물을 생성할 수 있는 카테고리입니다")
-//    @PostMapping("/api/post/{user-id}")
-//    public ApiResponse<CreatePostResponseDTO> createPost(
-//            @RequestBody @Valid PostForm postForm,
-//            @PathVariable("user-id") Long userId)  {
-//
-//        String url = null;
-//        Post post = postService.createPost(postForm, userId, url);
-//
-//        CreatePostResponseDTO dto = new CreatePostResponseDTO(post);
-//
-//        return ApiResponse.onSuccess(dto);
-//    }
-
     @Operation(summary = "커뮤니티 게시물 생성", description = "커뮤니티에 새로운 게시물을 생성할 수 있는 카테고리입니다")
     @PostMapping(value = "/api/post/{user-id}", consumes = {"multipart/form-data"})
     public ApiResponse<CreatePostResponseDTO> createPost(
