@@ -16,6 +16,7 @@ public class HealthRecordDateResponseDTO {
     private String fecesStatusProfile;
     private String healthStatus;
     private String atypicalSymptom;
+    private String otherSymptom;
     private String diagnosisName;
     private String prescription;
     private Double weightDifference; // 체중 변화량 추가
