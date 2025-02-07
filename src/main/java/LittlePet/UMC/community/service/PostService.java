@@ -36,7 +36,7 @@ public class PostService {
     private final PetCategoryRepository petCategoryRepository;
 
     @Transactional //위에서 readOnly해서 따로 해줘야 저장됨 : 디폴트가 false
-    public Post createPost(PostForm postForm, Long userId, String url) {
+    public Post createPost(PostForm postForm, Long userId, List<String> urls) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
@@ -51,11 +51,14 @@ public class PostService {
         Post post = Post.createPost(postForm.getTitle(),0l,user,postCategory,petCategory);
 
         List<PostContent> contents = postForm.getContents().stream()
-                .map(contentForm -> PostContent.createPostContent(
+                .map(contentForm -> PostContent.createPostContentText(
                         contentForm.getContent(),
-                        url,
                         post))
                 .collect(Collectors.toList());
+
+        for (String url : urls) {
+            contents.add(PostContent.createPostContentPicture(url, post));
+        }
 
         post.addPostContent(contents);
 
@@ -64,7 +67,7 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long postId, PostForm postForm,String url) {
+    public Post updatePost(Long postId, PostForm postForm,List<String> urls) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
@@ -88,11 +91,14 @@ public class PostService {
         if (postForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
             post.resetSequenceCounter();
             List<PostContent> contents = postForm.getContents().stream()
-                    .map(contentForm -> PostContent.createPostContent(
+                    .map(contentForm -> PostContent.createPostContentText(
                             contentForm.getContent(),
-                            url,
                             post))
                     .collect(Collectors.toList());
+
+            for (String url : urls) {
+                contents.add(PostContent.createPostContentPicture(url, post));
+            }
 
             post.getPostcontentList().clear();
             post.addPostContent(contents);

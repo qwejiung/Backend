@@ -6,6 +6,9 @@ import LittlePet.UMC.domain.postEntity.Post;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -32,17 +35,26 @@ public class PostContent extends BaseTimeEntity {
     private Post post;
 
 
-    public static PostContent createPostContent(String content, String imageUrl, Post post) {
+    public static PostContent createPostContentText(String content, Post post) {
+
+        PostContent postContent = new PostContent();
+        postContent.setMediaType(MediaTypeEnum.Text);
+        postContent.setContent(content);
+        postContent.setSequence(post.getSequenceCounter());
+        postContent.setPost(post);
+
+        return postContent;
+
+    }
+
+    public static PostContent createPostContentPicture(String url, Post post) {
 
         PostContent postContent = new PostContent();
 
         // 이미지 URL이 존재하면 content 필드에 저장
-        if (imageUrl != null && !imageUrl.isEmpty()) {
+        if (url != null || url.isEmpty()) {
             postContent.setMediaType(MediaTypeEnum.Picture);
-            postContent.setContent(imageUrl);
-        } else {
-            postContent.setMediaType(MediaTypeEnum.Text);
-            postContent.setContent(content);
+            postContent.setContent(url);
         }
 
         postContent.setSequence(post.getSequenceCounter());
@@ -50,4 +62,5 @@ public class PostContent extends BaseTimeEntity {
 
         return postContent;
     }
+
 }
