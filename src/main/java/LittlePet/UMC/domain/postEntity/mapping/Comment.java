@@ -53,6 +53,7 @@ public class Comment extends BaseTimeEntity {
 
     // Getters, Setters, Constructors
 
+
     public long getTotalReplyCount() {
         if (replies == null || replies.isEmpty()) {
             return 0; // ✅ 대댓글이 없으면 0으로 반환 (자기 자신 포함 X)
