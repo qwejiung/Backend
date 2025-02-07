@@ -96,5 +96,4 @@ public class Post extends BaseTimeEntity {
 
         return totalCount;
     }
-
 }
