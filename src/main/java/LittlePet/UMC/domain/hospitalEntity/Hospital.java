@@ -32,6 +32,9 @@ public class Hospital extends BaseTimeEntity {
 
     private String closedDay;
 
+    @Column(nullable = false)
+    private String animalCategory;
+
 //    private String operationAt;
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
