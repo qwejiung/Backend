@@ -100,7 +100,7 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/oauth2/authorization/**",
-                                "/login/login/oauth2/code",
+                                "/login/oauth2/code",
                                 "/api/**"
                         ).permitAll());
                         //.anyRequest().authenticated());
