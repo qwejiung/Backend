@@ -116,7 +116,7 @@ public class SecurityConfig {
                                 "/badge",
                                 "/badge/**",
                                 "/oauth2/authorization/**",
-                                "/post/**"
+                                "/api/post/**"
                         ).permitAll());
                         //.anyRequest().authenticated());
 

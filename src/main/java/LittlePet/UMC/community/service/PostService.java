@@ -82,7 +82,7 @@ public class PostService {
         if (postForm.getSmallPetCategory() != null && !postForm.getSmallPetCategory().equals("string")) {
             PetCategory petCategory = petCategoryRepository.findFirstBySpecies(postForm.getSmallPetCategory())
                     .orElseThrow(() -> new PetCategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
-            post.setPetBigCategory(petCategory.getPetBigCategory());
+            post.setPetCategory(petCategory);
         }
 
         if (postForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
@@ -106,5 +106,13 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
         postRepository.delete(post);
+    }
+
+
+    public Post FindOnePost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
+        return post;
+
     }
 }

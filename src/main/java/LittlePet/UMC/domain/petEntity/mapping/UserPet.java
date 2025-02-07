@@ -2,6 +2,8 @@ package LittlePet.UMC.domain.petEntity.mapping;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
+import LittlePet.UMC.domain.postEntity.Post;
+import LittlePet.UMC.domain.postEntity.mapping.Comment;
 import LittlePet.UMC.domain.userEntity.User;
 import LittlePet.UMC.domain.enums.Gender;
 import jakarta.persistence.*;
@@ -48,6 +50,27 @@ public class UserPet extends BaseTimeEntity {
         this.name = name;
         this.birthDay = birthDay;
         this.gender = gender;
+    }
+
+    public static String returnGenderPetCategoryPost(Post post){
+
+        if (post.getUser().getUserPetList() == null || post.getUser().getUserPetList().isEmpty()) {
+            return null;
+        }
+
+        for (UserPet userPet : post.getUser().getUserPetList()) {
+            if(userPet.getPetCategory().getSpecies().equals(post.getPetCategory().getSpecies()))
+                return userPet.getGender().toString();
+        }
+        return null;
+    }
+
+    public static String returnGenderPetCategoryComment(Comment comment){
+
+        if (comment.getUser().getUserPetList() == null || comment.getUser().getUserPetList().isEmpty()) {
+            return null;
+        }
+        return comment.getUser().getUserPetList().get(0).getGender().toString();
     }
 }
 

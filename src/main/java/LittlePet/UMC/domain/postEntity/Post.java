@@ -13,7 +13,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Getter @Setter
 @Builder
@@ -42,8 +44,8 @@ public class Post extends BaseTimeEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_big_category", nullable = false)
-    private PetBigCategory petBigCategory;        //게시물의 성별이 필요한 것으로 판단 PetCategory -> UserPet
+    @JoinColumn(name = "pet_category_id", nullable = false)
+    private PetCategory petCategory;       //게시물의 성별이 필요한 것으로 판단 PetCategory -> UserPet
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> commentList= new ArrayList<>();
@@ -58,7 +60,7 @@ public class Post extends BaseTimeEntity {
     private List<PostClipping> postClippingList= new ArrayList<>();
 
     @Transient // DB에는 저장되지 않음
-    private static int sequenceCounter = 1;
+    private int sequenceCounter = 1;
 
     public static Post createPost(String title, long views, User user, PostCategory postCategory, PetCategory petCategory) {
         Post post = new Post();
@@ -66,7 +68,7 @@ public class Post extends BaseTimeEntity {
         post.setUser(user);
         post.setViews(views);
         post.setPostCategory(postCategory);
-        post.setPetBigCategory(petCategory.getPetBigCategory());
+        post.setPetCategory(petCategory);
 
         return post;
     }
@@ -84,4 +86,11 @@ public class Post extends BaseTimeEntity {
     public void resetSequenceCounter() {
         sequenceCounter = 1;
     }
+
+    public long getTotalCommentCount() {
+        return commentList.stream()
+                .mapToLong(Comment::getTotalReplyCount) // 각 댓글에서 대댓글까지 포함된 개수 계산
+                .sum();
+    }
+
 }

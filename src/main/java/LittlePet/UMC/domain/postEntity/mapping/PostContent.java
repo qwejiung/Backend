@@ -31,15 +31,6 @@ public class PostContent extends BaseTimeEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-//    public static PostContent createPostContent(String mediaType, String content, Integer sequence,String imageUrl Post post) {
-//        PostContent postContent = new PostContent();
-//        postContent.setMediaType(MediaTypeEnum.WhatMediaType(mediaType));
-//        postContent.setContent(content);
-//        postContent.setSequence(sequence);
-//        postContent.setPost(post);
-//
-//        return postContent;
-//    }
 
     public static PostContent createPostContent(String content, String imageUrl, Post post) {
 

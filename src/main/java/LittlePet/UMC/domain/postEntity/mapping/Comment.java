@@ -39,4 +39,16 @@ public class Comment extends BaseTimeEntity {
     private List<Comment> replies = new ArrayList<>();
 
     // Getters, Setters, Constructors
+
+    public long getTotalReplyCount() {
+        if (replies == null || replies.isEmpty()) {
+            return 1;
+        }
+
+        return 1 + replies.stream() // 자기 자신(1) + 대댓글 개수 합산
+                .mapToLong(Comment::getTotalReplyCount)
+                .sum();
+    }
+
+
 }
