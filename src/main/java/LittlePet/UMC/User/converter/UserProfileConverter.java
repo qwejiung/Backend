@@ -42,6 +42,7 @@ public class UserProfileConverter {
                     .userId(user.getId())
                     .nickname(user.getName())
                     .phone(user.getPhone())
+                    .profilePhoto(user.getProfilePhoto())
                     .introduction(user.getIntroduction())
                     .build();
         }

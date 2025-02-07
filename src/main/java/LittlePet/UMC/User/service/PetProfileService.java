@@ -36,7 +36,7 @@ public class PetProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
         // PetCategory 검증
-        PetCategory category = petCategoryRepository.findBySpecies(petRequestDTO.getCategoryName())
+        PetCategory category = petCategoryRepository.findBySpecies(petRequestDTO.getCategorySpecies())
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 반려동물 카테고리입니다."));
 
         // S3 업로드 결과 URL (imageUrl)을 프로필 사진으로 사용
@@ -63,15 +63,16 @@ public class PetProfileService {
      * 반려동물 프로필 수정
      */
     @Transactional
-    public PetProfileResponseDTO updatePetProfile(Long userId, Long petId, PetProfileRequestDTO petRequestDTO, String imageUrl) {
+    public PetProfileResponseDTO updatePetProfile(Long petId, PetProfileRequestDTO petRequestDTO, String imageUrl) {
         // 기존 반려동물 정보 조회
-        UserPet pet = userPetRepository.findByIdAndUserId(petId, userId)
+        UserPet pet = userPetRepository.findById(petId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
 
         UserPet updatedPet = pet.toBuilder()
                 .name(petRequestDTO.getName())
                 .birthDay(LocalDate.parse(petRequestDTO.getBirthDay()))
                 .gender(Gender.valueOf(petRequestDTO.getGender().toUpperCase()))
+                .petCategory(pet.getPetCategory())
                 .profilePhoto(imageUrl != null ? imageUrl : pet.getProfilePhoto())
                 .build();
 
@@ -84,8 +85,8 @@ public class PetProfileService {
     /**
      * 반려동물 단일 조회
      */
-    public PetProfileResponseDTO getPetProfile(Long userId, Long petId) {
-        UserPet pet = userPetRepository.findByIdAndUserId(petId, userId)
+    public PetProfileResponseDTO getPetProfile(Long petId) {
+        UserPet pet = userPetRepository.findById(petId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
         return PetProfileConverter.toPetResponseDTO(pet);
     }
@@ -94,8 +95,8 @@ public class PetProfileService {
      * 반려동물 삭제
      */
     @Transactional
-    public void deletePetProfile(Long userId, Long petId) {
-        UserPet pet = userPetRepository.findByIdAndUserId(petId, userId)
+    public void deletePetProfile(Long petId) {
+        UserPet pet = userPetRepository.findById(petId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
 
         healthRecordRepository.deleteByUserPet(pet);
