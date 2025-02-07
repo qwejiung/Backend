@@ -101,6 +101,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/oauth2/authorization/**",
                                 "/login/oauth2/code/**",
+                                "/login",
                                 "/api/**"
                         ).permitAll());
                         //.anyRequest().authenticated());
