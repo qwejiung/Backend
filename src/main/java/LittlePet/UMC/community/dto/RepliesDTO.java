@@ -16,16 +16,19 @@ public class RepliesDTO {
     private String name;
     private String content;
     private LocalDateTime createdTime;
-    private String species;
-    private String gender; //??
+    private List<String> userPets;
     private List<RepliesDTO> replies;
 
     public RepliesDTO(Comment comment) {
         this.name = comment.getUser().getName();
         this.content = comment.getContent();
         this.createdTime = comment.getCreatedAt();
-        this.species = PetCategory.returnSpeciesPetCategoryComment(comment);
-        this.gender = UserPet.returnGenderPetCategoryComment(comment);
+        this.userPets = Optional.ofNullable(comment.getUser().getUserPetList())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(userPet -> userPet.getPetCategory().getSpecies())
+                .distinct()
+                .collect(Collectors.toList());
         this.replies = Optional.ofNullable(comment.getReplies())
                 .orElse(Collections.emptyList()) // null이면 빈 리스트 반환
                 .stream()

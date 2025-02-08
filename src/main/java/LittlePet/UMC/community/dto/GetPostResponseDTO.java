@@ -25,8 +25,7 @@ import java.util.stream.Collectors;
 public class GetPostResponseDTO {
     private String userName;
     private String userBadge;
-    private String userPetCategory;
-    private String userPetGender;
+    private String PetCategory;
     private String postTitle;
     private LocalDateTime createTime;
     private Long views; //조회
@@ -40,8 +39,7 @@ public class GetPostResponseDTO {
 
         this.userBadge = post.getUser().userHaveBadge();
 
-        this.userPetCategory = PetCategory.returnSpeciesPetCategoryPost(post);
-        this.userPetGender = UserPet.returnGenderPetCategoryPost(post);
+        this.PetCategory =post.getPetCategory().getSpecies();
 
         this.postTitle = post.getTitle();
         this.createTime = post.getCreatedAt();
