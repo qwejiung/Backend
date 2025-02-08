@@ -32,6 +32,9 @@ public class Hospital extends BaseTimeEntity {
 
     private String closedDay;
 
+    @Column(nullable = false)
+    private String animalCategory;
+
 //    private String operationAt;
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
@@ -39,6 +42,10 @@ public class Hospital extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
     private List<HospitalPref> hospitalPrefList= new ArrayList<>();
+
+    public void addHospitalPref(HospitalPref hospitalPref){
+        this.hospitalPrefList.add(hospitalPref);
+    }
 
 //    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<HospitalAnimal> hospitalAnimalList = new ArrayList<>();
