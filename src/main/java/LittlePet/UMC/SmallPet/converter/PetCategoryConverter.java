@@ -36,13 +36,13 @@ public class PetCategoryConverter {
 
     public static PetCategory toEntity(PetCategoryReqeustDto.PetCategoryWriteDTO dto, PetBigCategory petBigCategory, String imagePathUrl ) {
         return PetCategory.builder()
-                .features(dto.getFeatures().replace("\n", "<br><br>"))
-                .environment(dto.getEnvironment().replace("\n", "<br><br>"))
-                .foodInfo(dto.getFoodInfo().replace("\n", "<br><br>"))
+                .features(dto.getFeatures().replace("\n", "<br>"))
+                .environment(dto.getEnvironment().replace("\n", "<br>"))
+                .foodInfo(dto.getFoodInfo().replace("\n", "<br>"))
                 .species(dto.getSpecies())
                 .petBigCategory(petBigCategory)
                 .featureImagePath(imagePathUrl)
-                .playMethods(dto.getPlayMethods().replace("\n", "<br><br>"))
+                .playMethods(dto.getPlayMethods().replace("\n", "<br>"))
                 .title(dto.getTitle())
                 .build();
     }
