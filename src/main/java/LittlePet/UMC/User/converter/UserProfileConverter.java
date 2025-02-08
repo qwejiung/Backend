@@ -11,14 +11,18 @@ public class UserProfileConverter {
     public static UserProfileResponseDTO toUserResponseDto(User user) {
         return UserProfileResponseDTO.builder()
                 .name(user.getName())
-                .role(user.getRole().toString())
-                .introduction(user.getIntroduction())
                 .profilePhoto(user.getProfilePhoto())
                 .postCount(user.getPostList().size())
                 .commentCount(user.getCommentList().size())
                 .likeCount(user.getPostlikeList().size())
                 .reviewCount(user.getHospitalStarRatingList().size())
                 .scrapCount(user.getPostClippingList().size())
+                .petProfile(user.getUserPetList().stream()
+                        .map(pet -> UserProfileResponseDTO.PetProfileDTO.builder()
+                                .petSpices(pet.getPetCategory().getSpecies()) // PetCategory에서 species 가져오기
+                                .imageUrl(pet.getPetCategory().g) // 프로필 이미지 추가
+                                .build())
+                        .collect(Collectors.toList()))
                 .userPet(user.getUserPetList().stream()
                         .map(pet -> UserProfileResponseDTO.PetInfoDTO.builder()
                                 .petId(pet.getId())

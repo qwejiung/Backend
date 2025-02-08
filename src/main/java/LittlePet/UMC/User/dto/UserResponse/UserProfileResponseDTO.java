@@ -18,8 +18,20 @@ public class UserProfileResponseDTO {
     private int likeCount;
     private int reviewCount;
     private int scrapCount;
+    private List<PetProfileDTO> petProfile;
     private List<PetInfoDTO> userPet;
     private List<BadgeInfoDTO> userBadge;
+
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class PetProfileDTO {
+        private String petSpices;
+        private String imageUrl;
+
+    }
 
     @Getter
     @NoArgsConstructor
