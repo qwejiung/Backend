@@ -49,7 +49,7 @@ public class Hospital extends BaseTimeEntity {
 //    private List<HospitalAnimal> hospitalAnimalList = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "hospital") //cascade 안 되도록
-//    private List<MedicalHistory> medicalHistoryList = new ArrayList<>();
+//    private List<MedicalHistory> megdicalHistoryList = new ArrayList<>();
 
     // Getters, Setters, Constructors
 }
