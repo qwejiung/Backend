@@ -47,6 +47,14 @@ spring:
             scope:
               - email
               - profile
+          kakao:
+            client-name: kakao
+            client-id: ${KAKAO_CLIENT_ID}
+            redirect-uri: https://umclittlepet.shop/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
 
 
         provider:
@@ -60,6 +68,11 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
 #local 테스트 시 AWS_ACCESS_KEY_ID와 QWS_SECRET_ACCESS_KEY를 다운 받아서 환경 변수 추가 후 테스트 부탁드립니다.
 

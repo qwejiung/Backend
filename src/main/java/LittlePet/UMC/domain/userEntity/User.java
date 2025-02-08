@@ -34,7 +34,6 @@ public class User extends BaseTimeEntity {
     @Column(length = 50)
     private String name;
 
-
     private String phone;
 
     @Enumerated(EnumType.STRING)
@@ -76,20 +75,20 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<HospitalPref> hospitalprefList = new ArrayList<>();
 
-    @PrePersist
-    public void setDefaultRole() {
-        if (this.role == null) {
-            this.role = RoleStatus.USER; // 기본값 설정
-        }
-    }
-    // Getters and Setters
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserPet> userPetList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserBadge> userBadgeList= new ArrayList<>();
 
+    // Getters and Setters
+
+    @PrePersist
+    public void setDefaultRole() {
+        if (this.role == null) {
+            this.role = RoleStatus.USER; // 기본값 설정
+        }
+    }
 
     @Override
     public String toString() {
@@ -107,5 +106,12 @@ public class User extends BaseTimeEntity {
         this.socialId = socialId;
         this.socialProvider = socialProvider;
         this.role = role;
+    }
+
+    public String userHaveBadge() {
+        if (userBadgeList == null || userBadgeList.isEmpty()) {
+            return null;
+        }
+        return userBadgeList.get(0).getBadge().getName();
     }
 }
