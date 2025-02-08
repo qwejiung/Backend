@@ -44,9 +44,6 @@ public class PetCategory extends BaseTimeEntity {
     @JoinColumn(name = "pet_big_category_id",nullable = false)
     private PetBigCategory petBigCategory;
 
-    @OneToMany(mappedBy = "petCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Hospital> hospitals = new ArrayList<>();
-
     // Getters and Setters
 
     public PetCategory(String species) {

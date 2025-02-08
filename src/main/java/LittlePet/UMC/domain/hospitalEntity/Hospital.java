@@ -33,10 +33,6 @@ public class Hospital extends BaseTimeEntity {
 
     private String closedDay;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "pet_category_id", nullable = true)
-    private PetCategory petCategory;
-
 //    private String operationAt;
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
