@@ -111,13 +111,13 @@ public class PetCategoryService {
         PetCategory petCategory = this.isValidPetCategoryId(id);
 
         if(request.getFeatures() != null){
-            petCategory.setFeatures(request.getFeatures().replace("\n", "<br><br>"));
+            petCategory.setFeatures(request.getFeatures().replace("\n", "<br>"));
         }
         if(request.getEnvironment() != null){
-            petCategory.setEnvironment(request.getEnvironment().replace("\n", "<br><br>"));
+            petCategory.setEnvironment(request.getEnvironment().replace("\n", "<br>"));
         }
         if(request.getPlayMethods() != null){
-            petCategory.setPlayMethods(request.getPlayMethods().replace("\n", "<br><br>"));
+            petCategory.setPlayMethods(request.getPlayMethods().replace("\n", "<br>"));
         }
         if(request.getSpecies() != null){
             petCategory.setSpecies(request.getSpecies());
@@ -127,7 +127,7 @@ public class PetCategoryService {
             petCategory.setPetBigCategory(petBigCategory);
         }
         if(request.getFoodInfo() != null){
-            petCategory.setFoodInfo(request.getFoodInfo().replace("\n", "<br><br>"));
+            petCategory.setFoodInfo(request.getFoodInfo().replace("\n", "<br>"));
         }
         if(url != null){
             petCategory.setFeatureImagePath(url);
