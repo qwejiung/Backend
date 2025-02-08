@@ -1,8 +1,12 @@
 package LittlePet.UMC.domain.petEntity.categories;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
+import LittlePet.UMC.domain.hospitalEntity.Hospital;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 @Builder
@@ -39,6 +43,9 @@ public class PetCategory extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_big_category_id",nullable = false)
     private PetBigCategory petBigCategory;
+
+    @OneToMany(mappedBy = "petCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Hospital> hospitals = new ArrayList<>();
 
     // Getters and Setters
 

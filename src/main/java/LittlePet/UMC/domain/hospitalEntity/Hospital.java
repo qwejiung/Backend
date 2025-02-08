@@ -4,6 +4,7 @@ import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 //import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalAnimal;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalStarRating;
+import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,8 +33,9 @@ public class Hospital extends BaseTimeEntity {
 
     private String closedDay;
 
-    @Column(nullable = false)
-    private String animalCategory;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "pet_category_id", nullable = true)
+    private PetCategory petCategory;
 
 //    private String operationAt;
 
