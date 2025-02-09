@@ -74,25 +74,25 @@ public class SecurityConfig {
         http.httpBasic(httpBasic -> httpBasic.disable());
 
 
-//
-//        // 5. JWTFilter 추가
-//
-//         http
-//                 .addFilterAfter(new JwtFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-//
+
+        // 5. JWTFilter 추가
+
+         http
+                 .addFilterAfter(new JwtFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+
 //        //6. OAuth2 로그인 설정
 //        http.oauth2Login(oauth2 -> oauth2
 //                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
 //                .successHandler(customSuccessHandler)
 //        );
-//        http
-//                .oauth2Login((oauth2) -> oauth2
-//                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-//                                .userService(customOAuth2UserService))
-//                        .successHandler(customSuccessHandler)
-//
-//
-//                );
+        http
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService))
+                        .successHandler(customSuccessHandler)
+
+
+                );
 
         http
                 .authorizeHttpRequests((auth) -> auth
@@ -105,14 +105,14 @@ public class SecurityConfig {
                                 "/login/oauth2/code/**",
                                 "/login",
                                 "/api/**"
-                        ).permitAll()
-                        .anyRequest().authenticated());
+                        ).permitAll());
+                        //.anyRequest().authenticated());
 
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
-       // http.addFilterBefore(oAuth2LoggingFilter, OAuth2LoginAuthenticationFilter.class);
+        http.addFilterBefore(oAuth2LoggingFilter, OAuth2LoginAuthenticationFilter.class);
 
         return http.build();
     }
