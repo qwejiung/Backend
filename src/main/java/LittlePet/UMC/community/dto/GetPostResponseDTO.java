@@ -7,6 +7,7 @@ import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.postEntity.mapping.PostContent;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +28,13 @@ public class GetPostResponseDTO {
     private String userBadge;
     private String PetCategory;
     private String postTitle;
-    private LocalDateTime createTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
+    private LocalDateTime createdTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
+    private LocalDateTime updatedTime;
+
     private Long views; //조회
     private Long likes; //좋아요
     private Long commentNum; //댓글수
@@ -42,7 +49,8 @@ public class GetPostResponseDTO {
         this.PetCategory =post.getPetCategory().getSpecies();
 
         this.postTitle = post.getTitle();
-        this.createTime = post.getCreatedAt();
+        this.createdTime = post.getCreatedAt();
+        this.updatedTime = post.getUpdatedAt();
         this.views = post.getViews();
         this.likes = (long) post.getPostLikeList().size();
         this.commentNum = post.getTotalCommentCount();
