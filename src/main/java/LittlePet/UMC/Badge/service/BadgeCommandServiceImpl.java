@@ -74,7 +74,7 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
         if (criteriaMet) {
             log.info("Criteria met for badge type: {}", badgeType);
         } else {
-            log.info("Criteria not met for badge type: {}", badgeType);
+            return null;
         }
 
         return assignBadge(user, badgeType, criteriaMet);
