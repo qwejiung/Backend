@@ -32,8 +32,8 @@ public class Hospital extends BaseTimeEntity {
 
     private String closedDay;
 
-    @Column(nullable = false)
-    private String animalCategory;
+    private String latitude;  // 위도
+    private String longitude; // 경도
 
 //    private String operationAt;
 
@@ -43,11 +43,13 @@ public class Hospital extends BaseTimeEntity {
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
     private List<HospitalPref> hospitalPrefList= new ArrayList<>();
 
+    public void updateCoordinates(String latitude, String longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
 //    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<HospitalAnimal> hospitalAnimalList = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "hospital") //cascade 안 되도록
-//    private List<MedicalHistory> medicalHistoryList = new ArrayList<>();
 
     // Getters, Setters, Constructors
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KakaoGeoResponse {
+public class KakaoGeoResponseDTO {
     private List<KakaoGeoDocument> documents;
 
     @Data
