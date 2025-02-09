@@ -1,7 +1,9 @@
 package LittlePet.UMC.domain.petEntity.categories;
 
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
-import LittlePet.UMC.domain.hospitalEntity.Hospital;
+import LittlePet.UMC.domain.petEntity.mapping.UserPet;
+import LittlePet.UMC.domain.postEntity.Post;
+import LittlePet.UMC.domain.postEntity.mapping.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -54,5 +56,27 @@ public class PetCategory extends BaseTimeEntity {
         this.species = species;
         this.featureImagePath = featureImagePath;
         this.petBigCategory = petBigCategory;
+    }
+
+    public static String returnSpeciesPetCategoryComment(Comment comment){
+
+        if (comment.getUser().getUserPetList() == null || comment.getUser().getUserPetList().isEmpty()) {
+            return null;
+        }
+        return comment.getUser().getUserPetList().get(0).getPetCategory().getSpecies();
+    }
+
+
+    public static String returnSpeciesPetCategoryPost(Post post){
+
+        if (post.getUser().getUserPetList() == null || post.getUser().getUserPetList().isEmpty()) {
+            return null;
+        }
+
+        for (UserPet userPet : post.getUser().getUserPetList()) {
+            if(userPet.getPetCategory().getSpecies().equals(post.getPetCategory().getSpecies()))
+                return userPet.getPetCategory().getSpecies();
+        }
+        return null;
     }
 }

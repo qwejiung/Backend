@@ -12,6 +12,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserProfileService {
@@ -23,12 +27,42 @@ public class UserProfileService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // Converter를 사용해 DTO 변환
-        return UserProfileConverter.toUserResponseDto(user);
+        // 1. 컨버터를 사용해 DTO 변환
+        UserProfileResponseDTO response = UserProfileConverter.toUserResponseDto(user);
+
+        // 2. petProfile에서 같은 petSpices(종) 값이 중복되면 하나만 남기도록 필터링
+        List<UserProfileResponseDTO.PetProfileDTO> distinctPetProfiles = response.getPetProfile().stream()
+                .collect(Collectors.toMap(
+                        UserProfileResponseDTO.PetProfileDTO::getPetSpices, // Key: petSpices (종)
+                        pet -> pet, // Value: 첫 번째 petProfile 데이터
+                        (existing, replacement) -> existing, // 중복되면 기존 값 유지
+                        LinkedHashMap::new // 순서 유지
+                ))
+                .values()
+                .stream()
+                .collect(Collectors.toList());
+
+        // 3. 필터링된 데이터를 적용
+        return UserProfileResponseDTO.builder()
+                .name(response.getName())
+                .role(response.getRole())
+                .introduction(response.getIntroduction())
+                .profilePhoto(response.getProfilePhoto())
+                .postCount(response.getPostCount())
+                .commentCount(response.getCommentCount())
+                .likeCount(response.getLikeCount())
+                .reviewCount(response.getReviewCount())
+                .scrapCount(response.getScrapCount())
+                .petProfile(distinctPetProfiles) // 중복 없는 대표 펫 리스트
+                .userPet(response.getUserPet())
+                .userBadge(response.getUserBadge())
+                .build();
+
+
     }
 
     @Transactional
-    public UserUpdateProfileResponseDTO updateProfile(Long userId, UserProfileRequestDTO request,String profileImageUrl) {
+    public UserUpdateProfileResponseDTO updateProfile(Long userId, UserProfileRequestDTO request,String ImageUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -43,8 +77,12 @@ public class UserProfileService {
                 .name(request.getNickname())
                 .phone(request.getPhone())
                 .introduction(request.getIntroduction())
-                .profilePhoto(profileImageUrl != null ? profileImageUrl : user.getProfilePhoto())
+                .profilePhoto(user.getProfilePhoto())
                 .build();
+
+        userRepository.save(updatedUser);
+
+
 
         return UserProfileConverter.toUpdateResponse(updatedUser);
     }

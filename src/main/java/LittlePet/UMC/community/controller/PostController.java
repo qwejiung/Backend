@@ -4,6 +4,7 @@ import LittlePet.UMC.S3Service;
 import LittlePet.UMC.SmallPet.service.PetCategoryService;
 import LittlePet.UMC.apiPayload.ApiResponse;
 import LittlePet.UMC.community.dto.CreatePostResponseDTO;
+import LittlePet.UMC.community.dto.GetPostResponseDTO;
 import LittlePet.UMC.community.dto.PostForm;
 import LittlePet.UMC.community.service.PostService;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -31,13 +34,23 @@ public class PostController {
     @PostMapping(value = "/post/{user-id}", consumes = {"multipart/form-data"})
     public ApiResponse<CreatePostResponseDTO> createPost(
             @RequestPart @Valid PostForm postForm,
-            @RequestPart(value = "image", required = false) MultipartFile image,
+            @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @PathVariable("user-id") Long userId) throws IOException {
 
-        String url = s3Service.upload(image);
-        Post post = postService.createPost(postForm, userId, url);
+//        if (images.size() > 5) {
+//             // 예외 발생
+//        }
 
-        CreatePostResponseDTO dto = new CreatePostResponseDTO(post,postForm.getSmallPetCategory());
+        List<String> imageUrls = new ArrayList<>();
+        if (images != null || !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                String url = s3Service.upload(image);
+                imageUrls.add(url);
+            }
+        }
+        Post post = postService.createPost(postForm, userId, imageUrls);
+
+        CreatePostResponseDTO dto = new CreatePostResponseDTO(post);
 
         return ApiResponse.onSuccess(dto);
     }
@@ -47,12 +60,19 @@ public class PostController {
     public ApiResponse<CreatePostResponseDTO> updatePost(
             @PathVariable("post-id") Long postId,
             @RequestPart @Valid PostForm postForm,
-            @RequestPart(value = "image", required = false) MultipartFile image) throws IOException {
+            @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
 
-        String url = s3Service.upload(image);
-        Post updatePost = postService.updatePost(postId, postForm,url);
+        List<String> imageUrls = new ArrayList<>();
+        if (images != null || !images.isEmpty()) {
+            for (MultipartFile image : images) {
+                String url = s3Service.upload(image);
+                imageUrls.add(url);
+            }
+        }
 
-        CreatePostResponseDTO dto = new CreatePostResponseDTO(updatePost,postForm.getSmallPetCategory());
+        Post updatePost = postService.updatePost(postId, postForm,imageUrls);
+
+        CreatePostResponseDTO dto = new CreatePostResponseDTO(updatePost);
 
         return ApiResponse.onSuccess(dto);
     }
@@ -62,6 +82,16 @@ public class PostController {
     public ApiResponse<String> deletePost(@PathVariable("post-id") Long postId) {
         postService.deletePost(postId);
         return ApiResponse.onSuccess("게시물이 성공적으로 삭제되었습니다");
+    }
+
+    @Operation(summary = "커뮤니티 특정 글 조회", description = "특정 게시물을 조회하는 카테고리입니다")
+    @GetMapping("/post/{post-id}")
+    public ApiResponse<GetPostResponseDTO> GetPost(@PathVariable("post-id") Long postId) {
+        Post post = postService.FindOnePost(postId);
+
+        GetPostResponseDTO dto = new GetPostResponseDTO(post);
+
+        return ApiResponse.onSuccess(dto);
     }
 }
 
