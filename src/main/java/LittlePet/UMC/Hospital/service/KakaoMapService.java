@@ -25,7 +25,6 @@ public class KakaoMapService {
     //주소를 입력받아 카카오 API를 호출하여 위도/경도를 반환하는 메서드
     public String[] getCoordinates(String address) {
         String apiUrl = "https://dapi.kakao.com/v2/local/search/address.json?query=" + address;
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "KakaoAK " + kakaoApiKey);
         HttpEntity<String> entity = new HttpEntity<>(headers);
