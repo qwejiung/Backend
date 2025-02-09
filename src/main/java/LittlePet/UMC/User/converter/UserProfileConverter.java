@@ -20,7 +20,7 @@ public class UserProfileConverter {
                 .petProfile(user.getUserPetList().stream()
                         .map(pet -> UserProfileResponseDTO.PetProfileDTO.builder()
                                 .petSpices(pet.getPetCategory().getSpecies()) // PetCategory에서 species 가져오기
-                                .imageUrl(pet.getPetCategory().g) // 프로필 이미지 추가
+                                .imageUrl(pet.getPetCategory().getFeatureImagePath()) // 프로필 이미지 추가
                                 .build())
                         .collect(Collectors.toList()))
                 .userPet(user.getUserPetList().stream()
