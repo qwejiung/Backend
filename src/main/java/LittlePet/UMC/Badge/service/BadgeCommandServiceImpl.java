@@ -163,7 +163,55 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
         return deletedUserBadge;
     }
 
+    @Override
+    public String getBadgeProgress(Long userId, String badgeType) {
+        Long currentCount;
+        int requiredCount;
 
-}
+        switch (badgeType) {
+            case "글쓰기마스터":
+                currentCount = postRepository.countByUserId(userId);
+                requiredCount = 15;
+                return "다음 목표까지 게시글 작성 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
+
+            case "소통천재":
+                currentCount = commentRepository.getCountByUserId(userId);
+                requiredCount = 30;
+                return "다음 목표까지 댓글 작성 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
+
+            case "소셜응원왕":
+                currentCount = postLlikeRepository.getCountByUserId(userId);
+                requiredCount = 50;
+                return "다음 목표까지 받은 좋아요 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
+
+            case "인기스타":
+                currentCount = postRepository.getTotalLikesReceivedByUserId(userId);
+                requiredCount = 30;
+                return "다음 목표까지 받은 총 좋아요 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
+
+            default:
+                throw new IllegalArgumentException("Invalid badge type");
+        }
+    }
+
+    @Override
+    public List<String> getMissingBadges(Long userId) {
+        List<String> allBadges = badgeRepository.findAll().stream()
+                .map(Badge::getName)
+                .collect(Collectors.toList());
+
+        List<String> userBadges = userBadgeRepository.findByUserId(userId).stream()
+                .map(userBadge -> userBadge.getBadge().getName())
+                .collect(Collectors.toList());
+
+        allBadges.removeAll(userBadges);
+        return allBadges;
+    }
+    }
+
+
+
+
+
 
 
