@@ -21,10 +21,6 @@ public class HospitalController {
 
     private final HospitalService hospitalService;
 
-    public HospitalController(HospitalService hospitalService) {
-        this.hospitalService = hospitalService;
-    }
-
     @Operation(summary = "병원 스크랩", description = "특정 병원을 스크랩하여 저장합니다.")
     @PostMapping("/hospitals/{hospital-id}")
     public ApiResponse<String> scrapHospital(
