@@ -4,6 +4,7 @@ import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 //import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalAnimal;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalStarRating;
+import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -43,6 +44,10 @@ public class Hospital extends BaseTimeEntity {
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL)
     private List<HospitalPref> hospitalPrefList= new ArrayList<>();
 
+    public void addHospitalPref(HospitalPref hospitalPref) {
+        this.hospitalPrefList.add(hospitalPref);
+    }
+
     public void updateCoordinates(String latitude, String longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
@@ -50,6 +55,9 @@ public class Hospital extends BaseTimeEntity {
 
 //    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<HospitalAnimal> hospitalAnimalList = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "hospital") //cascade 안 되도록
+//    private List<MedicalHistory> megdicalHistoryList = new ArrayList<>();
 
     // Getters, Setters, Constructors
 }

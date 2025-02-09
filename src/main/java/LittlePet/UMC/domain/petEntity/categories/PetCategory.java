@@ -7,6 +7,9 @@ import LittlePet.UMC.domain.postEntity.mapping.Comment;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter @Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
