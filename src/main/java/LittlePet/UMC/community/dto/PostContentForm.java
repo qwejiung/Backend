@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostContentForm {
 
+    private String type; // test, image
     @NotBlank
-    private String content;
+    private String value;
+    private int orderIndex;
 }

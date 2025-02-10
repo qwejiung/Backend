@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class GetAllPostResponseDTO {
     private String title;
     private String petCategory;
-    private List<ContentDTO> contents;
+    private List<PostContentResponseDTO> contents;
     private String userName;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd HH:mm:ss")
@@ -42,7 +43,8 @@ public class GetAllPostResponseDTO {
         // ✅ 게시물 내용(사진, 텍스트 등) 리스트 변환
         this.contents = post.getPostcontentList()
                 .stream()
-                .map(content -> new ContentDTO(content)) // PostContent 엔티티의 content 필드
+                .sorted(Comparator.comparingInt(PostContent::getSequence))
+                .map(content -> new PostContentResponseDTO(content.getContent(),content.getSequence())) // PostContent 엔티티의 content 필드
                 .collect(Collectors.toList());
     }
 
@@ -52,14 +54,14 @@ public class GetAllPostResponseDTO {
                 .collect(Collectors.toList());
     }
 
-    @Data
-    static class ContentDTO {
-        private String content;
-        private int sequence;
-
-        public ContentDTO(PostContent postContent) {
-            this.content = postContent.getContent();
-            this.sequence = postContent.getSequence();
-        }
-    }
+//    @Data
+//    static class ContentDTO {
+//        private String content;
+//        private int sequence;
+//
+//        public ContentDTO(PostContent postContent) {
+//            this.content = postContent.getContent();
+//            this.sequence = postContent.getSequence();
+//        }
+//    }
 }
