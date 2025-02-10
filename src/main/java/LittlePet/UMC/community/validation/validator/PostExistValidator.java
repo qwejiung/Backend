@@ -2,7 +2,6 @@ package LittlePet.UMC.community.validation.validator;
 
 import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
 import LittlePet.UMC.community.repository.postRepository.PostRepository;
-import LittlePet.UMC.community.repository.postlikerepository.PostLikeRepository;
 import LittlePet.UMC.community.validation.annotation.ExistPost;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
