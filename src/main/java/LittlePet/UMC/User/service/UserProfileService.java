@@ -86,4 +86,12 @@ public class UserProfileService {
 
         return UserProfileConverter.toUpdateResponse(updatedUser);
     }
+
+    @Transactional
+    public UserUpdateProfileResponseDTO getUserIdProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return UserProfileConverter.toUpdateResponse(user);
+    }
 }
