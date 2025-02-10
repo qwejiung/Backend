@@ -32,7 +32,7 @@ public class PostLikeController {
      * @param postId 게시물 ID (PathVariable)
      * @return 등록한 유저뱃지 응답 DTO
      */
-    @Operation(summary = "좋아요 등록", description = "게시물의 좋아요를 누르는 API 입니다.")
+    @Operation(summary = "좋아요 등록 & 취소 ", description = "게시물의 좋아요를 누르는 API 입니다. 한번더 누를 경우 좋아요 취소되는 기능도 있습니다.")
     @PostMapping("/{userId}/{postId}")
     public ApiResponse<PostLikeResponseDTO.postlikeResultDTO> click_like(
             @PathVariable @ExistUser Long userId,

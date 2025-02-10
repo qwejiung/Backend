@@ -1,13 +1,12 @@
 package LittlePet.UMC.Badge.service;
 
-import LittlePet.UMC.Badge.converter.UserBadgeConverter;
 import LittlePet.UMC.Badge.repository.badgeRepository.BadgeRepository;
 import LittlePet.UMC.Badge.repository.badgeRepository.UserBadgeRepository;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
 import LittlePet.UMC.apiPayload.exception.handler.BadgeHandler;
 import LittlePet.UMC.community.repository.commentRepository.CommentRepository;
-import LittlePet.UMC.community.repository.postRepository.PostLlikeRepository;
+import LittlePet.UMC.community.repository.postRepository.PostLikeRepository;
 import LittlePet.UMC.community.repository.postRepository.PostRepository;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
 import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
@@ -32,7 +31,7 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
 
     private final UserBadgeRepository userBadgeRepository;
 
-    private final PostLlikeRepository postLlikeRepository;
+    private final PostLikeRepository postlikeRepository;
 
     private final CommentRepository commentRepository;
 
@@ -56,7 +55,7 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
                 break;
 
             case "소셜응원왕":
-                long likeCount = postLlikeRepository.getCountByUserId(userId); // 좋아요 수 가져오기 (추가 메서드 필요)
+                long likeCount = postlikeRepository.getCountByUserId(userId); // 좋아요 수 가져오기 (추가 메서드 필요)
                 criteriaMet = likeCount >= 1; // Test를 위해 일단 1개 50개 이상이면 True
                 break;
 
@@ -96,8 +95,10 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
 
         if (alreadyHasBadge) {
             log.info("already has badge for badge type: {}", badgeType);
-            // 이미 뱃지를 보유하고 있다면 예외를 던짐
-            throw new BadgeHandler(ErrorStatus.BADGE_ALREADY_OWNED);
+            // 1.이미 뱃지를 보유하고 있다면 예외를 던짐
+//            throw new BadgeHandler(ErrorStatus.BADGE_ALREADY_OWNED);
+            //2. null을 던짐
+              return null;
         }
 
         Badge badge = badgeRepository.findByBadgeType(badgeType);
@@ -125,7 +126,7 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
     @Override
     @Transactional
     public List<UserBadge> assignChallenger() {
-        List<Long> userIdList = postLlikeRepository.findTopUsersByChallenge();
+        List<Long> userIdList = postlikeRepository.findTopUsersByChallenge();
 
         // 해당 ID로 User 리스트 조회
         List<User> userList = userRepository.findAllById(userIdList);
@@ -180,14 +181,20 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
                 return "다음 목표까지 댓글 작성 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
 
             case "소셜응원왕":
-                currentCount = postLlikeRepository.getCountByUserId(userId);
+                currentCount = postlikeRepository.getCountByUserId(userId);
                 requiredCount = 50;
-                return "다음 목표까지 받은 좋아요 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
+                return "다음 목표까지 좋아요 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
 
             case "인기스타":
                 currentCount = postRepository.getTotalLikesReceivedByUserId(userId);
                 requiredCount = 30;
-                return "다음 목표까지 받은 총 좋아요 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
+                return "다음 목표까지 받을 좋아요 " + Math.max(0, requiredCount - currentCount) + "개 남았어요!";
+
+            case "챌린저":
+                currentCount = postlikeRepository.findMyRankingByChallenge(userId);
+                if (currentCount == null)
+                    return "이번 주 챌린지에 도전하세요!";
+                return "현재 내 등수는 "+ currentCount+"등 이에요";
 
             default:
                 throw new IllegalArgumentException("Invalid badge type");
@@ -196,15 +203,21 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
 
     @Override
     public List<String> getMissingBadges(Long userId) {
+        List<Badge> TestBadges = badgeRepository.findAll();
+        System.out.println("TestBadges:"+TestBadges);
+
         List<String> allBadges = badgeRepository.findAll().stream()
                 .map(Badge::getName)
                 .collect(Collectors.toList());
+        System.out.println("allBadges:"+allBadges);
 
         List<String> userBadges = userBadgeRepository.findByUserId(userId).stream()
                 .map(userBadge -> userBadge.getBadge().getName())
                 .collect(Collectors.toList());
+        System.out.println("userBadges:"+userBadges);
 
         allBadges.removeAll(userBadges);
+        System.out.println("allBadges:"+allBadges);
         return allBadges;
     }
     }
