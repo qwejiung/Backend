@@ -85,6 +85,7 @@ public class SecurityConfig {
 //                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
 //                .successHandler(customSuccessHandler)
 //        );
+
         http
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
