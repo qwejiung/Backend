@@ -3,9 +3,7 @@ package LittlePet.UMC.community.controller;
 import LittlePet.UMC.S3Service;
 import LittlePet.UMC.SmallPet.service.PetCategoryService;
 import LittlePet.UMC.apiPayload.ApiResponse;
-import LittlePet.UMC.community.dto.CreatePostResponseDTO;
-import LittlePet.UMC.community.dto.GetPostResponseDTO;
-import LittlePet.UMC.community.dto.PostForm;
+import LittlePet.UMC.community.dto.*;
 import LittlePet.UMC.community.service.PostService;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.postEntity.Post;
@@ -86,12 +84,26 @@ public class PostController {
 
     @Operation(summary = "커뮤니티 특정 글 조회", description = "특정 게시물을 조회하는 카테고리입니다")
     @GetMapping("/post/{post-id}")
-    public ApiResponse<GetPostResponseDTO> GetPost(@PathVariable("post-id") Long postId) {
+    public ApiResponse<GetPostResponseDTO> getPost(@PathVariable("post-id") Long postId) {
         Post post = postService.FindOnePost(postId);
 
         GetPostResponseDTO dto = new GetPostResponseDTO(post);
 
         return ApiResponse.onSuccess(dto);
+    }
+
+    @Operation(summary = "커뮤니티 글 목록 조회", description = "커뮤니티의 게시판을 조회하는 카테고리입니다")
+    @GetMapping("/post")
+    public ApiResponse<List<GetAllPostResponseDTO>> getPosts(
+            @RequestParam String category, //Q&A
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "최신순") String sort) {
+
+        List<Post> posts = postService.FindAllPost(category,pageNum,size,sort);
+        List<GetAllPostResponseDTO> dtos = GetAllPostResponseDTO.fromEntityList(posts);
+
+        return ApiResponse.onSuccess(dtos);
     }
 }
 

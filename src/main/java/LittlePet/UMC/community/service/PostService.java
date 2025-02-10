@@ -21,6 +21,10 @@ import LittlePet.UMC.domain.postEntity.PostCategory;
 import LittlePet.UMC.domain.postEntity.mapping.PostContent;
 import LittlePet.UMC.domain.userEntity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -126,5 +130,19 @@ public class PostService {
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
         return post;
 
+    }
+
+    public List<Post> FindAllPost(String category, int pageNum, int size, String sort) {
+        Pageable pageable = PageRequest.of(pageNum, size);
+
+        // 최신순 기본값
+        if (sort.equalsIgnoreCase("최신순")) {
+            return postRepository.findLatestPostsByCategory(category, pageable).getContent();
+        } else if (sort.equalsIgnoreCase("인기순")) {
+            return postRepository.findPopularPostsByCategory(category, pageable).getContent();
+        }
+
+        // 만약 이상한 정렬 기준이 들어오면 기본 최신순 적용
+        return postRepository.findLatestPostsByCategory(category, pageable).getContent();
     }
 }
