@@ -1,5 +1,6 @@
 package LittlePet.UMC.community.service;
 
+import LittlePet.UMC.Badge.service.BadgeCommandService;
 import LittlePet.UMC.SmallPet.repository.PetCategoryRepository;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
@@ -10,6 +11,10 @@ import LittlePet.UMC.apiPayload.exception.handler.UserHandler;
 import LittlePet.UMC.community.dto.PostForm;
 import LittlePet.UMC.community.repository.PostCategoryRepository;
 import LittlePet.UMC.community.repository.postRepository.PostRepository;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
+import LittlePet.UMC.domain.enums.RoleStatus;
+import LittlePet.UMC.domain.enums.SocialProviderEnum;
+import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.postEntity.PostCategory;
@@ -35,6 +40,7 @@ public class PostService {
     private final UserRepository userRepository;
     private final PostCategoryRepository postCategoryRepository;
     private final PetCategoryRepository petCategoryRepository;
+    private final BadgeCommandService badgeCommandService;
 
     @Transactional //위에서 readOnly해서 따로 해줘야 저장됨 : 디폴트가 false
     public Post createPost(PostForm postForm, Long userId, List<String> urls) {
@@ -64,6 +70,9 @@ public class PostService {
         post.addPostContent(contents);
 
         postRepository.save(post);
+        UserBadge userBadge =badgeCommandService.checkBadges(userId,"글스기마스터");
+        System.out.println("userBadge: " + userBadge);
+
         return post;
     }
 

@@ -73,16 +73,19 @@ public class SecurityConfig {
 
         http.httpBasic(httpBasic -> httpBasic.disable());
 
+
+
         // 5. JWTFilter 추가
 
          http
                  .addFilterAfter(new JwtFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
-        // 6. OAuth2 로그인 설정
+//        //6. OAuth2 로그인 설정
 //        http.oauth2Login(oauth2 -> oauth2
 //                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
 //                .successHandler(customSuccessHandler)
 //        );
+
         http
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig

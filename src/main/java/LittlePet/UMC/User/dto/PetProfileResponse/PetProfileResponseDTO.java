@@ -15,5 +15,5 @@ public class PetProfileResponseDTO {
     private String birthDay;
     private String gender;
     private String profilePhoto;
-    private String categoryName; // PetCategory 이름
+    private String categorySpecies; // PetCategory 이름
 }

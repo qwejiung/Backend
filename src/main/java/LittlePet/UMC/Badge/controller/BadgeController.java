@@ -74,6 +74,38 @@ public class BadgeController {
 
 
     /**
+     * 유저가 뱃지 확인 API
+     *
+     * @param userId 사용자 ID (PathVariable)
+     * @return 등록된 유저뱃지 응답 DTO
+     */
+    @Operation(summary = "획득하지 못한 뱃지 조회", description = "사용자가 아직 획득하지 못한 뱃지 목록을 반환합니다.")
+    @GetMapping("/{userId}/missingbadge")
+    public ApiResponse<List<String>> getMissingBadges(@PathVariable @ExistUser Long userId) {
+        List<String> missingBadges = badgeCommandService.getMissingBadges(userId);
+        return ApiResponse.onSuccess(missingBadges);
+    }
+
+
+    /**
+     * 유저의 목표뱃지 진행상황 API
+     *
+     * @param userId 사용자 ID (PathVariable)
+     * @param badgeType 뱃지 타입 ex)글쓰기 마스터,소셜 응원왕
+     * @return 삭제된 유저뱃지 응답 DTO
+     */
+    @Operation(summary = "목표 뱃지 진행 상황", description = "사용자가 목표 뱃지를 얻기까지 남은 조건을 반환합니다.")
+    @GetMapping("/{userId}/{badgeType}/progress")
+    public ApiResponse<String> getBadgeProgress(
+            @PathVariable @ExistUser Long userId,
+            @PathVariable @ExistBadgeType String badgeType) {
+
+        String progressMessage = badgeCommandService.getBadgeProgress(userId, badgeType);
+        return ApiResponse.onSuccess(progressMessage);
+    }
+
+
+    /**
      * 유저의 뱃지 삭제API
      *
      * @param userId 사용자 ID (PathVariable)
@@ -89,5 +121,7 @@ public class BadgeController {
             UserBadge deleted_UserBadge = badgeCommandService.deleteUserBadge(userId, badgetype);
             return ApiResponse.onSuccess(BadgeConverter.toBadgeResponseDTO(deleted_UserBadge));
     }
+
+
 }
 
