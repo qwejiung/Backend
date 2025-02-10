@@ -35,32 +35,43 @@ public class PostContent extends BaseTimeEntity {
     private Post post;
 
 
-    public static PostContent createPostContentText(String content, Post post) {
+    public static PostContent createPostContent(String type,String content,int sequence, Post post) {
 
-        PostContent postContent = new PostContent();
-        postContent.setMediaType(MediaTypeEnum.Text);
-        postContent.setContent(content);
-        postContent.setSequence(post.getSequenceCounter());
-        postContent.setPost(post);
+        if (type.equals("text") || type.equals("Text") || type.equals("TEXT")) {
+            PostContent postContent = new PostContent();
+            postContent.setMediaType(MediaTypeEnum.Text);
+            postContent.setContent(content);
+            postContent.setSequence(sequence);
+            postContent.setPost(post);
 
-        return postContent;
-
-    }
-
-    public static PostContent createPostContentPicture(String url, Post post) {
-
-        PostContent postContent = new PostContent();
-
-        // 이미지 URL이 존재하면 content 필드에 저장
-        if (url != null || url.isEmpty()) {
+            return postContent;
+        } else {
+            PostContent postContent = new PostContent();
             postContent.setMediaType(MediaTypeEnum.Picture);
-            postContent.setContent(url);
+            postContent.setContent(content);
+            postContent.setSequence(sequence);
+            postContent.setPost(post);
+
+            return postContent;
         }
 
-        postContent.setSequence(post.getSequenceCounter());
-        postContent.setPost(post);
 
-        return postContent;
     }
+
+//    public static PostContent createPostContentPicture(String url,int sequence, Post post) {
+//
+//        PostContent postContent = new PostContent();
+//
+//        // 이미지 URL이 존재하면 content 필드에 저장
+//        if (url != null || url.isEmpty()) {
+//            postContent.setMediaType(MediaTypeEnum.Picture);
+//            postContent.setContent(url);
+//        }
+//
+//        postContent.setSequence(sequence);
+//        postContent.setPost(post);
+//
+//        return postContent;
+//    }
 
 }

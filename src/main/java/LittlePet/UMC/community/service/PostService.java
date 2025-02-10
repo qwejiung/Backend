@@ -43,7 +43,7 @@ public class PostService {
     private final BadgeCommandService badgeCommandService;
 
     @Transactional //위에서 readOnly해서 따로 해줘야 저장됨 : 디폴트가 false
-    public Post createPost(PostForm postForm, Long userId, List<String> urls) {
+    public Post createPost(PostForm postForm, Long userId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
@@ -53,31 +53,28 @@ public class PostService {
 
         PostCategory postCategory = postCategoryRepository.findFirstByCategory(postForm.getPostCategory())
                 .orElseThrow(() -> new PostCategoryHandler(ErrorStatus.POST_CATEGORY_NOT_FOUND));
-        //url은 종류가 image로 들어가면서 저장하면될듯?
 
         Post post = Post.createPost(postForm.getTitle(),0l,user,postCategory,petCategory);
 
         List<PostContent> contents = postForm.getContents().stream()
-                .map(contentForm -> PostContent.createPostContentText(
-                        contentForm.getContent(),
+                .map(contentForm -> PostContent.createPostContent(
+                        contentForm.getType(),
+                        contentForm.getValue(),
+                        contentForm.getOrderIndex(),
                         post))
                 .collect(Collectors.toList());
-
-        for (String url : urls) {
-            contents.add(PostContent.createPostContentPicture(url, post));
-        }
 
         post.addPostContent(contents);
 
         postRepository.save(post);
-        UserBadge userBadge =badgeCommandService.checkBadges(userId,"글스기마스터");
-        System.out.println("userBadge: " + userBadge);
+//        UserBadge userBadge =badgeCommandService.checkBadges(userId,"글스기마스터");
+//        System.out.println("userBadge: " + userBadge);
 
         return post;
     }
 
     @Transactional
-    public Post updatePost(Long postId, PostForm postForm,List<String> urls) {
+    public Post updatePost(Long postId, PostForm postForm) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
@@ -101,14 +98,12 @@ public class PostService {
         if (postForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
             post.resetSequenceCounter();
             List<PostContent> contents = postForm.getContents().stream()
-                    .map(contentForm -> PostContent.createPostContentText(
-                            contentForm.getContent(),
+                    .map(contentForm -> PostContent.createPostContent(
+                            contentForm.getType(),
+                            contentForm.getValue(),
+                            contentForm.getOrderIndex(),
                             post))
                     .collect(Collectors.toList());
-
-            for (String url : urls) {
-                contents.add(PostContent.createPostContentPicture(url, post));
-            }
 
             post.getPostcontentList().clear();
             post.addPostContent(contents);
