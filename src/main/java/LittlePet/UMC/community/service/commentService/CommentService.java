@@ -1,10 +1,12 @@
 package LittlePet.UMC.community.service.commentService;
 
+import LittlePet.UMC.Badge.service.BadgeCommandService;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.community.dto.commentDTO.CommentRequestDTO;
 import LittlePet.UMC.community.dto.commentDTO.CommentResponseDTO;
 import LittlePet.UMC.community.repository.commentRepository.CommentRepository;
 import LittlePet.UMC.community.repository.postRepository.PostRepository;
+import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.postEntity.mapping.Comment;
 import LittlePet.UMC.domain.userEntity.User;
@@ -19,7 +21,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
+    private final BadgeCommandService badgeCommandService;
     @Transactional
     public CommentResponseDTO createComment(Long postId, CommentRequestDTO requestDTO) {
         Post post = postRepository.findById(postId)
@@ -42,7 +44,12 @@ public class CommentService {
                 .parent(parent)
                 .build();
 
+        //뱃지 조건 확인 및 수여
         commentRepository.save(comment);
+        postRepository.save(post);
+        UserBadge userBadge =badgeCommandService.checkBadges(user.getId(),"소통천재");
+        System.out.println("userBadge: " + userBadge);
+
         return CommentResponseDTO.of(comment);
     }
 

@@ -17,4 +17,7 @@ public interface BadgeCommandService {
 
     UserBadge deleteUserBadge(Long userId, String badgeType);
 
+    String getBadgeProgress(Long userId, String badgeType);
+
+    List<String> getMissingBadges(Long userId);
 }
