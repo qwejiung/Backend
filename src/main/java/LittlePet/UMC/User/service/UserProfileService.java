@@ -62,14 +62,17 @@ public class UserProfileService {
     }
 
     @Transactional
-    public UserUpdateProfileResponseDTO updateProfile(Long userId, UserProfileRequestDTO request,String ImageUrl) {
+    public UserUpdateProfileResponseDTO updateProfile(Long userId, UserProfileRequestDTO request,String imageUrl) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 중복 닉네임 검증
-        if (userRepository.existsByNameAndIdNot(request.getNickname(), userId)) {
+        // 🚨 중복 닉네임 검증 (자기 닉네임이면 검증 스킵)
+        if (!user.getName().equals(request.getNickname()) && userRepository.existsByNameAndIdNot(request.getNickname(), userId)) {
             throw new UserHandler(ErrorStatus.DUPLICATE_NICKNAME);
         }
+
+        String updatedProfilePhoto = (imageUrl != null) ? imageUrl : user.getProfilePhoto();
 
         // 사용자 정보 업데이트
         // toBuilder()를 사용해 기존 엔티티의 값을 유지하면서 업데이트할 필드만 변경
@@ -77,7 +80,7 @@ public class UserProfileService {
                 .name(request.getNickname())
                 .phone(request.getPhone())
                 .introduction(request.getIntroduction())
-                .profilePhoto(user.getProfilePhoto())
+                .profilePhoto(updatedProfilePhoto)
                 .build();
 
         userRepository.save(updatedUser);
