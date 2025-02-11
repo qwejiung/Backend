@@ -98,11 +98,23 @@ public class PostController {
             @RequestParam(defaultValue = "0") int pageNum,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "최신순") String sort,
+            @RequestParam(required = false) Long cursorLikes,
+            @RequestParam(required = false) Long cursorId,
             @RequestParam(value = "deviceType", defaultValue = "pc") String deviceType) {
 
-        List<Post> posts = postService.FindAllPost(category,pageNum,size,sort);
-        List<GetAllPostResponseDTO> dtos = GetAllPostResponseDTO.fromEntityList(posts);
+        List<Post> posts;
 
+        if ("mobile".equalsIgnoreCase(deviceType)) {
+            //모바일
+            posts = (cursorLikes == null || cursorId == null)
+                    ? postService.findFirstPage(category, size, sort)  // 첫 페이지 (커서 없음)
+                    : postService.findNextPage(category, cursorLikes, cursorId, size, sort); // 커서 이후 데이터 로딩
+        } else {
+            //pc
+            posts = postService.findPagedPosts(category, pageNum, size, sort);
+        }
+
+        List<GetAllPostResponseDTO> dtos = GetAllPostResponseDTO.fromEntityList(posts);
         return ApiResponse.onSuccess(dtos);
     }
 }

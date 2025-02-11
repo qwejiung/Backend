@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAllPostResponseDTO {
+    private long id;
     private String title;
     private String petCategory;
     private List<PostContentResponseDTO> contents;
@@ -31,6 +32,7 @@ public class GetAllPostResponseDTO {
     private long comments;
 
     public GetAllPostResponseDTO(Post post) {
+        this.id = post.getId();
         this.title = post.getTitle();
         this.petCategory = post.getPetCategory().getSpecies(); // PetCategory에서 카테고리 가져오기
         this.userName = post.getUser().getName(); // 작성자 이름
