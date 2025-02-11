@@ -140,4 +140,27 @@ public class PostService {
         // 만약 이상한 정렬 기준이 들어오면 기본 최신순 적용
         return postRepository.findLatestPostsByCategory(category, pageable).getContent();
     }
+
+    // ✅ 1️⃣ 모바일 - 첫 페이지 불러오기 (커서 없음)
+    public List<Post> findFirstPage(String category, int size, String sort) {
+        return sort.equalsIgnoreCase("인기순")
+                ? postRepository.findPopularPostsByCategory(category, size)
+                : postRepository.findLatestPostsByCategory(category, size);
+    }
+
+    // ✅ 2️⃣ 모바일 - 추가 데이터 로딩 (커서 이후 데이터)
+    public List<Post> findNextPage(String category, Long cursorLikes, Long cursorId, int size, String sort) {
+        return sort.equalsIgnoreCase("인기순")
+                ? postRepository.findPopularPostsByCategoryWithCursor(category, cursorLikes, cursorId, size)
+                : postRepository.findLatestPostsByCategoryWithCursor(category, cursorId, size);
+    }
+
+    // ✅ 3️⃣ PC - 일반 페이지네이션 적용 (15개씩 불러오기)
+    public List<Post> findPagedPosts(String category, int pageNum, int size, String sort) {
+        Pageable pageable = PageRequest.of(pageNum, size);
+        return sort.equalsIgnoreCase("인기순")
+                ? postRepository.findPopularPostsByCategoryPaged(category, pageable).getContent()
+                : postRepository.findLatestPostsByCategoryPaged(category, pageable).getContent();
+    }
+
 }
