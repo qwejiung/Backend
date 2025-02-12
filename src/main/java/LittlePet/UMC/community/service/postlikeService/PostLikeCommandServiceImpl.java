@@ -39,6 +39,9 @@ public class PostLikeCommandServiceImpl implements PostLikeCommandService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
 
+        User likeduser = post.getUser();
+        System.out.println("liked user: " + likeduser);
+
         // ✅ 이미 좋아요를 눌렀는지 확인
         Optional<PostLike> existingLike = postLikeRepository.findByUserIdAndPostId(userId, postId);
 
@@ -52,14 +55,21 @@ public class PostLikeCommandServiceImpl implements PostLikeCommandService {
                     .post(post)
                     .build();
             PostLike savedLike = postLikeRepository.save(postLike);
-            System.out.println("좋아요 저장 성공 " + savedLike);
-            System.out.println("뱃지 조건 확인 시작---------");
             if(badgeCommandService.checkBadges(userId,"소셜응원왕")) {
                 UserBadge userBadge = badgeCommandService.assignBadge(userId, "소셜응원왕");
                 if (userBadge != null) {
                     log.info("User {} received a new badge: {}", userId, userBadge.getBadge().getName());
                 } else {
                     log.info("User {} did not receive a new badge", userId);
+                }
+            }
+
+            if(badgeCommandService.checkBadges(likeduser.getId(),"인기스타")) {
+                UserBadge userBadge = badgeCommandService.assignBadge(likeduser.getId(), "인기스타");
+                if (userBadge != null) {
+                    log.info("User {} received a new badge: {}", likeduser.getId(), userBadge.getBadge().getName());
+                } else {
+                    log.info("User {} did not receive a new badge", likeduser.getId());
                 }
             }
 

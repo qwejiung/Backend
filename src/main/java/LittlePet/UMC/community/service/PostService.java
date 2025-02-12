@@ -21,6 +21,7 @@ import LittlePet.UMC.domain.postEntity.PostCategory;
 import LittlePet.UMC.domain.postEntity.mapping.PostContent;
 import LittlePet.UMC.domain.userEntity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -67,6 +69,16 @@ public class PostService {
         post.addPostContent(contents);
 
         postRepository.save(post);
+
+
+        if(badgeCommandService.checkBadges(userId,"글쓰기마스터")) {
+            UserBadge userBadge = badgeCommandService.assignBadge(userId, "글쓰기마스터");
+            if (userBadge != null) {
+                log.info("User {} received a new badge: {}", userId, userBadge.getBadge().getName());
+            } else {
+                log.info("User {} did not receive a new badge", userId);
+            }
+        }
 
         return post;
     }
