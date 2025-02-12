@@ -36,10 +36,9 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
     private final CommentRepository commentRepository;
 
     @Override
-    public UserBadge checkBadges(Long userId,String badgeType) {
+    @Transactional
+    public Boolean checkBadges(Long userId,String badgeType) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found")); //바꿔야함 validation
 
         boolean criteriaMet = false;
         // 문자열을 Enum으로 변환
@@ -76,18 +75,16 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
             return null;
         }
 
-        return assignBadge(user, badgeType, criteriaMet);
+        return criteriaMet;
 
     }
 
     @Override
     @Transactional
-    public UserBadge assignBadge(User user, String badgeType, boolean criteriaMet) {
-        log.info("메소드 시작:"+user+badgeType+criteriaMet);
-        if (!criteriaMet) {
-            // 조건을 충족하지 못함
-            throw new BadgeHandler(ErrorStatus.BADGE_NOT_QUALIFIED);
-        }
+    public UserBadge assignBadge(Long userId,String badgeType) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found")); //바꿔야함 validation
 
         // 이미 뱃지가 할당된 경우 처리
         boolean alreadyHasBadge = user.getUserBadgeList().stream()
@@ -98,7 +95,7 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
             // 1.이미 뱃지를 보유하고 있다면 예외를 던짐
 //            throw new BadgeHandler(ErrorStatus.BADGE_ALREADY_OWNED);
             //2. null을 던짐
-              return null;
+            return null;  // 예외를 던지지 않고 그냥 종료
         }
 
         Badge badge = badgeRepository.findByBadgeType(badgeType);

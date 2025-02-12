@@ -7,6 +7,8 @@ import LittlePet.UMC.Badge.service.BadgeCommandService;
 import LittlePet.UMC.Badge.validation.annotation.ExistBadgeType;
 import LittlePet.UMC.Badge.validation.annotation.ExistUser;
 import LittlePet.UMC.apiPayload.ApiResponse;
+import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
+import LittlePet.UMC.apiPayload.exception.handler.BadgeHandler;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
 import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,8 +40,11 @@ public class BadgeController {
             @PathVariable @ExistUser Long userId,
             @PathVariable @ExistBadgeType String badgetype)
     {
-        UserBadge new_userbadge  = badgeCommandService.checkBadges(userId,badgetype);
-        return ApiResponse.onSuccess(BadgeConverter.toBadgeResponseDTO(new_userbadge));
+        if(badgeCommandService.checkBadges(userId,badgetype)){
+            UserBadge new_userbadge = badgeCommandService.assignBadge(userId,badgetype);
+            return ApiResponse.onSuccess(BadgeConverter.toBadgeResponseDTO(new_userbadge));
+        }
+        throw new BadgeHandler(ErrorStatus.BADGE_NOT_QUALIFIED);
     }
 
     /**

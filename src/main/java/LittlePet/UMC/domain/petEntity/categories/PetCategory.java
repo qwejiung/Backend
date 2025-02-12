@@ -44,6 +44,7 @@ public class PetCategory extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_big_category_id",nullable = false)
+    @ToString.Exclude
     private PetBigCategory petBigCategory;
 
     // Getters and Setters
