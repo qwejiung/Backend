@@ -151,7 +151,7 @@ public class PostService {
     // ✅ 2️⃣ 모바일 - 추가 데이터 로딩 (커서 이후 데이터)
     public List<Post> findNextPage(String category, Long cursorLikes, Long cursorId, int size, String sort) {
         return sort.equalsIgnoreCase("인기순")
-                ? postRepository.findPopularPostsByCategoryWithCursor(category, cursorLikes, cursorId, size)
+                ? postRepository.findPopularPostsByCategoryWithCursor(category, cursorLikes+1, cursorId, size)
                 : postRepository.findLatestPostsByCategoryWithCursor(category, cursorId, size);
     }
 
