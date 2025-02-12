@@ -66,8 +66,11 @@ public class PostService {
         post.addPostContent(contents);
 
         postRepository.save(post);
-        UserBadge userBadge =badgeCommandService.checkBadges(userId,"글스기마스터");
-        System.out.println("userBadge: " + userBadge);
+        System.out.println("post 저장"+post);
+
+//        System.out.println("checkBadgees with 글쓰기 마스터 실행");
+//        UserBadge userBadge =badgeCommandService.checkBadges(userId,"글쓰기마스터");
+//        System.out.println(" checkBadges with 글쓰기 성공"+userBadge );
 
         return post;
     }

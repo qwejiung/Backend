@@ -44,11 +44,14 @@ public class CommentService {
                 .parent(parent)
                 .build();
 
-        //뱃지 조건 확인 및 수여
-        commentRepository.save(comment);
-        postRepository.save(post);
-        UserBadge userBadge =badgeCommandService.checkBadges(user.getId(),"소통천재");
-        System.out.println("userBadge: " + userBadge);
+//        //뱃지 조건 확인 및 수여
+//        commentRepository.save(comment);
+//        System.out.println("댓글 저장성공 comment: "+comment);
+//        postRepository.save(post);
+//        System.out.println("포스트 저장 성공 post: "+post);
+//        System.out.println("뱃지 조건 확인 시작---------");
+//        UserBadge userBadge =badgeCommandService.checkBadges(user.getId(),"소통천재");
+//        System.out.println("뱃지 부여 성공userBadge: " + userBadge);
 
         return CommentResponseDTO.of(comment);
     }
