@@ -45,17 +45,17 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
         switch (badgeType) {
             case "글쓰기마스터":
                 long postCount = postRepository.countByUserId(userId);
-                criteriaMet = postCount >= 1; // Test를 위해 일단 1개 ,원래 15개 이상이면 True
+                criteriaMet = postCount >= 2; // Test를 위해 일단 1개 ,원래 15개 이상이면 True
                 break;
 
             case "소통천재":
                 long commentCount = commentRepository.getCountByUserId(userId); // 댓글 수 가져오기 (추가 메서드 필요)
-                criteriaMet = commentCount >= 1; // Test를 위해 일단 1개 30개 이상이면 True
+                criteriaMet = commentCount >= 2; // Test를 위해 일단 1개 30개 이상이면 True
                 break;
 
             case "소셜응원왕":
                 long likeCount = postlikeRepository.getCountByUserId(userId); // 좋아요 수 가져오기 (추가 메서드 필요)
-                criteriaMet = likeCount >= 1; // Test를 위해 일단 1개 50개 이상이면 True
+                criteriaMet = likeCount >= 2; // Test를 위해 일단 1개 50개 이상이면 True
                 break;
 
 //            case "CHALLENGER":
@@ -72,7 +72,7 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
         if (criteriaMet) {
             log.info("Criteria met for badge type: {}", badgeType);
         } else {
-            return null;
+            return false;
         }
 
         return criteriaMet;

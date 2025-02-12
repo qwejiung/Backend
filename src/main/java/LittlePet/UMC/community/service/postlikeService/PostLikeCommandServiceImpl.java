@@ -52,8 +52,6 @@ public class PostLikeCommandServiceImpl implements PostLikeCommandService {
                     .post(post)
                     .build();
             PostLike savedLike = postLikeRepository.save(postLike);
-            System.out.println("좋아요 저장 성공 " + savedLike);
-            System.out.println("뱃지 조건 확인 시작---------");
             if(badgeCommandService.checkBadges(userId,"소셜응원왕")) {
                 UserBadge userBadge = badgeCommandService.assignBadge(userId, "소셜응원왕");
                 if (userBadge != null) {
