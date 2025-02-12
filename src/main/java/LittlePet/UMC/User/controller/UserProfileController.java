@@ -70,4 +70,18 @@ public class UserProfileController {
         return ApiResponse.onSuccess(response);
     }
 
+    @Operation(summary = "프로필 조회 ", description = "사용자의 프로필 정보를 조회 합니다.")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공적으로 프로필이 조회되었습니다."),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "잘못된 요청입니다. 중복된 닉네임 또는 유효하지 않은 입력값"),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "존재하지 않는 사용자입니다.")
+    })
+    @GetMapping(value = "/update/{userId}")
+    public ApiResponse<UserUpdateProfileResponseDTO> updateUserProfile(
+            @PathVariable Long userId
+    ){
+        UserUpdateProfileResponseDTO response = userProfileService.getUserIdProfile(userId);
+        return ApiResponse.onSuccess(response);
+    }
+
 }

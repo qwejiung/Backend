@@ -14,7 +14,6 @@ public class PostForm {
 
     @NotBlank
     private String title;
-
     private String smallPetCategory; //petCategory
     private String postCategory; //postCategory
     private List<PostContentForm> contents;

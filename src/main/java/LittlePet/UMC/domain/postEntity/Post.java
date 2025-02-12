@@ -62,7 +62,7 @@ public class Post extends BaseTimeEntity {
     private List<PostClipping> postClippingList= new ArrayList<>();
 
     @Transient // DB에는 저장되지 않음
-    private int sequenceCounter = 1;
+    private int sequenceCounter = 0;
 
     public static Post createPost(String title, long views, User user, PostCategory postCategory, PetCategory petCategory) {
         Post post = new Post();
@@ -86,7 +86,7 @@ public class Post extends BaseTimeEntity {
     }
 
     public void resetSequenceCounter() {
-        sequenceCounter = 1;
+        sequenceCounter = 0;
     }
 
     public long getTotalCommentCount() {

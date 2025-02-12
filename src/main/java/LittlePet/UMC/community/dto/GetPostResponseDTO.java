@@ -1,10 +1,5 @@
 package LittlePet.UMC.community.dto;
 
-import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
-import LittlePet.UMC.apiPayload.exception.handler.BadgeHandler;
-import LittlePet.UMC.apiPayload.exception.handler.PetCategoryHandler;
-import LittlePet.UMC.domain.petEntity.categories.PetCategory;
-import LittlePet.UMC.domain.petEntity.mapping.UserPet;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.postEntity.mapping.PostContent;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class GetPostResponseDTO {
     private String userName;
-    private String userBadge;
+    private List<String> userBadges;
     private String PetCategory;
     private String postTitle;
 
@@ -38,13 +32,13 @@ public class GetPostResponseDTO {
     private Long views; //조회
     private Long likes; //좋아요
     private Long commentNum; //댓글수
-    private List<PostContentForm> contents;
+    private List<PostContentResponseDTO> contents;
     private List <CommentResponseDTO> comments; //댓글 단 사람의 닉네임, 펫 종류, 성별, 그, 댓글내용, 댓글 생성 시간
 
-    public GetPostResponseDTO(Post post) {
+    public GetPostResponseDTO(Post post, String deviceType) {
         this.userName = post.getUser().getName();
 
-        this.userBadge = post.getUser().userHaveBadge();
+        this.userBadges = post.getUser().userHaveBadge(deviceType);
 
         this.PetCategory =post.getPetCategory().getSpecies();
 
@@ -59,7 +53,8 @@ public class GetPostResponseDTO {
         this.contents = Optional.ofNullable(post.getPostcontentList())
                 .orElse(Collections.emptyList())  // null이면 빈 리스트 반환
                 .stream()
-                .map(postContent -> new PostContentForm(postContent.getContent()))
+                .sorted(Comparator.comparingInt(PostContent::getSequence))
+                .map(postContent -> new PostContentResponseDTO(postContent.getContent(), postContent.getSequence()))
                 .collect(Collectors.toList());
 
         // ✅ 최상위 댓글 필터링 및 변환
@@ -70,6 +65,7 @@ public class GetPostResponseDTO {
                 .map(comment -> new CommentResponseDTO(comment)) // 개별 댓글을 DTO로 변환
                 .collect(Collectors.toList());
     }
+
 
 
 }

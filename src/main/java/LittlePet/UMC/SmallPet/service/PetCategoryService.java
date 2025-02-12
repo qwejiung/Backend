@@ -132,6 +132,9 @@ public class PetCategoryService {
         if(url != null){
             petCategory.setFeatureImagePath(url);
         }
+        if(request.getTitle() != null){
+            petCategory.setTitle(request.getTitle());
+        }
 
         return PetCategoryConverter.toResponseDTO(petCategory);
     }

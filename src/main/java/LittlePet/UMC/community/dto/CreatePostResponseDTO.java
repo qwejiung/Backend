@@ -1,9 +1,16 @@
 package LittlePet.UMC.community.dto;
 
 import LittlePet.UMC.domain.postEntity.Post;
+import LittlePet.UMC.domain.postEntity.mapping.PostContent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -12,13 +19,18 @@ public class CreatePostResponseDTO {
     private String title;
     private String postCategory; //postCategory
     private String petCategory;
-    private String content;
+    private List<PostContentResponseDTO> contents;
 
     public CreatePostResponseDTO(Post post) {
         title = post.getTitle();
         postCategory = post.getPostCategory().getCategory();
         this.petCategory = post.getPetCategory().getSpecies();
-        content = post.getPostcontentList().get(0).getContent();
+        this.contents = Optional.ofNullable(post.getPostcontentList())
+                .orElse(Collections.emptyList())  // null이면 빈 리스트 반환
+                .stream()
+                .sorted(Comparator.comparingInt(PostContent::getSequence))
+                .map(postContent -> new PostContentResponseDTO(postContent.getContent(), postContent.getSequence()))
+                .collect(Collectors.toList());
     }
 }
 
