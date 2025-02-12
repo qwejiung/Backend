@@ -82,3 +82,7 @@ logging:
     org.springframework.security.oauth2: DEBUG
     org.springframework.security.oauth2.client: DEBUG
     org.springframework.security.oauth2.provider: DEBUG
+
+kakao:
+  api:
+    key: ${KAKAO_REST_API_KEY}  # 카카오 개발자 사이트에서 발급받은 REST API 키
