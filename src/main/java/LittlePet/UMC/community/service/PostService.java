@@ -67,7 +67,6 @@ public class PostService {
                 .collect(Collectors.toList());
 
         post.addPostContent(contents);
-
         postRepository.save(post);
 
 
@@ -129,10 +128,11 @@ public class PostService {
         postRepository.delete(post);
     }
 
-
+    @Transactional
     public Post FindOnePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
+        post.incrementViews();
         return post;
 
     }
