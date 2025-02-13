@@ -98,7 +98,7 @@ public class PostController {
             @RequestParam(defaultValue = "0") int pageNum,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "최신순") String sort,
-            @RequestParam(required = false) Long cursorLikes,
+            @RequestParam(defaultValue = "0", required = false) Long cursorLikes,
             @RequestParam(required = false) Long cursorId,
             @RequestParam(value = "deviceType", defaultValue = "pc") String deviceType) {
 
