@@ -16,12 +16,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreatePostResponseDTO {
+    private long id;
     private String title;
     private String postCategory; //postCategory
     private String petCategory;
     private List<PostContentResponseDTO> contents;
 
     public CreatePostResponseDTO(Post post) {
+        this.id = post.getId();
         title = post.getTitle();
         postCategory = post.getPostCategory().getCategory();
         this.petCategory = post.getPetCategory().getSpecies();

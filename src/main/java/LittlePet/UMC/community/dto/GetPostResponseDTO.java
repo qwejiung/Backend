@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetPostResponseDTO {
+    private Long id;
     private String userName;
     private List<String> userBadges;
     private String PetCategory;
@@ -36,6 +37,7 @@ public class GetPostResponseDTO {
     private List <CommentResponseDTO> comments; //댓글 단 사람의 닉네임, 펫 종류, 성별, 그, 댓글내용, 댓글 생성 시간
 
     public GetPostResponseDTO(Post post, String deviceType) {
+        this.id = post.getId();
         this.userName = post.getUser().getName();
 
         this.userBadges = post.getUser().userHaveBadge(deviceType);
