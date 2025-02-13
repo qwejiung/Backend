@@ -30,7 +30,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "JOIN p.postCategory pc " +
             "WHERE pc.category = :category " +
             "AND p.id < :cursor " +
-            "ORDER BY p.createdAt DESC " +
+            "ORDER BY p.createdAt DESC, p.id DESC " +
             "LIMIT :size")
     List<Post> findLatestPostsByCategoryWithCursor(@Param("category") String category, @Param("cursor") Long cursor, @Param("size") int size);
 
