@@ -55,7 +55,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostLike> postLikeList= new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<PostContent> postcontentList= new ArrayList<>();
     // Getters, Setters, Constructors
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
