@@ -96,4 +96,8 @@ public class Post extends BaseTimeEntity {
 
         return totalCount;
     }
+
+    public void incrementViews() {
+        this.views += 1;
+    }
 }

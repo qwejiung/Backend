@@ -65,7 +65,6 @@ public class PostService {
                 .collect(Collectors.toList());
 
         post.addPostContent(contents);
-
         postRepository.save(post);
 //        UserBadge userBadge =badgeCommandService.checkBadges(userId,"글스기마스터");
 //        System.out.println("userBadge: " + userBadge);
@@ -119,10 +118,11 @@ public class PostService {
         postRepository.delete(post);
     }
 
-
+    @Transactional
     public Post FindOnePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
+        post.incrementViews();
         return post;
 
     }
