@@ -78,7 +78,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //                    "Authorization=" + token + "; Path=/; HttpOnly; Secure; SameSite=None");
 
             // 클라이언트로 리다이렉트
-            response.sendRedirect("http://localhost:5173/");
+            response.sendRedirect("https://umclittlepet.shop/");
         } catch (ExpiredJwtException e) {
             System.err.println("[ERROR] JWT expired. Refreshing token...");
             //handleExpiredJwt(response, authentication);
