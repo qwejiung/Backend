@@ -106,7 +106,11 @@ public class SecurityConfig {
                                 "/login/oauth2/code/**",
                                 "/login",
                                 "/api/**"
-                        ).permitAll());
+                        ).permitAll()
+                                // /pet-register 경로는 로그인한 사용자만 접근 가능하게 설정
+                                .requestMatchers("/pet-register").authenticated()
+                                // 나머지 모든 요청은 인증 필요 (필요에 따라 조정)
+                                .anyRequest().authenticated());
                         //.anyRequest().authenticated());
 
         http.sessionManagement(session -> session
