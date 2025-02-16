@@ -49,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         Optional<Cookie> authCookie = Arrays.stream(cookies)
-                .filter(cookie -> "Authorization".equals(cookie.getName()))
+                .filter(cookie -> "jwt".equals(cookie.getName()))
                 .findFirst();
 
         if (authCookie.isEmpty()) {
