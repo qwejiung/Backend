@@ -68,7 +68,7 @@ UMC_LittlePet Backend는 반려 소동물 관리 모바일 웹 애플리케이�
 
 - **브랜치 전략**
   - Issue 기반 feature 브랜치 생성 (브랜치 source: `develop`)
-  - 작업 전 항상 최신 `develop` 브랜치 반영 후 진행
+  - 작업 전 항상 최신 `main` 브랜치 반영 후 진행
 - **커밋 메시지 규칙**
   - `[태그] 설명` (예: `[feat] 로그인 기능 구현`)
   - 주요 태그: `feat`, `fix`, `docs`, `refactor`, `style`, `test`
