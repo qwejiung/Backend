@@ -3,14 +3,18 @@ package LittlePet.UMC.Hospital.service;
 import LittlePet.UMC.Hospital.dto.HospitalResponseDTO;
 import LittlePet.UMC.Hospital.repository.HospitalPrefRepository;
 import LittlePet.UMC.Hospital.repository.HospitalRepository;
+import LittlePet.UMC.S3Service;
 import LittlePet.UMC.User.repository.UserRepository;
 import LittlePet.UMC.domain.hospitalEntity.Hospital;
 import LittlePet.UMC.domain.hospitalEntity.mapping.HospitalPref;
 import LittlePet.UMC.domain.userEntity.User;
 import jakarta.transaction.Transactional;
 import LittlePet.UMC.Hospital.dto.HospitalRequestDTO;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,13 +26,15 @@ public class HospitalService {
     private final KakaoMapService kakaoMapService;
     private final HospitalPrefRepository hospitalPrefRepository;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
 
-    public HospitalService(HospitalRepository hospitalRepository, HospitalPrefRepository hospitalPrefRepository, UserRepository userRepository, KakaoMapService kakaoMapService){
+    public HospitalService(HospitalRepository hospitalRepository, HospitalPrefRepository hospitalPrefRepository, UserRepository userRepository, KakaoMapService kakaoMapService, S3Service s3Service){
         this.hospitalRepository = hospitalRepository;
         this.hospitalPrefRepository = hospitalPrefRepository;
         this.userRepository = userRepository;
         this.kakaoMapService = kakaoMapService;
+        this.s3Service = s3Service;
     }
 
     @Transactional
@@ -68,7 +74,15 @@ public class HospitalService {
         return hospitalPrefRepository.findByUser(user).stream()
                 .map(hospitalPref -> {
                     Hospital hospital = hospitalPref.getHospital();
-                    return new HospitalResponseDTO(hospital.getId(), hospital.getName(), hospital.getAddress());
+                    return new HospitalResponseDTO(
+                            hospital.getId(),
+                            hospital.getName(),
+                            hospital.getAddress(),
+                            hospital.getPhoneNumber(),
+                            hospital.getOpeningHours(),
+                            hospital.getImageUrl(),
+                            hospital.getRating()
+                    );
                 })
                 .collect(Collectors.toList());
     }
@@ -92,9 +106,73 @@ public class HospitalService {
         }).collect(Collectors.toList());
     }
 
+    // 병원 정보 가져오기
     public HospitalRequestDTO getHospitalDetails(Long hospitalId) {
         Hospital hospital = hospitalRepository.findById(hospitalId)
                 .orElseThrow(() -> new RuntimeException("병원을 찾을 수 없습니다."));
         return new HospitalRequestDTO(hospital);
+    }
+
+    @Transactional
+    public List<HospitalRequestDTO> filterHospitals(String filterType) {
+        List<Hospital> hospitals = hospitalRepository.findAll();
+        LocalDate currentDate = LocalDate.now();
+        LocalTime currentTime = LocalTime.now();
+
+        return hospitals.stream()
+                .filter(hospital -> applyFilter(hospital, filterType, currentDate, currentTime))
+                .map(HospitalRequestDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    //영업시간 필터링
+    private boolean applyFilter(Hospital hospital, String filterType, LocalDate currentDate, LocalTime currentTime) {
+        if (filterType == null) return true;
+
+        switch (filterType) {
+            case "주말":
+                return isWeekendOpen(hospital);
+            case "영업중":
+                return isOpenNow(hospital, currentDate, currentTime);
+            case "24시간":
+                return isTwentyFourHours(hospital);
+            default:
+                return true;
+        }
+    }
+
+    //주말 영업 병원
+    private boolean isWeekendOpen(Hospital hospital) {
+        String openingHours = hospital.getOpeningHours();
+        return openingHours.contains("토") && openingHours.contains("일");
+    }
+
+    //현재 날짜+시간 기준 영업 중인 병원
+    private boolean isOpenNow(Hospital hospital, LocalDate currentDate, LocalTime currentTime) {
+        String openingHours = hospital.getOpeningHours();
+        String dayOfWeek = currentDate.getDayOfWeek().toString();
+
+        // 현재 요일에 맞는 영업시간 찾아오기
+        String[] days = openingHours.split(",");
+        for (String day : days) {
+            String[] parts = day.split(" ");
+            String dayName = parts[0]; // 예: "월"
+            String timeRange = parts[1] + " " + parts[2]; // 예: "10:00 - 18:30"
+
+            if (dayName.equalsIgnoreCase(dayOfWeek)) {
+                // 요일이 일치하면, 영업시간 비교
+                String[] times = timeRange.split(" - ");
+                LocalTime openingTime = LocalTime.parse(times[0]);
+                LocalTime closingTime = LocalTime.parse(times[1]);
+
+                return !currentTime.isBefore(openingTime) && !currentTime.isAfter(closingTime);
+            }
+        }
+        return false; // 해당 요일에 영업시간이 없다면 false 반환
+    }
+
+    // 24시간 영업하는 병원
+    private boolean isTwentyFourHours(Hospital hospital) {
+        return hospital.getOpeningHours().contains("24:00");
     }
 }
