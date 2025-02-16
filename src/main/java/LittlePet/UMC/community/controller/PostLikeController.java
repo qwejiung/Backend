@@ -39,6 +39,7 @@ public class PostLikeController {
             @PathVariable @ExistPost Long postId) //@ExistPost로 바꿔야함
     {
         PostLike postLike = postLikeCommandService.addlike(userId,postId);
-        return ApiResponse.onSuccess(PostLikeConverter.toPostResponseDTO(postLike));
+        int countLike = postLikeCommandService.PostLikeCount(postId);
+        return ApiResponse.onSuccess(PostLikeConverter.toPostResponseDTO(postLike,countLike));
     }
 }

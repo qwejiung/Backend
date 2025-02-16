@@ -15,6 +15,7 @@ public class PostLikeResponseDTO {
     public static class postlikeResultDTO {
         Long userId;
         Long postId;
+        int likeNum;
         LocalDateTime createdAt;
     }
 }
