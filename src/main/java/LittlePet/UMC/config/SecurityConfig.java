@@ -73,6 +73,7 @@ public class SecurityConfig {
 
         http.httpBasic(httpBasic -> httpBasic.disable());
 
+        http.anonymous(anonymous -> anonymous.disable());
 
 
         // 5. JWTFilter 추가
