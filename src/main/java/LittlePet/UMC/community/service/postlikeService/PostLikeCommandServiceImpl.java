@@ -76,4 +76,9 @@ public class PostLikeCommandServiceImpl implements PostLikeCommandService {
             return savedLike; // 좋아요 안 함 → 저장 (좋아요 추가)
         }
     }
+
+    @Override
+    public int PostLikeCount(Long postId){
+        return postLikeRepository.countPostLikes(postId);
+    }
 }
