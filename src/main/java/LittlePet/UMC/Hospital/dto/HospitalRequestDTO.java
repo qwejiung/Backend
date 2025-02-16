@@ -15,6 +15,11 @@ public class HospitalRequestDTO {
     private String closedDay;
     private String latitude;
     private String longitude;
+    private String phoneNumber;
+    private String openingHours;
+    private String imageUrl;
+    private Double rating;
+
 
     // Hospital 엔티티를 기반으로 DTO 객체 생성
     public HospitalRequestDTO(Hospital hospital) {
@@ -24,5 +29,9 @@ public class HospitalRequestDTO {
         this.latitude = hospital.getLatitude();
         this.longitude = hospital.getLongitude();
         this.closedDay = hospital.getClosedDay();
+        this.phoneNumber = hospital.getPhoneNumber();
+        this.openingHours = hospital.getOpeningHours();
+        this.imageUrl = hospital.getImageUrl();
+        this.rating = hospital.getRating();
     }
 }
