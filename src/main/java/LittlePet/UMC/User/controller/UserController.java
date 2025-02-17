@@ -3,8 +3,10 @@ package LittlePet.UMC.User.controller;
 import LittlePet.UMC.User.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,4 +62,23 @@ public class UserController {
         }
         return ResponseEntity.ok(Map.of("loggedIn", false, "message", "No token found"));
     }
+
+    @GetMapping("/api/auth/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        // 만료된 쿠키 생성 (maxAge 0)
+        ResponseCookie expiredCookie = ResponseCookie.from("jwt", "")
+                .path("/")
+                .maxAge(0)
+                .httpOnly(true)
+                .secure(true)   // 운영 환경에 맞게 조정 (개발 환경에서는 false)
+                .sameSite("None")  // cross-site 요청 허용
+                .build();
+
+        // 쿠키 헤더에 추가하여 클라이언트로 전송
+        response.setHeader("Set-Cookie", expiredCookie.toString());
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
+    }
+
+
+
 }
