@@ -122,7 +122,6 @@ public class PostService {
     public Post FindOnePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
-        post.incrementViews();
         return post;
 
     }
@@ -147,6 +146,15 @@ public class PostService {
         return sort.equalsIgnoreCase("인기순")
                 ? postRepository.findPopularPostsByCategoryPaged(category, pageable).getContent()
                 : postRepository.findLatestPostsByCategoryPaged(category, pageable).getContent();
+    }
+
+    // 조회수 1 증가
+    @Transactional
+    public Post incrementPostViews(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
+        post.incrementViews();
+        return post;
     }
 
 }
