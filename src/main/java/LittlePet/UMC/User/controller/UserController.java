@@ -37,14 +37,20 @@ public class UserController {
                         }
 
                         String socialId = jwtUtil.getSocialId(token);
+
                         String role = jwtUtil.getRole(token);
+                        // 추가 클레임 추출 (토큰에 userId, userName이 포함되어 있어야 함)
+                        String userId = jwtUtil.getUserId(token);
+                        String userName = jwtUtil.getUserName(token);
 
                         // 사용자 정보 반환
                         return ResponseEntity.ok(Map.of(
                                 "loggedIn", true,
                                 "user", Map.of(
                                         "socialId", socialId,
-                                        "role", role
+                                        "role", role,
+                                        "userId", userId,
+                                        "userName", userName
                                 )
                         ));
                     } catch (Exception e) {
