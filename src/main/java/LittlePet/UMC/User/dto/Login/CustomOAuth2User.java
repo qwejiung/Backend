@@ -33,9 +33,6 @@ public class CustomOAuth2User implements OAuth2User {
         return userJoinDTO.getName(); // 사용자 이름 반환
     }
 
-    public String getUserId() {
-        return userJoinDTO.getUserId();
-    }
 
     public String getUserName() {
         return userJoinDTO.getUsername();
