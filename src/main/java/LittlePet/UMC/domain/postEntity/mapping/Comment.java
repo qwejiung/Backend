@@ -58,20 +58,4 @@ public class Comment extends BaseTimeEntity {
 
     // Getters, Setters, Constructors
 
-
-    public long getTotalReplyCount() {
-        if (replies == null || replies.isEmpty()) {
-            return 0; // ✅ 대댓글이 없으면 0으로 반환 (자기 자신 포함 X)
-        }
-
-        long count = replies.size(); // ✅ 현재 댓글의 직접적인 대댓글 개수
-
-        for (Comment reply : replies) {
-            count += reply.getTotalReplyCount(); // ✅ 대댓글의 대댓글 개수 합산
-        }
-
-        return count-1;
-    }
-
-
 }

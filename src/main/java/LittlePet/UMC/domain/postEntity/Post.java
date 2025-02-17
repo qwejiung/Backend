@@ -90,13 +90,7 @@ public class Post extends BaseTimeEntity {
     }
 
     public long getTotalCommentCount() {
-        long totalCount = commentList.size(); // ✅ 최상위 댓글 개수 포함
-
-        for (Comment comment : commentList) {
-            totalCount += comment.getTotalReplyCount(); // ✅ 각 댓글의 대댓글 개수 합산
-        }
-
-        return totalCount;
+        return commentList.size();
     }
 
     public void incrementViews() {
