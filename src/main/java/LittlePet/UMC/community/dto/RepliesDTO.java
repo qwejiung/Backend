@@ -25,7 +25,6 @@ public class RepliesDTO {
     private LocalDateTime updatedTime;
 
     private List<String> userPets;
-    private List<RepliesDTO> replies;
 
     public RepliesDTO(Comment comment) {
         this.commentId = comment.getId();
@@ -38,11 +37,6 @@ public class RepliesDTO {
                 .stream()
                 .map(userPet -> userPet.getPetCategory().getSpecies())
                 .distinct()
-                .collect(Collectors.toList());
-        this.replies = Optional.ofNullable(comment.getReplies())
-                .orElse(Collections.emptyList()) // null이면 빈 리스트 반환
-                .stream()
-                .map(reply -> new RepliesDTO(reply))
                 .collect(Collectors.toList());
     }
 }
