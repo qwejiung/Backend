@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class CommentResponseDTO {
 
     //댓글 단 사람의 닉네임, 펫 종류, 성별, 그, 댓글내용, 댓글 생성 시간
+    private Long commentId;
     private String name;
     private String content;
 
@@ -34,6 +35,7 @@ public class CommentResponseDTO {
     private List<RepliesDTO> replies;
 
     public CommentResponseDTO(Comment comment) {
+        this.commentId = comment.getId();
         this.name = comment.getUser().getName();
         this.content = comment.getContent();
         this.createdTime = comment.getCreatedAt();
