@@ -1,6 +1,9 @@
 package LittlePet.UMC.User.controller;
 
 import LittlePet.UMC.User.jwt.JwtUtil;
+import LittlePet.UMC.User.repository.UserRepository;
+import LittlePet.UMC.User.service.UserService;
+import LittlePet.UMC.domain.userEntity.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,9 +21,11 @@ import java.util.Map;
 @RestController
 public class UserController {
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public UserController(JwtUtil jwtUtil) {
+    public UserController(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
 
@@ -42,15 +47,21 @@ public class UserController {
 
                         String role = jwtUtil.getRole(token);
                         // 추가 클레임 추출 (토큰에 userId, userName이 포함되어 있어야 함)
-                        String userName = jwtUtil.getUserName(token);
-
                         // 사용자 정보 반환
+
+                        User user = userRepository.findBySocialId(socialId);
+                        if(user == null) {
+                            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                    .body(Map.of("loggedIn", false, "message", "User not found"));
+                        }
                         return ResponseEntity.ok(Map.of(
                                 "loggedIn", true,
                                 "user", Map.of(
+                                        "id", user.getId(),
                                         "socialId", socialId,
                                         "role", role,
-                                        "userName", userName
+                                        "userName", user.getName()
+
                                 )
                         ));
                     } catch (Exception e) {
