@@ -57,7 +57,7 @@ public class UserController {
                         return ResponseEntity.ok(Map.of(
                                 "loggedIn", true,
                                 "user", Map.of(
-                                        "id", user.getId(),
+                                        "userId", user.getId(),
                                         "socialId", socialId,
                                         "role", role,
                                         "userName", user.getName()
