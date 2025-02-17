@@ -49,11 +49,13 @@ public class JwtUtil {
                 .getPayload().get("userName", String.class);
     }
 
-    public String createJwt(String socialId, String role, Long expiredMs) {
+    public String createJwt(String socialId, String role,String userId, String userName, Long expiredMs) {
 
         return Jwts.builder()
                 .claim("socialId", socialId)
                 .claim("role", role)
+                .claim("userId", userId)         // 추가
+                .claim("userName", userName)     // 추가
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
                 .signWith(secretKey)
