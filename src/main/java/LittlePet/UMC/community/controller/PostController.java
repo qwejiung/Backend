@@ -117,5 +117,13 @@ public class PostController {
         List<GetAllPostResponseDTO> dtos = GetAllPostResponseDTO.fromEntityList(posts);
         return ApiResponse.onSuccess(dtos);
     }
+
+    @Operation(summary = "게시물 조회수 증가", description = "특정 게시물의 조회수를 1 증가시킵니다")
+    @PatchMapping("/post/{post-id}/view")
+    public ApiResponse<ViewsResponseDTO> increasePostView(@PathVariable("post-id") Long postId) {
+        Post post = postService.incrementPostViews(postId);
+        ViewsResponseDTO dto = new ViewsResponseDTO(post);
+        return ApiResponse.onSuccess(dto);
+    }
 }
 
