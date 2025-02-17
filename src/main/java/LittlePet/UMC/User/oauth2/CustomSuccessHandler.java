@@ -2,6 +2,8 @@ package LittlePet.UMC.User.oauth2;
 
 import LittlePet.UMC.User.dto.Login.CustomOAuth2User;
 import LittlePet.UMC.User.jwt.JwtUtil;
+import LittlePet.UMC.User.repository.UserRepository;
+import LittlePet.UMC.domain.userEntity.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,9 +21,12 @@ import java.io.IOException;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public CustomSuccessHandler(JwtUtil jwtUtil) {
+
+    public CustomSuccessHandler(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -55,6 +60,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 throw new IllegalArgumentException("[ERROR] Unsupported principal type: " + principal.getClass().getName());
             }
 
+            User user = userRepository.findBySocialId(socialId);
+
+            boolean isFirstLogin = user.getCreatedAt().equals(user.getUpdatedAt()); // 최초 로그인 여부 확인
+            System.out.println("[DEBUG] First Login: " + isFirstLogin);
+
+
             System.out.println("[DEBUG] Social ID: " + socialId);
             System.out.println("[DEBUG] Role: " + role);
 
@@ -67,8 +78,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             response.addHeader("Set-Cookie", jwtCookie.toString());
             System.out.println("[DEBUG] JWT cookie added: " + token);
 
-            // 클라이언트로 리다이렉트
-            response.sendRedirect("https://umclittlepet.shop/");
+            String redirectUrl = isFirstLogin ? "https://umclittlepet.shop/onboarding" : "https://umclittlepet.shop/";
+            System.out.println("[DEBUG] Redirecting to: " + redirectUrl);
+
+            response.sendRedirect(redirectUrl);
+
+
         } catch (ExpiredJwtException e) {
             System.err.println("[ERROR] JWT expired. Refreshing token...");
             // handleExpiredJwt(response, authentication);
