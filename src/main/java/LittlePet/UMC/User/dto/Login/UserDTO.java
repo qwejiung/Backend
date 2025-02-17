@@ -15,6 +15,8 @@ public class UserDTO {
     @Builder
     public static class UserJoinDTO{
         private RoleStatus role;
+        private String username;
+        private String userId;
         private String phone;
         private String name;
         private String socialId;
