@@ -37,14 +37,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                     .map(GrantedAuthority::getAuthority)
                     .findFirst()
                     .orElse("USER"); // 기본 권한
-            String userId = "";    // DB나 추가 정보에서 가져와야 함
             String userName = "";  // DB나 추가 정보에서 가져와야 함
 
             if (principal instanceof CustomOAuth2User) {
                 // Naver 처리
                 CustomOAuth2User customUserDetails = (CustomOAuth2User) principal;
                 socialId = customUserDetails.getSocialId();
-                userId = customUserDetails.getUserId();       // 예시
                 userName = customUserDetails.getUserName();
             } else if (principal instanceof DefaultOidcUser) {
                 // Google 처리
@@ -52,7 +50,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 role = "USER";
                 socialId = oidcUser.getSubject(); // Google 사용자 ID
                 System.out.println("[DEBUG] Google attributes: " + oidcUser.getAttributes());
-                userId = oidcUser.getAttribute("userId");
                 userName = oidcUser.getAttribute("userName");
             } else {
                 throw new IllegalArgumentException("[ERROR] Unsupported principal type: " + principal.getClass().getName());
@@ -62,7 +59,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             System.out.println("[DEBUG] Role: " + role);
 
             // JWT 생성 (1일 유효)
-            String token = jwtUtil.createJwt(socialId, role,userName,userId, 60 * 60 * 24 * 1000L);
+            String token = jwtUtil.createJwt(socialId, role,userName, 60 * 60 * 24 * 1000L);
             System.out.println("[DEBUG] Generated JWT: " + token);
 
             // JWT를 쿠키에 추가 (쿠키 이름을 "jwt"로 변경)

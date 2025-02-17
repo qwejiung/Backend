@@ -39,22 +39,17 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String getUserId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
-                .getPayload().get("userId", String.class);
-    }
 
     public String getUserName(String token) {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
                 .getPayload().get("userName", String.class);
     }
 
-    public String createJwt(String socialId, String role,String userId, String userName, Long expiredMs) {
+    public String createJwt(String socialId, String role, String userName, Long expiredMs) {
 
         return Jwts.builder()
                 .claim("socialId", socialId)
                 .claim("role", role)
-                .claim("userId", userId)         // 추가
                 .claim("userName", userName)     // 추가
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))
