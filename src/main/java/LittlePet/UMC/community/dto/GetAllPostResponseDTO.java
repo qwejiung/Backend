@@ -48,7 +48,7 @@ public class GetAllPostResponseDTO {
         this.contents = post.getPostcontentList()
                 .stream()
                 .sorted(Comparator.comparingInt(PostContent::getSequence))
-                .map(content -> new PostContentResponseDTO(content.getContent(),content.getSequence())) // PostContent 엔티티의 content 필드
+                .map(content -> new PostContentResponseDTO(content)) // PostContent 엔티티의 content 필드
                 .collect(Collectors.toList());
     }
 
