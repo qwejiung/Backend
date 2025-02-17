@@ -40,7 +40,6 @@ public class UserController {
 
                         String role = jwtUtil.getRole(token);
                         // 추가 클레임 추출 (토큰에 userId, userName이 포함되어 있어야 함)
-                        String userId = jwtUtil.getUserId(token);
                         String userName = jwtUtil.getUserName(token);
 
                         // 사용자 정보 반환
@@ -49,7 +48,6 @@ public class UserController {
                                 "user", Map.of(
                                         "socialId", socialId,
                                         "role", role,
-                                        "userId", userId,
                                         "userName", userName
                                 )
                         ));
