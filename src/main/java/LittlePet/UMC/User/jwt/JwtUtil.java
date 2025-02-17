@@ -39,6 +39,16 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
+    public String getUserId(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
+                .getPayload().get("userId", String.class);
+    }
+
+    public String getUserName(String token) {
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
+                .getPayload().get("userName", String.class);
+    }
+
     public String createJwt(String socialId, String role, Long expiredMs) {
 
         return Jwts.builder()
