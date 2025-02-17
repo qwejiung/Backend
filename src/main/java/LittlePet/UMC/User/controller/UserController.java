@@ -27,7 +27,7 @@ public class UserController {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("Authorization".equals(cookie.getName())) {
+                if ("jwt".equals(cookie.getName())) {
                     String token = cookie.getValue();
                     try {
                         // 토큰 검증
