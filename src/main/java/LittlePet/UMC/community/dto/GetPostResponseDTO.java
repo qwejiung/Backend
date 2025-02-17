@@ -51,7 +51,7 @@ public class GetPostResponseDTO {
         this.likes = (long) post.getPostLikeList().size();
         this.commentNum = post.getTotalCommentCount();
 
-        // ✅ PostContent 리스트 변환
+        // PostContent 리스트 변환
         this.contents = Optional.ofNullable(post.getPostcontentList())
                 .orElse(Collections.emptyList())  // null이면 빈 리스트 반환
                 .stream()
@@ -59,7 +59,7 @@ public class GetPostResponseDTO {
                 .map(postContent -> new PostContentResponseDTO(postContent.getContent(), postContent.getSequence()))
                 .collect(Collectors.toList());
 
-        // ✅ 최상위 댓글 필터링 및 변환
+        // 최상위 댓글 필터링 및 변환
         this.comments = Optional.ofNullable(post.getCommentList())
                 .orElse(Collections.emptyList()) // null이면 빈 리스트 반환
                 .stream()

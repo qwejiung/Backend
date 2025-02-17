@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Data
 public class RepliesDTO {
+    private Long commentId;
     private String name;
     private String content;
 
@@ -27,6 +28,7 @@ public class RepliesDTO {
     private List<RepliesDTO> replies;
 
     public RepliesDTO(Comment comment) {
+        this.commentId = comment.getId();
         this.name = comment.getUser().getName();
         this.content = comment.getContent();
         this.createdTime = comment.getCreatedAt();
