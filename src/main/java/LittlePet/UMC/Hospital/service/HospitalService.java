@@ -13,9 +13,12 @@ import LittlePet.UMC.Hospital.dto.HospitalRequestDTO;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 
@@ -142,37 +145,54 @@ public class HospitalService {
     }
 
     //주말 영업 병원
+    @Transactional
     private boolean isWeekendOpen(Hospital hospital) {
         String openingHours = hospital.getOpeningHours();
         return openingHours.contains("토") && openingHours.contains("일");
     }
 
     //현재 날짜+시간 기준 영업 중인 병원
-    private boolean isOpenNow(Hospital hospital, LocalDate currentDate, LocalTime currentTime) {
+    @Transactional
+    public boolean isOpenNow(Hospital hospital, LocalDate currentDate, LocalTime currentTime) {
+
         String openingHours = hospital.getOpeningHours();
-        String dayOfWeek = currentDate.getDayOfWeek().toString();
+        String[] days = openingHours.split("\n"); // 줄바꿈 기준으로 나누기
 
-        // 현재 요일에 맞는 영업시간 찾아오기
-        String[] days = openingHours.split(",");
+        String koreanDay = currentDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN);
+
         for (String day : days) {
-            String[] parts = day.split(" ");
-            String dayName = parts[0]; // 예: "월"
-            String timeRange = parts[1] + " " + parts[2]; // 예: "10:00 - 18:30"
+            String[] parts = day.split("\\s", 2); // 공백 기준으로 요일과 시간 분리
+            if (parts.length < 2) continue;
 
-            if (dayName.equalsIgnoreCase(dayOfWeek)) {
-                // 요일이 일치하면, 영업시간 비교
-                String[] times = timeRange.split(" - ");
-                LocalTime openingTime = LocalTime.parse(times[0]);
-                LocalTime closingTime = LocalTime.parse(times[1]);
+            String dayName = parts[0].trim(); // "월"
+            if (!dayName.equals(koreanDay)) continue;
 
-                return !currentTime.isBefore(openingTime) && !currentTime.isAfter(closingTime);
+            if (parts[1].contains("휴무")) {
+                return false;
+            }
+
+            String[] times = parts[1].trim().split("\\s*-\\s*");
+            if (times.length < 2) continue;
+
+            try {
+                LocalTime openingTime = LocalTime.parse(times[0].trim());
+                LocalTime closingTime = LocalTime.parse(times[1].trim());
+
+                boolean isOpen = !currentTime.isBefore(openingTime) && !currentTime.isAfter(closingTime);
+                return isOpen;
+            } catch (Exception e) {
+                continue; // 시간 파싱 오류가 있을 경우, 다른 요일로 넘어감
             }
         }
-        return false; // 해당 요일에 영업시간이 없다면 false 반환
+        return false;
     }
 
+
     // 24시간 영업하는 병원
+    @Transactional
     private boolean isTwentyFourHours(Hospital hospital) {
-        return hospital.getOpeningHours().contains("24:00");
+        String openingHours = hospital.getOpeningHours();
+        return openingHours.contains("00:00") && hospital.getOpeningHours().contains("23:59");
     }
+
 }

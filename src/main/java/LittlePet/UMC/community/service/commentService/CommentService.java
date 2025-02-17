@@ -48,10 +48,6 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        System.out.println("댓글 저장성공 comment: "+comment);
-        postRepository.save(post);
-        System.out.println("포스트 저장 성공 post: "+post);
-
         //뱃지 조건 확인 및 수여
         System.out.println("뱃지 조건 확인 시작---------");
 
