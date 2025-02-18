@@ -1,6 +1,7 @@
 package LittlePet.UMC;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -37,4 +38,20 @@ public class S3Service {
         return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, s3.getRegionName(), fileName);
     }
 
+    public String getFileUrl(String fileName) {
+        return s3.getUrl(bucket, fileName).toString();
+    }
+
+    public String getFileUrlIfExists(String fileName) {
+        try {
+            if (s3.doesObjectExist(bucket, fileName)) {  // S3에 파일 존재 여부 확인
+                return s3.getUrl(bucket, fileName).toString();
+            } else {
+                throw new IllegalArgumentException(fileName + "이 존재하지 않음");
+
+            }
+        } catch (AmazonS3Exception e) {
+            return "Error checking file: " + e.getMessage();
+        }
+    }
 }
