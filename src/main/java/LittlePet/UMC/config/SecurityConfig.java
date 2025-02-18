@@ -115,7 +115,6 @@ public class SecurityConfig {
 //                        //.anyRequest().authenticated());
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/pet-register").authenticated() // /pet-register는 인증 필요
                 .requestMatchers(
                         "/",
                         "/docs/**",

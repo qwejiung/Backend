@@ -72,6 +72,7 @@ public class PetProfileService {
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 반려동물 카테고리입니다."));
 
         UserPet updatedPet = pet.toBuilder()
+                .id(pet.getId())
                 .name(petRequestDTO.getName())
                 .birthDay(LocalDate.parse(petRequestDTO.getBirthDay()))
                 .gender(Gender.valueOf(petRequestDTO.getGender().toUpperCase()))
@@ -80,6 +81,10 @@ public class PetProfileService {
                 .build();
 
         userPetRepository.save(updatedPet);
+
+        // DB 저장 후 확인
+        UserPet savedPet = userPetRepository.findById(petId).orElseThrow();
+        System.out.println("🔄 업데이트 후 petCategory: " + savedPet.getPetCategory().getSpecies());
 
         // DTO 변환 및 반환
         return PetProfileConverter.toPetResponseDTO(updatedPet);
