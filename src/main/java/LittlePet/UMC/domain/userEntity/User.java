@@ -16,7 +16,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //유저 이름,성별,소셜로그인 등
 @Getter
@@ -24,7 +26,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-
 @Table(name = "`user`")
 public class User extends BaseTimeEntity {
     @Id
@@ -61,12 +62,14 @@ public class User extends BaseTimeEntity {
     private List<HospitalStarRating> hospitalStarRatingList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Post> postList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PostClipping> postClippingList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -78,8 +81,9 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserPet> userPetList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<UserBadge> userBadgeList= new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserBadge> userBadgeList = new ArrayList<>();
+
 
     // Getters and Setters
 
@@ -108,10 +112,18 @@ public class User extends BaseTimeEntity {
         this.role = role;
     }
 
-    public String userHaveBadge() {
+    public List<String> userHaveBadge(String deviceType) {
         if (userBadgeList == null || userBadgeList.isEmpty()) {
-            return null;
+            return Collections.emptyList(); // ✅ null 대신 빈 리스트 반환 (NPE 방지)
         }
-        return userBadgeList.get(0).getBadge().getName();
+
+        if ("mobile".equalsIgnoreCase(deviceType)) {
+            return List.of(userBadgeList.get(0).getBadge().getName()); // ✅ String을 List<String>으로 변환
+        }
+
+        // ✅ PC: 전체 배지를 리스트로 반환
+        return userBadgeList.stream()
+                .map(userBadge -> userBadge.getBadge().getName())
+                .collect(Collectors.toList());
     }
 }

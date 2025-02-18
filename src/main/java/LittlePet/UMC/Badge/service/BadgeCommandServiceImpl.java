@@ -36,27 +36,26 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
     private final CommentRepository commentRepository;
 
     @Override
-    public UserBadge checkBadges(Long userId,String badgeType) {
+    @Transactional
+    public Boolean checkBadges(Long userId,String badgeType) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found")); //바꿔야함 validation
 
         boolean criteriaMet = false;
         // 문자열을 Enum으로 변환
         switch (badgeType) {
             case "글쓰기마스터":
                 long postCount = postRepository.countByUserId(userId);
-                criteriaMet = postCount >= 1; // Test를 위해 일단 1개 ,원래 15개 이상이면 True
+                criteriaMet = postCount >= 2; // Test를 위해 일단 1개 ,원래 15개 이상이면 True
                 break;
 
             case "소통천재":
                 long commentCount = commentRepository.getCountByUserId(userId); // 댓글 수 가져오기 (추가 메서드 필요)
-                criteriaMet = commentCount >= 1; // Test를 위해 일단 1개 30개 이상이면 True
+                criteriaMet = commentCount >= 2; // Test를 위해 일단 1개 30개 이상이면 True
                 break;
 
             case "소셜응원왕":
                 long likeCount = postlikeRepository.getCountByUserId(userId); // 좋아요 수 가져오기 (추가 메서드 필요)
-                criteriaMet = likeCount >= 1; // Test를 위해 일단 1개 50개 이상이면 True
+                criteriaMet = likeCount >= 2; // Test를 위해 일단 1개 50개 이상이면 True
                 break;
 
 //            case "CHALLENGER":
@@ -73,21 +72,19 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
         if (criteriaMet) {
             log.info("Criteria met for badge type: {}", badgeType);
         } else {
-            return null;
+            return false;
         }
 
-        return assignBadge(user, badgeType, criteriaMet);
+        return criteriaMet;
 
     }
 
     @Override
     @Transactional
-    public UserBadge assignBadge(User user, String badgeType, boolean criteriaMet) {
-        log.info("메소드 시작:"+user+badgeType+criteriaMet);
-        if (!criteriaMet) {
-            // 조건을 충족하지 못함
-            throw new BadgeHandler(ErrorStatus.BADGE_NOT_QUALIFIED);
-        }
+    public UserBadge assignBadge(Long userId,String badgeType) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found")); //바꿔야함 validation
 
         // 이미 뱃지가 할당된 경우 처리
         boolean alreadyHasBadge = user.getUserBadgeList().stream()
@@ -98,7 +95,7 @@ public class BadgeCommandServiceImpl implements BadgeCommandService {
             // 1.이미 뱃지를 보유하고 있다면 예외를 던짐
 //            throw new BadgeHandler(ErrorStatus.BADGE_ALREADY_OWNED);
             //2. null을 던짐
-              return null;
+            return null;  // 예외를 던지지 않고 그냥 종료
         }
 
         Badge badge = badgeRepository.findByBadgeType(badgeType);

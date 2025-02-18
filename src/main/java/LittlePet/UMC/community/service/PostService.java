@@ -21,6 +21,11 @@ import LittlePet.UMC.domain.postEntity.PostCategory;
 import LittlePet.UMC.domain.postEntity.mapping.PostContent;
 import LittlePet.UMC.domain.userEntity.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +35,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
 
     private final PostRepository postRepository;
@@ -39,7 +45,7 @@ public class PostService {
     private final BadgeCommandService badgeCommandService;
 
     @Transactional //위에서 readOnly해서 따로 해줘야 저장됨 : 디폴트가 false
-    public Post createPost(PostForm postForm, Long userId, List<String> urls) {
+    public Post createPost(PostForm postForm, Long userId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserHandler(ErrorStatus.USER_NOT_FOUND));
@@ -49,31 +55,35 @@ public class PostService {
 
         PostCategory postCategory = postCategoryRepository.findFirstByCategory(postForm.getPostCategory())
                 .orElseThrow(() -> new PostCategoryHandler(ErrorStatus.POST_CATEGORY_NOT_FOUND));
-        //url은 종류가 image로 들어가면서 저장하면될듯?
 
         Post post = Post.createPost(postForm.getTitle(),0l,user,postCategory,petCategory);
 
         List<PostContent> contents = postForm.getContents().stream()
-                .map(contentForm -> PostContent.createPostContentText(
-                        contentForm.getContent(),
+                .map(contentForm -> PostContent.createPostContent(
+                        contentForm.getType(),
+                        contentForm.getValue(),
+                        contentForm.getOrderIndex(),
                         post))
                 .collect(Collectors.toList());
 
-        for (String url : urls) {
-            contents.add(PostContent.createPostContentPicture(url, post));
-        }
-
         post.addPostContent(contents);
-
         postRepository.save(post);
-        UserBadge userBadge =badgeCommandService.checkBadges(userId,"글스기마스터");
-        System.out.println("userBadge: " + userBadge);
+
+
+        if(badgeCommandService.checkBadges(userId,"글쓰기마스터")) {
+            UserBadge userBadge = badgeCommandService.assignBadge(userId, "글쓰기마스터");
+            if (userBadge != null) {
+                log.info("User {} received a new badge: {}", userId, userBadge.getBadge().getName());
+            } else {
+                log.info("User {} did not receive a new badge", userId);
+            }
+        }
 
         return post;
     }
 
     @Transactional
-    public Post updatePost(Long postId, PostForm postForm,List<String> urls) {
+    public Post updatePost(Long postId, PostForm postForm) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
@@ -97,14 +107,12 @@ public class PostService {
         if (postForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
             post.resetSequenceCounter();
             List<PostContent> contents = postForm.getContents().stream()
-                    .map(contentForm -> PostContent.createPostContentText(
-                            contentForm.getContent(),
+                    .map(contentForm -> PostContent.createPostContent(
+                            contentForm.getType(),
+                            contentForm.getValue(),
+                            contentForm.getOrderIndex(),
                             post))
                     .collect(Collectors.toList());
-
-            for (String url : urls) {
-                contents.add(PostContent.createPostContentPicture(url, post));
-            }
 
             post.getPostcontentList().clear();
             post.addPostContent(contents);
@@ -120,11 +128,43 @@ public class PostService {
         postRepository.delete(post);
     }
 
-
+    @Transactional
     public Post FindOnePost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
         return post;
 
     }
+
+    // 모바일 - 첫 페이지 불러오기 (커서 없음)
+    public List<Post> findFirstPage(String category, int size, String sort) {
+        return sort.equalsIgnoreCase("인기순")
+                ? postRepository.findPopularPostsByCategory(category, size)
+                : postRepository.findLatestPostsByCategory(category, size);
+    }
+
+    // 모바일 - 추가 데이터 로딩 (커서 이후 데이터)
+    public List<Post> findNextPage(String category, Long cursorLikes, Long cursorId, int size, String sort) {
+        return sort.equalsIgnoreCase("인기순")
+                ? postRepository.findPopularPostsByCategoryWithCursor(category, cursorLikes, cursorId, size)
+                : postRepository.findLatestPostsByCategoryWithCursor(category, cursorId, size);
+    }
+
+    // PC - 일반 페이지네이션 적용 (15개씩 불러오기)
+    public List<Post> findPagedPosts(String category, int pageNum, int size, String sort) {
+        Pageable pageable = PageRequest.of(pageNum, size);
+        return sort.equalsIgnoreCase("인기순")
+                ? postRepository.findPopularPostsByCategoryPaged(category, pageable).getContent()
+                : postRepository.findLatestPostsByCategoryPaged(category, pageable).getContent();
+    }
+
+    // 조회수 1 증가
+    @Transactional
+    public Post incrementPostViews(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
+        post.incrementViews();
+        return post;
+    }
+
 }

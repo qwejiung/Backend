@@ -22,7 +22,6 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@ToString
 public class Post extends BaseTimeEntity {
 
     @Id
@@ -37,6 +36,7 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postcategory_id", nullable = false)
+    @ToString.Exclude
     private PostCategory postCategory;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,20 +47,22 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "pet_category_id", nullable = false)
     private PetCategory petCategory;       //게시물의 성별이 필요한 것으로 판단 PetCategory -> UserPet
 
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Comment> commentList= new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostLike> postLikeList= new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<PostContent> postcontentList= new ArrayList<>();
     // Getters, Setters, Constructors
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<PostClipping> postClippingList= new ArrayList<>();
 
     @Transient // DB에는 저장되지 않음
-    private int sequenceCounter = 1;
+    private int sequenceCounter = 0;
 
     public static Post createPost(String title, long views, User user, PostCategory postCategory, PetCategory petCategory) {
         Post post = new Post();
@@ -84,16 +86,14 @@ public class Post extends BaseTimeEntity {
     }
 
     public void resetSequenceCounter() {
-        sequenceCounter = 1;
+        sequenceCounter = 0;
     }
 
     public long getTotalCommentCount() {
-        long totalCount = commentList.size(); // ✅ 최상위 댓글 개수 포함
+        return commentList.size();
+    }
 
-        for (Comment comment : commentList) {
-            totalCount += comment.getTotalReplyCount(); // ✅ 각 댓글의 대댓글 개수 합산
-        }
-
-        return totalCount;
+    public void incrementViews() {
+        this.views += 1;
     }
 }

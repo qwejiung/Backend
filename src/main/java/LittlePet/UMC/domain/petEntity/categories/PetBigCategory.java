@@ -25,7 +25,9 @@ public class PetBigCategory extends BaseTimeEntity {
     @Column(nullable = false)
     private String categoryName;
 
+
     @OneToMany(mappedBy = "petBigCategory", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<PetCategory> petCategoryList = new ArrayList<>();
 
     //꼭 필요할 것 같지는 않아서 일단 보류

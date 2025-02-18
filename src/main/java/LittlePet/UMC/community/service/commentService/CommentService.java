@@ -12,10 +12,12 @@ import LittlePet.UMC.domain.postEntity.mapping.Comment;
 import LittlePet.UMC.domain.userEntity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CommentService {
 
     private final CommentRepository commentRepository;
@@ -44,11 +46,19 @@ public class CommentService {
                 .parent(parent)
                 .build();
 
-        //뱃지 조건 확인 및 수여
         commentRepository.save(comment);
-        postRepository.save(post);
-        UserBadge userBadge =badgeCommandService.checkBadges(user.getId(),"소통천재");
-        System.out.println("userBadge: " + userBadge);
+
+        //뱃지 조건 확인 및 수여
+        System.out.println("뱃지 조건 확인 시작---------");
+
+        if(badgeCommandService.checkBadges(requestDTO.getUserId(),"소통천재")) {
+            UserBadge userBadge = badgeCommandService.assignBadge(requestDTO.getUserId(), "소통천재");
+            if (userBadge != null) {
+                log.info("User {} received a new badge: {}", requestDTO.getUserId(), userBadge.getBadge().getName());
+            } else {
+                log.info("User {} did not receive a new badge", requestDTO.getUserId());
+            }
+        }
 
         return CommentResponseDTO.of(comment);
     }

@@ -25,17 +25,22 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id",nullable = false)
+    @ToString.Exclude
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
+    @ToString.Exclude
     private Comment parent;
 
+
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Comment> replies = new ArrayList<>();
 
     @Builder
@@ -52,21 +57,5 @@ public class Comment extends BaseTimeEntity {
 
 
     // Getters, Setters, Constructors
-
-
-    public long getTotalReplyCount() {
-        if (replies == null || replies.isEmpty()) {
-            return 0; // ✅ 대댓글이 없으면 0으로 반환 (자기 자신 포함 X)
-        }
-
-        long count = replies.size(); // ✅ 현재 댓글의 직접적인 대댓글 개수
-
-        for (Comment reply : replies) {
-            count += reply.getTotalReplyCount(); // ✅ 대댓글의 대댓글 개수 합산
-        }
-
-        return count-1;
-    }
-
 
 }

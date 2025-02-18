@@ -7,10 +7,13 @@ import LittlePet.UMC.Badge.service.BadgeCommandService;
 import LittlePet.UMC.Badge.validation.annotation.ExistBadgeType;
 import LittlePet.UMC.Badge.validation.annotation.ExistUser;
 import LittlePet.UMC.apiPayload.ApiResponse;
+import LittlePet.UMC.apiPayload.code.status.ErrorStatus;
+import LittlePet.UMC.apiPayload.exception.handler.BadgeHandler;
 import LittlePet.UMC.domain.BadgeEntity.Badge;
 import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +41,11 @@ public class BadgeController {
             @PathVariable @ExistUser Long userId,
             @PathVariable @ExistBadgeType String badgetype)
     {
-        UserBadge new_userbadge  = badgeCommandService.checkBadges(userId,badgetype);
-        return ApiResponse.onSuccess(BadgeConverter.toBadgeResponseDTO(new_userbadge));
+        if(badgeCommandService.checkBadges(userId,badgetype)){
+            UserBadge new_userbadge = badgeCommandService.assignBadge(userId,badgetype);
+            return ApiResponse.onSuccess(BadgeConverter.toBadgeResponseDTO(new_userbadge));
+        }
+        throw new BadgeHandler(ErrorStatus.BADGE_NOT_QUALIFIED);
     }
 
     /**
@@ -47,6 +53,7 @@ public class BadgeController {
      *일주일 후 챌린지가 종료되었을때 챌린지 게시글의 좋아요를 가장 많이 받은 유저 3명에게 '챌린저'뱃지등록
      * @return 챌린저 유저뱃지 응답 DTO
      */
+    @Scheduled(cron = "0 0 0 * * MON") // 매주 월요일 00:00에 실행
     @Operation(summary = "챌린저 뱃지 등록", description = "챌린저 뱃지를 받을 수 있는 사용자를 추려 뱃지를 주는 API입니다.")
     @PostMapping("/challengers")//이미 받은 사람 못받게 수정 추가해야됨
     public ApiResponse<List<BadgeResponseDTO.ChallengerResultDTO>> addChallenger()

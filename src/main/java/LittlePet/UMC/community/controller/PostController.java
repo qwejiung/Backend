@@ -3,22 +3,16 @@ package LittlePet.UMC.community.controller;
 import LittlePet.UMC.S3Service;
 import LittlePet.UMC.SmallPet.service.PetCategoryService;
 import LittlePet.UMC.apiPayload.ApiResponse;
-import LittlePet.UMC.community.dto.CreatePostResponseDTO;
-import LittlePet.UMC.community.dto.GetPostResponseDTO;
-import LittlePet.UMC.community.dto.PostForm;
+import LittlePet.UMC.community.dto.*;
 import LittlePet.UMC.community.service.PostService;
-import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import LittlePet.UMC.domain.postEntity.Post;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,14 +35,16 @@ public class PostController {
 //             // 예외 발생
 //        }
 
-        List<String> imageUrls = new ArrayList<>();
-        if (images != null || !images.isEmpty()) {
-            for (MultipartFile image : images) {
-                String url = s3Service.upload(image);
-                imageUrls.add(url);
+        int num = 0;
+        for (PostContentForm form : postForm.getContents() ) {
+            if ( form.getType().equals("image") && num < images.size() ) {
+                String url = s3Service.upload(images.get(num));
+                form.setValue(url);
+                num++;
             }
         }
-        Post post = postService.createPost(postForm, userId, imageUrls);
+
+        Post post = postService.createPost(postForm, userId);
 
         CreatePostResponseDTO dto = new CreatePostResponseDTO(post);
 
@@ -62,15 +58,16 @@ public class PostController {
             @RequestPart @Valid PostForm postForm,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
 
-        List<String> imageUrls = new ArrayList<>();
-        if (images != null || !images.isEmpty()) {
-            for (MultipartFile image : images) {
-                String url = s3Service.upload(image);
-                imageUrls.add(url);
+        int num = 0;
+        for (PostContentForm form : postForm.getContents() ) {
+            if ( form.getType().equals("image") && num < images.size() ) {
+                String url = s3Service.upload(images.get(num));
+                form.setValue(url);
+                num++;
             }
         }
 
-        Post updatePost = postService.updatePost(postId, postForm,imageUrls);
+        Post updatePost = postService.updatePost(postId, postForm);
 
         CreatePostResponseDTO dto = new CreatePostResponseDTO(updatePost);
 
@@ -86,11 +83,46 @@ public class PostController {
 
     @Operation(summary = "커뮤니티 특정 글 조회", description = "특정 게시물을 조회하는 카테고리입니다")
     @GetMapping("/post/{post-id}")
-    public ApiResponse<GetPostResponseDTO> GetPost(@PathVariable("post-id") Long postId) {
+    public ApiResponse<GetPostResponseDTO> getPost(
+            @PathVariable("post-id") Long postId,
+            @RequestParam(value = "deviceType", defaultValue = "pc") String deviceType) {
         Post post = postService.FindOnePost(postId);
 
-        GetPostResponseDTO dto = new GetPostResponseDTO(post);
+        return ApiResponse.onSuccess(new GetPostResponseDTO(post,deviceType));
+    }
 
+    @Operation(summary = "커뮤니티 글 목록 조회", description = "커뮤니티의 게시판을 조회하는 카테고리입니다")
+    @GetMapping("/post")
+    public ApiResponse<List<GetAllPostResponseDTO>> getPosts(
+            @RequestParam String category, //Q&A
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "최신순") String sort,
+            @RequestParam(defaultValue = "0", required = false) Long cursorLikes,
+            @RequestParam(required = false) Long cursorId,
+            @RequestParam(value = "deviceType", defaultValue = "pc") String deviceType) {
+
+        List<Post> posts;
+
+        if ("mobile".equalsIgnoreCase(deviceType)) {
+            //모바일
+            posts = (cursorLikes == null || cursorId == null)
+                    ? postService.findFirstPage(category, size, sort)  // 첫 페이지 (커서 없음)
+                    : postService.findNextPage(category, cursorLikes, cursorId, size, sort); // 커서 이후 데이터 로딩
+        } else {
+            //pc
+            posts = postService.findPagedPosts(category, pageNum, size, sort);
+        }
+
+        List<GetAllPostResponseDTO> dtos = GetAllPostResponseDTO.fromEntityList(posts);
+        return ApiResponse.onSuccess(dtos);
+    }
+
+    @Operation(summary = "게시물 조회수 증가", description = "특정 게시물의 조회수를 1 증가시킵니다")
+    @PatchMapping("/post/{post-id}/view")
+    public ApiResponse<ViewsResponseDTO> increasePostView(@PathVariable("post-id") Long postId) {
+        Post post = postService.incrementPostViews(postId);
+        ViewsResponseDTO dto = new ViewsResponseDTO(post);
         return ApiResponse.onSuccess(dto);
     }
 }
