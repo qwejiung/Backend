@@ -11,5 +11,5 @@ public class PostContentUpdateForm {
     private Long id;
     private String type;
     private String value; // 이미지의 경우 null일 수도 있음
-    private int orderIndex;
+    private Integer orderIndex;
 }

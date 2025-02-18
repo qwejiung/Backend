@@ -61,7 +61,7 @@ public class PostController {
         // 사진은 무조건 added로 request
         int num = 0;
         for (PostContentForm form : postUpdateForm.getAdded()) {
-            if (form.getType().equals("image") && num < images.size()) {
+            if (form.getType().equals("image") && num < images.size() ) {
                 String url = s3Service.upload(images.get(num));
                 form.setValue(url);
                 num++;
@@ -71,8 +71,7 @@ public class PostController {
         if ( !postUpdateForm.getUpdated().isEmpty()) {
             for (PostContentUpdateForm form : postUpdateForm.getUpdated() ) {
                 if (form.getType() != null && form.getType().equals("image")) {
-                    form.setValue(s3Service.getFileUrlIfExists(form.getValue()));
-
+                    form.setValue(form.getValue());
                 }
             }
         }

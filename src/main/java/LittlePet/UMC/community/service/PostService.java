@@ -120,7 +120,10 @@ public class PostService {
                 post.getPostcontentList().stream()
                         .filter(content -> content.getId().equals(updateForm.getId()))
                         .forEach(content -> {
-                            content.setSequence(updateForm.getOrderIndex());
+                            if (updateForm.getOrderIndex() != null) {
+                                content.setSequence(updateForm.getOrderIndex());
+                            }
+
                             if (updateForm.getType() != null && updateForm.getType().equals("image")) {
                                 content.setMediaType(MediaTypeEnum.Picture);
                             } else {
