@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostUpdateForm {
-    private String title; // ✅ 게시물 제목 수정 가능하도록 추가
+    private String title;
     private String postCategory;
     private String smallPetCategory;
     private List<PostContentForm> added = new ArrayList<>();

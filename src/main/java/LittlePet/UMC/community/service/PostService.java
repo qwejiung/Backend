@@ -114,17 +114,6 @@ public class PostService {
             );
         }
 
-        if (!postUpdateForm.getAdded().isEmpty()) {
-            List<PostContent> addedContents = postUpdateForm.getAdded().stream()
-                    .map(form -> PostContent.createPostContent(
-                            form.getType(),
-                            form.getValue(),
-                            form.getOrderIndex(),
-                            post))
-                    .collect(Collectors.toList());
-            post.addPostContent(addedContents);
-        }
-
         if (!postUpdateForm.getUpdated().isEmpty()) {
             for (PostContentUpdateForm updateForm : postUpdateForm.getUpdated()) {
                 post.getPostcontentList().stream()
@@ -147,15 +136,16 @@ public class PostService {
             }
         }
 
-//        if (postUpdateForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
-//            post.resetSequenceCounter();
-//            List<PostContent> contents = postForm.getContents().stream()
-//                    .map(contentForm -> PostContent.createPostContent(
-//                            contentForm.getType(),
-//                            contentForm.getValue(),
-//                            contentForm.getOrderIndex(),
-//                            post))
-//                    .collect(Collectors.toList());
+        if (!postUpdateForm.getAdded().isEmpty()) {
+            List<PostContent> addedContents = postUpdateForm.getAdded().stream()
+                    .map(form -> PostContent.createPostContent(
+                            form.getType(),
+                            form.getValue(),
+                            form.getOrderIndex(),
+                            post))
+                    .collect(Collectors.toList());
+            post.addPostContent(addedContents);
+        }
 
         post.getPostcontentList().sort(Comparator.comparing(PostContent::getSequence));
 
