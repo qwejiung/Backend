@@ -8,10 +8,13 @@ import LittlePet.UMC.apiPayload.exception.handler.PetCategoryHandler;
 import LittlePet.UMC.apiPayload.exception.handler.PostCategoryHandler;
 import LittlePet.UMC.apiPayload.exception.handler.PostHandler;
 import LittlePet.UMC.apiPayload.exception.handler.UserHandler;
+import LittlePet.UMC.community.dto.PostContentUpdateForm;
 import LittlePet.UMC.community.dto.PostForm;
+import LittlePet.UMC.community.dto.PostUpdateForm;
 import LittlePet.UMC.community.repository.PostCategoryRepository;
 import LittlePet.UMC.community.repository.postRepository.PostRepository;
 import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
+import LittlePet.UMC.domain.enums.MediaTypeEnum;
 import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
@@ -28,6 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,40 +77,74 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long postId, PostForm postForm) {
+    public Post updatePost(Long postId, PostUpdateForm postUpdateForm) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
-        if (postForm.getTitle() != null && !postForm.getTitle().isEmpty() && !postForm.getTitle().equals("string")) {
-            post.setTitle(postForm.getTitle());
+        if ((postUpdateForm.getTitle() != null && !postUpdateForm.getTitle().isEmpty()) && !postUpdateForm.getTitle().equals("string")) {
+            post.setTitle(postUpdateForm.getTitle());
         }
 
-        if (postForm.getPostCategory() != null && !postForm.getPostCategory().equals("string")) {
-            PostCategory postCategory = postCategoryRepository.findFirstByCategory(postForm.getPostCategory())
+        if (postUpdateForm.getPostCategory() != null && !postUpdateForm.getPostCategory().equals("string")) {
+            PostCategory postCategory = postCategoryRepository.findFirstByCategory(postUpdateForm.getPostCategory())
                     .orElseThrow(() -> new PostCategoryHandler(ErrorStatus.POST_CATEGORY_NOT_FOUND));
             post.setPostCategory(postCategory);
 
         }
 
-        if (postForm.getSmallPetCategory() != null && !postForm.getSmallPetCategory().equals("string")) {
-            PetCategory petCategory = petCategoryRepository.findFirstBySpecies(postForm.getSmallPetCategory())
+        if (postUpdateForm.getSmallPetCategory() != null && !postUpdateForm.getSmallPetCategory().equals("string")) {
+            PetCategory petCategory = petCategoryRepository.findFirstBySpecies(postUpdateForm.getSmallPetCategory())
                     .orElseThrow(() -> new PetCategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
             post.setPetCategory(petCategory);
         }
 
-        if (postForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
-            post.resetSequenceCounter();
-            List<PostContent> contents = postForm.getContents().stream()
-                    .map(contentForm -> PostContent.createPostContent(
-                            contentForm.getType(),
-                            contentForm.getValue(),
-                            contentForm.getOrderIndex(),
+        if (!postUpdateForm.getDeleted().isEmpty()) {
+            post.getPostcontentList().removeIf(content ->
+                    postUpdateForm.getDeleted().contains(content.getId())
+            );
+        }
+
+        if (!postUpdateForm.getAdded().isEmpty()) {
+            List<PostContent> addedContents = postUpdateForm.getAdded().stream()
+                    .map(form -> PostContent.createPostContent(
+                            form.getType(),
+                            form.getValue(),
+                            form.getOrderIndex(),
                             post))
                     .collect(Collectors.toList());
-
-            post.getPostcontentList().clear();
-            post.addPostContent(contents);
+            post.addPostContent(addedContents);
         }
+
+        if (!postUpdateForm.getUpdated().isEmpty()) {
+            for (PostContentUpdateForm updateForm : postUpdateForm.getUpdated()) {
+                post.getPostcontentList().stream()
+                        .filter(content -> content.getId().equals(updateForm.getId()))
+                        .forEach(content -> {
+                            content.setSequence(updateForm.getOrderIndex());
+                            if (updateForm.getType() != null && updateForm.getType().equals("image")) {
+                                content.setMediaType(MediaTypeEnum.Picture);
+                            } else {
+                                content.setMediaType(MediaTypeEnum.Text);
+                            }
+
+                            if (updateForm.getValue() != null) {
+                                content.setContent(updateForm.getValue());
+                            }
+                        });
+            }
+        }
+
+//        if (postUpdateForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
+//            post.resetSequenceCounter();
+//            List<PostContent> contents = postForm.getContents().stream()
+//                    .map(contentForm -> PostContent.createPostContent(
+//                            contentForm.getType(),
+//                            contentForm.getValue(),
+//                            contentForm.getOrderIndex(),
+//                            post))
+//                    .collect(Collectors.toList());
+
+        post.getPostcontentList().sort(Comparator.comparing(PostContent::getSequence));
 
         return post;
     }
