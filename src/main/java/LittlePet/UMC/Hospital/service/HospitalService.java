@@ -113,7 +113,10 @@ public class HospitalService {
     public HospitalRequestDTO getHospitalDetails(Long hospitalId) {
         Hospital hospital = hospitalRepository.findById(hospitalId)
                 .orElseThrow(() -> new RuntimeException("병원을 찾을 수 없습니다."));
-        return new HospitalRequestDTO(hospital);
+
+        boolean isOpen = isOpenNow(hospital, LocalDate.now(), LocalTime.now());
+
+        return new HospitalRequestDTO(hospital, isOpen);
     }
 
     @Transactional
