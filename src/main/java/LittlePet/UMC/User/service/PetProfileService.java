@@ -68,11 +68,14 @@ public class PetProfileService {
         UserPet pet = userPetRepository.findById(petId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 반려동물을 찾을 수 없습니다."));
 
+        PetCategory category = petCategoryRepository.findBySpecies(petRequestDTO.getCategorySpecies())
+                .orElseThrow(() -> new IllegalArgumentException("잘못된 반려동물 카테고리입니다."));
+
         UserPet updatedPet = pet.toBuilder()
                 .name(petRequestDTO.getName())
                 .birthDay(LocalDate.parse(petRequestDTO.getBirthDay()))
                 .gender(Gender.valueOf(petRequestDTO.getGender().toUpperCase()))
-                .petCategory(pet.getPetCategory())
+                .petCategory(category)
                 .profilePhoto(imageUrl != null ? imageUrl : pet.getProfilePhoto())
                 .build();
 

@@ -45,7 +45,9 @@ public class PetProfileController {
     @PostMapping(value = "/api/users/{userId}/pets",consumes = {"multipart/form-data"})
     public ApiResponse<PetProfileResponseDTO> addPetProfile(
             @PathVariable Long userId,
-            @RequestPart(value = "request",required = true) String requestJson,
+            @RequestPart(value = "request",required = true)
+            @Parameter(description = "반려동물 정보 (JSON 형식)", example = "{ \"name\": \"멍멍이\", \"birthDay\": \"2020-05-15\", \"gender\": \"MALE\", \"categorySpecies\": \"고슴돞치\" }")
+            String requestJson,
             @RequestPart(value = "file", required = false) MultipartFile file // 이미지 (선택)
     ) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
