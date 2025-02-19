@@ -31,7 +31,6 @@ spring:
             scope:
               - name
               - email
-              - phone_number
           google:
             client-name: google
             client-id: ${GOOGLE_CLIENT_ID}
