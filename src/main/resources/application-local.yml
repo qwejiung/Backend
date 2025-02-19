@@ -37,7 +37,6 @@ spring:
             scope:
               - name
               - email
-              - phone_number # 핸드폰 번호 추가
           google:
             client-name: google
             client-id: ${GOOGLE_CLIENT_ID} # 환경 변수로 클라이언트 ID 설정
