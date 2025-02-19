@@ -12,7 +12,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
 
         registry.addMapping("/**")
                 .allowedOrigins("https://umclittlepet.shop", "http://localhost:5173")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH")
                 .allowCredentials(true) // 쿠키 전송 허용
                 .exposedHeaders("Authorization", "Set-Cookie");
     }
