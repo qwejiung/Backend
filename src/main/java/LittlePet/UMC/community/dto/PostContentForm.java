@@ -11,8 +11,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostContentForm {
 
+    private Long id;
     private String type; // test, image
-    @NotBlank
     private String value;
-    private int orderIndex;
+
+    private String status; //url 넣을때만 값 전달
+    private Integer orderIndex;
 }
