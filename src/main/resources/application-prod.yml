@@ -12,8 +12,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
   servlet:
     multipart:
-      max-file-size: 3GB
-      max-request-size: 3GB
+      max-file-size: 10MB
+      max-request-size: 10MB
   jwt:
     secret-key: "afdkjfkldsjsflkaklfsjklfsjlkfdjskldfjslkdjfk"
     expiration-time: 86400000 # 1일
@@ -89,3 +89,10 @@ logging:
 kakao:
   api:
     key: ${KAKAO_REST_API_KEY}  # 카카오 개발자 사이트에서 발급받은 REST API 키
+
+server:
+  tomcat:
+    max-upload-size: 10485760     # 10MB
+    max-swallow-size: 10485760    # 10MB
+    max-http-form-post-size: 10485760
+
