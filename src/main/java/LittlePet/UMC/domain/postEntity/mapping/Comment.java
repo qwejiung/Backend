@@ -3,6 +3,7 @@ package LittlePet.UMC.domain.postEntity.mapping;
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.userEntity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,7 @@ public class Comment extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id",nullable = false)
     @ToString.Exclude
+    @JsonBackReference
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)

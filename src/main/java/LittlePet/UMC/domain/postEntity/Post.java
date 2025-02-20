@@ -9,6 +9,7 @@ import LittlePet.UMC.domain.postEntity.mapping.PostContent;
 import LittlePet.UMC.domain.userEntity.User;
 import LittlePet.UMC.domain.postEntity.mapping.Comment;
 import LittlePet.UMC.domain.postEntity.mapping.PostLike;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,6 +51,7 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonManagedReference
     private List<Comment> commentList= new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

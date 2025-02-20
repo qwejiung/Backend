@@ -10,6 +10,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+  servlet:
+    multipart:
+      max-file-size: 3GB
+      max-request-size: 3GB
   jwt:
     secret-key: "afdkjfkldsjsflkaklfsjklfsjlkfdjskldfjslkdjfk"
     expiration-time: 86400000 # 1일
