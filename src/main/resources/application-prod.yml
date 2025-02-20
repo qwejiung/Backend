@@ -12,8 +12,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: 50MB
+      max-request-size: 50MB
   jwt:
     secret-key: "afdkjfkldsjsflkaklfsjklfsjlkfdjskldfjslkdjfk"
     expiration-time: 86400000 # 1일
@@ -92,7 +92,7 @@ kakao:
 
 server:
   tomcat:
-    max-upload-size: 10485760     # 10MB
-    max-swallow-size: 10485760    # 10MB
-    max-http-form-post-size: 10485760
+    max-upload-size: 31457280     # 30MB (30 * 1024 * 1024)
+    max-swallow-size: 31457280    # 30MB
+    max-http-form-post-size: 31457280  # 30MB
 
