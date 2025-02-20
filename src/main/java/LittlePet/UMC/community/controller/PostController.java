@@ -27,20 +27,20 @@ public class PostController {
     @Operation(summary = "커뮤니티 게시물 생성", description = "커뮤니티에 새로운 게시물을 생성할 수 있는 카테고리입니다")
     @PostMapping(value = "/post/{user-id}", consumes = {"multipart/form-data"})
     public ApiResponse<CreatePostResponseDTO> createPost(
-            @RequestPart @Valid PostForm postForm,
+            @RequestPart PostForm postForm,
             @RequestPart(value = "images", required = false) List<MultipartFile> images,
             @PathVariable("user-id") Long userId) throws IOException {
 
-//        if (images.size() > 5) {
-//             // 예외 발생
-//        }
-
         int num = 0;
         for (PostContentForm form : postForm.getContents() ) {
-            if ( form.getType().equals("image") && num < images.size() ) {
-                String url = s3Service.upload(images.get(num));
-                form.setValue(url);
-                num++;
+            if (form.getType().equals("image")) {
+                if (!form.getValue().startsWith("http")) {  // URL 형식이 아니라면 새로운 파일 업로드
+                    if (num < images.size()) {
+                        String url = s3Service.upload(images.get(num));
+                        form.setValue(url);
+                        num++;
+                    }
+                }
             }
         }
 
@@ -55,28 +55,23 @@ public class PostController {
     @PatchMapping(value = "/post/{post-id}", consumes = {"multipart/form-data"})
     public ApiResponse<CreatePostResponseDTO> updatePost(
             @PathVariable("post-id") Long postId,
-            @RequestPart PostUpdateForm postUpdateForm,
+            @RequestPart PostForm postForm,
             @RequestPart(value = "images", required = false) List<MultipartFile> images) throws IOException {
 
-        // 사진은 무조건 added로 request
         int num = 0;
-        for (PostContentForm form : postUpdateForm.getAdded()) {
-            if (form.getType().equals("image") && num < images.size() ) {
-                String url = s3Service.upload(images.get(num));
-                form.setValue(url);
-                num++;
-            }
-        }
-
-        if ( !postUpdateForm.getUpdated().isEmpty()) {
-            for (PostContentUpdateForm form : postUpdateForm.getUpdated() ) {
-                if (form.getType() != null && form.getType().equals("image")) {
-                    form.setValue(form.getValue());
+        for (PostContentForm form : postForm.getContents() ) {
+            if (form.getType().equals("image")) {
+                if (!form.getValue().startsWith("http")) {  // URL 형식이 아니라면 새로운 파일 업로드
+                    if (num < images.size()) {
+                        String url = s3Service.upload(images.get(num));
+                        form.setValue(url);
+                        num++;
+                    }
                 }
             }
         }
 
-        Post updatePost = postService.updatePost(postId, postUpdateForm);
+        Post updatePost = postService.updatePost(postId, postForm);
 
         CreatePostResponseDTO dto = new CreatePostResponseDTO(updatePost);
 

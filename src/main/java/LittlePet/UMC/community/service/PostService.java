@@ -8,6 +8,7 @@ import LittlePet.UMC.apiPayload.exception.handler.PetCategoryHandler;
 import LittlePet.UMC.apiPayload.exception.handler.PostCategoryHandler;
 import LittlePet.UMC.apiPayload.exception.handler.PostHandler;
 import LittlePet.UMC.apiPayload.exception.handler.UserHandler;
+import LittlePet.UMC.community.dto.PostContentForm;
 import LittlePet.UMC.community.dto.PostContentUpdateForm;
 import LittlePet.UMC.community.dto.PostForm;
 import LittlePet.UMC.community.dto.PostUpdateForm;
@@ -77,64 +78,48 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long postId, PostUpdateForm postUpdateForm) {
+    public Post updatePost(Long postId, PostForm postForm) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
-        if ((postUpdateForm.getTitle() != null && !postUpdateForm.getTitle().isEmpty()) && !postUpdateForm.getTitle().equals("string")) {
-            post.setTitle(postUpdateForm.getTitle());
+        if (postForm.getTitle() != null && !postForm.getTitle().equals("string")) {
+            post.setTitle(postForm.getTitle());
         }
 
-        if (postUpdateForm.getPostCategory() != null && !postUpdateForm.getPostCategory().equals("string")) {
-            PostCategory postCategory = postCategoryRepository.findFirstByCategory(postUpdateForm.getPostCategory())
+        if (postForm.getPostCategory() != null && !postForm.getPostCategory().equals("string")) {
+            PostCategory postCategory = postCategoryRepository.findFirstByCategory(postForm.getPostCategory())
                     .orElseThrow(() -> new PostCategoryHandler(ErrorStatus.POST_CATEGORY_NOT_FOUND));
             post.setPostCategory(postCategory);
 
         }
 
-        if (postUpdateForm.getSmallPetCategory() != null && !postUpdateForm.getSmallPetCategory().equals("string")) {
-            PetCategory petCategory = petCategoryRepository.findFirstBySpecies(postUpdateForm.getSmallPetCategory())
+        if (postForm.getSmallPetCategory() != null && !postForm.getSmallPetCategory().equals("string")) {
+            PetCategory petCategory = petCategoryRepository.findFirstBySpecies(postForm.getSmallPetCategory())
                     .orElseThrow(() -> new PetCategoryHandler(ErrorStatus.CATEGORY_NOT_FOUND));
             post.setPetCategory(petCategory);
         }
 
-        if (!postUpdateForm.getDeleted().isEmpty()) {
-            post.getPostcontentList().removeIf(content ->
-                    postUpdateForm.getDeleted().contains(content.getId())
-            );
-        }
-
-        if (!postUpdateForm.getUpdated().isEmpty()) {
-            for (PostContentUpdateForm updateForm : postUpdateForm.getUpdated()) {
-                post.getPostcontentList().stream()
-                        .filter(content -> content.getId().equals(updateForm.getId()))
-                        .forEach(content -> {
-                            if (updateForm.getOrderIndex() != null) {
-                                content.setSequence(updateForm.getOrderIndex());
-                            }
-
-                            if (updateForm.getType() != null && updateForm.getType().equals("image")) {
-                                content.setMediaType(MediaTypeEnum.Picture);
-                            } else {
-                                content.setMediaType(MediaTypeEnum.Text);
-                            }
-
-                            if (updateForm.getValue() != null) {
-                                content.setContent(updateForm.getValue());
-                            }
-                        });
+        if (postForm.getContents() != null && !postForm.getContents().isEmpty()) {
+            for (PostContentForm contentForm : postForm.getContents()) {
+                if (contentForm.getId() != null) {
+                    // 기존 ID가 있는 경우 업데이트
+                    post.getPostcontentList().stream()
+                            .filter(content -> content.getId().equals(contentForm.getId()))
+                            .forEach(content -> {
+                                if (contentForm.getOrderIndex() != null) {
+                                    content.setSequence(contentForm.getOrderIndex());
+                                }
+                                if (contentForm.getType() != null && contentForm.getType().equals("image")) {
+                                    content.setMediaType(MediaTypeEnum.Picture);
+                                } else {
+                                    content.setMediaType(MediaTypeEnum.Text);
+                                }
+                                if (contentForm.getValue() != null) {
+                                    content.setContent(contentForm.getValue());
+                                }
+                            });
+                }
             }
-        }
-
-        if (!postUpdateForm.getAdded().isEmpty()) {
-            List<PostContent> addedContents = postUpdateForm.getAdded().stream()
-                    .map(form -> PostContent.createPostContent(
-                            form.getType(),
-                            form.getValue(),
-                            form.getOrderIndex(),
-                            post))
-                    .collect(Collectors.toList());
-            post.addPostContent(addedContents);
         }
 
         post.getPostcontentList().sort(Comparator.comparing(PostContent::getSequence));

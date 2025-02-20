@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -12,10 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 public class PostForm {
 
-    @NotBlank
     private String title;
     private String smallPetCategory; //petCategory
     private String postCategory; //postCategory
-    private List<PostContentForm> contents;
+    private List<PostContentForm> contents = new ArrayList<>();
 
 }
