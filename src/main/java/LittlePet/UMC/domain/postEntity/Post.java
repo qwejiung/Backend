@@ -48,7 +48,6 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "pet_category_id", nullable = false)
     private PetCategory petCategory;       //게시물의 성별이 필요한 것으로 판단 PetCategory -> UserPet
 
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<Comment> commentList= new ArrayList<>();
