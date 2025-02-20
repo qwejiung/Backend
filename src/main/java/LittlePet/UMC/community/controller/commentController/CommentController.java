@@ -1,7 +1,7 @@
 package LittlePet.UMC.community.controller.commentController;
 
 import LittlePet.UMC.community.dto.commentDTO.CommentRequestDTO;
-import LittlePet.UMC.community.dto.commentDTO.CommentResponseDTO;
+import LittlePet.UMC.community.dto.commentDTO.CommentCreateResponseDTO;
 import LittlePet.UMC.community.service.commentService.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,19 +19,19 @@ public class CommentController {
 
     @Operation(summary = "댓글 작성", description = "parentId가 있으면 대댓글, 없으면 일반 댓글을 작성합니다.")
     @PostMapping
-    public ResponseEntity<CommentResponseDTO> createComment(
+    public ResponseEntity<CommentCreateResponseDTO> createComment(
             @PathVariable Long postId,
             @RequestBody CommentRequestDTO requestDTO) {
-        CommentResponseDTO responseDTO = commentService.createComment(postId, requestDTO);
+        CommentCreateResponseDTO responseDTO = commentService.createComment(postId, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @Operation(summary = "댓글 수정", description = "댓글을 수정합니다.")
     @PutMapping("/{commentId}")
-    public ResponseEntity<CommentResponseDTO> updateComment(
+    public ResponseEntity<CommentCreateResponseDTO> updateComment(
             @PathVariable Long commentId,
             @RequestBody CommentRequestDTO requestDTO) {
-        CommentResponseDTO responseDTO = commentService.updateComment(commentId, requestDTO);
+        CommentCreateResponseDTO responseDTO = commentService.updateComment(commentId, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 

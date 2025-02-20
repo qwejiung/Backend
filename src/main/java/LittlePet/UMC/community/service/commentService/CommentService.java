@@ -2,8 +2,9 @@ package LittlePet.UMC.community.service.commentService;
 
 import LittlePet.UMC.Badge.service.BadgeCommandService;
 import LittlePet.UMC.User.repository.UserRepository;
+import LittlePet.UMC.community.dto.CommentResponseDTO;
 import LittlePet.UMC.community.dto.commentDTO.CommentRequestDTO;
-import LittlePet.UMC.community.dto.commentDTO.CommentResponseDTO;
+import LittlePet.UMC.community.dto.commentDTO.CommentCreateResponseDTO;
 import LittlePet.UMC.community.repository.commentRepository.CommentRepository;
 import LittlePet.UMC.community.repository.postRepository.PostRepository;
 import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
@@ -15,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -25,7 +29,7 @@ public class CommentService {
     private final UserRepository userRepository;
     private final BadgeCommandService badgeCommandService;
     @Transactional
-    public CommentResponseDTO createComment(Long postId, CommentRequestDTO requestDTO) {
+    public CommentCreateResponseDTO createComment(Long postId, CommentRequestDTO requestDTO) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
@@ -59,13 +63,12 @@ public class CommentService {
                 log.info("User {} did not receive a new badge", requestDTO.getUserId());
             }
         }
-
-        return CommentResponseDTO.of(comment);
+        return CommentCreateResponseDTO.of(comment);
     }
 
 
     @Transactional
-    public CommentResponseDTO updateComment(Long commentId, CommentRequestDTO requestDTO) {
+    public CommentCreateResponseDTO updateComment(Long commentId, CommentRequestDTO requestDTO) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
 
@@ -75,7 +78,7 @@ public class CommentService {
 
         comment.updateContent(requestDTO.getContent());
 
-        return CommentResponseDTO.of(comment);
+        return CommentCreateResponseDTO.of(comment);
     }
 
     @Transactional
