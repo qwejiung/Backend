@@ -51,7 +51,6 @@ public class Post extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @ToString.Exclude
-    @JsonManagedReference
     private List<Comment> commentList= new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
