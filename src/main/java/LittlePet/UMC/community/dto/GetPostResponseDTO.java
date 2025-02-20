@@ -56,7 +56,7 @@ public class GetPostResponseDTO {
                 .orElse(Collections.emptyList())  // null이면 빈 리스트 반환
                 .stream()
                 .sorted(Comparator.comparingInt(PostContent::getSequence))
-                .map(postContent -> new PostContentResponseDTO(postContent.getContent(), postContent.getSequence()))
+                .map(postContent -> new PostContentResponseDTO(postContent))
                 .collect(Collectors.toList());
 
         // 최상위 댓글 필터링 및 변환

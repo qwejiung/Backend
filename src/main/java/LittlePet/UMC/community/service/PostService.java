@@ -8,10 +8,14 @@ import LittlePet.UMC.apiPayload.exception.handler.PetCategoryHandler;
 import LittlePet.UMC.apiPayload.exception.handler.PostCategoryHandler;
 import LittlePet.UMC.apiPayload.exception.handler.PostHandler;
 import LittlePet.UMC.apiPayload.exception.handler.UserHandler;
+import LittlePet.UMC.community.dto.PostContentForm;
+import LittlePet.UMC.community.dto.PostContentUpdateForm;
 import LittlePet.UMC.community.dto.PostForm;
+import LittlePet.UMC.community.dto.PostUpdateForm;
 import LittlePet.UMC.community.repository.PostCategoryRepository;
 import LittlePet.UMC.community.repository.postRepository.PostRepository;
 import LittlePet.UMC.domain.BadgeEntity.mapping.UserBadge;
+import LittlePet.UMC.domain.enums.MediaTypeEnum;
 import LittlePet.UMC.domain.enums.RoleStatus;
 import LittlePet.UMC.domain.enums.SocialProviderEnum;
 import LittlePet.UMC.domain.petEntity.categories.PetBigCategory;
@@ -29,6 +33,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -87,7 +92,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostHandler(ErrorStatus.POST_NOT_FOUND));
 
-        if (postForm.getTitle() != null && !postForm.getTitle().isEmpty() && !postForm.getTitle().equals("string")) {
+        if (postForm.getTitle() != null && !postForm.getTitle().equals("string")) {
             post.setTitle(postForm.getTitle());
         }
 
@@ -104,19 +109,30 @@ public class PostService {
             post.setPetCategory(petCategory);
         }
 
-        if (postForm.getContents() != null && !postForm.getContents().isEmpty() && !postForm.getContents().equals("string")) {
-            post.resetSequenceCounter();
-            List<PostContent> contents = postForm.getContents().stream()
-                    .map(contentForm -> PostContent.createPostContent(
-                            contentForm.getType(),
-                            contentForm.getValue(),
-                            contentForm.getOrderIndex(),
-                            post))
-                    .collect(Collectors.toList());
-
-            post.getPostcontentList().clear();
-            post.addPostContent(contents);
+        if (postForm.getContents() != null && !postForm.getContents().isEmpty()) {
+            for (PostContentForm contentForm : postForm.getContents()) {
+                if (contentForm.getId() != null) {
+                    // 기존 ID가 있는 경우 업데이트
+                    post.getPostcontentList().stream()
+                            .filter(content -> content.getId().equals(contentForm.getId()))
+                            .forEach(content -> {
+                                if (contentForm.getOrderIndex() != null) {
+                                    content.setSequence(contentForm.getOrderIndex());
+                                }
+                                if (contentForm.getType() != null && contentForm.getType().equals("image")) {
+                                    content.setMediaType(MediaTypeEnum.Picture);
+                                } else {
+                                    content.setMediaType(MediaTypeEnum.Text);
+                                }
+                                if (contentForm.getValue() != null) {
+                                    content.setContent(contentForm.getValue());
+                                }
+                            });
+                }
+            }
         }
+
+        post.getPostcontentList().sort(Comparator.comparing(PostContent::getSequence));
 
         return post;
     }

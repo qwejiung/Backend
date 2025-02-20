@@ -3,6 +3,8 @@ package LittlePet.UMC.domain.postEntity.mapping;
 import LittlePet.UMC.domain.BaseEntity.BaseTimeEntity;
 import LittlePet.UMC.domain.postEntity.Post;
 import LittlePet.UMC.domain.userEntity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 

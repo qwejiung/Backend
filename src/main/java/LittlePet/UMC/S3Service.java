@@ -20,6 +20,7 @@ public class S3Service {
     private String bucket;
 
     public String upload(MultipartFile file) throws IOException {
+
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         ObjectMetadata metadata = new ObjectMetadata();
@@ -29,7 +30,6 @@ public class S3Service {
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata);
 
         s3.putObject(putObjectRequest);
-
         return getPublicUrl(fileName);
 
     }
