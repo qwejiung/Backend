@@ -6,7 +6,9 @@ import LittlePet.UMC.domain.postEntity.mapping.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -17,13 +19,16 @@ public class CommentCreateResponseDTO {
     private Long userId;
     private Long postId;
     private Long parentId;
-    private List<CommentResponseDTO> commentList;  // 댓글 목록
+    private List<CommentResponseDTO> comments;  // 댓글 목록
     private Long commentNum;
 
     public static CommentCreateResponseDTO of(Comment comment ) {
         Post post = comment.getPost();
 
-        List<CommentResponseDTO> commentList  = post.getCommentList().stream()
+        List<CommentResponseDTO> commentList = Optional.ofNullable(post.getCommentList())
+                .orElse(Collections.emptyList()) // null이면 빈 리스트 반환
+                .stream()
+                .filter(Incomment -> Incomment.getParent() == null) // 부모가 없는 최상위 댓글만 필터링
                 .map(CommentResponseDTO::new) // CommentResponseDTO로 변환
                 .collect(Collectors.toList());
 
