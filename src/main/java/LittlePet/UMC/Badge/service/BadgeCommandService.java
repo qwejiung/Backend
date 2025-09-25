@@ -7,9 +7,9 @@ import LittlePet.UMC.domain.userEntity.User;
 import java.util.List;
 
 public interface BadgeCommandService {
-    UserBadge checkBadges(Long userId, String badgeType);
+    Boolean checkBadges(Long userId, String badgeType);
 
-    UserBadge assignBadge(User user, String badgeType, boolean criteriaMet);
+    UserBadge assignBadge(Long userId, String badgeType);
 
     List<Badge> getBadgesByUserId(Long userId);
 
@@ -17,4 +17,7 @@ public interface BadgeCommandService {
 
     UserBadge deleteUserBadge(Long userId, String badgeType);
 
+    String getBadgeProgress(Long userId, String badgeType);
+
+    List<String> getMissingBadges(Long userId);
 }

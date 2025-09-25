@@ -30,12 +30,14 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final JwtUtil jwtUtil;
     private final CustomSuccessHandler customSuccessHandler;
+    private final OAuth2LoggingFilter oAuth2LoggingFilter;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtUtil jwtUtil) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtUtil jwtUtil,OAuth2LoggingFilter oAuth2LoggingFilter) {
 
         this.customOAuth2UserService = customOAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
         this.jwtUtil = jwtUtil;
+        this.oAuth2LoggingFilter = oAuth2LoggingFilter;
     }
 
     @Bean
@@ -47,14 +49,16 @@ public class SecurityConfig {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration configuration = new CorsConfiguration();
 
-                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:8080"));
-                configuration.addAllowedMethod("*");
+                configuration.setAllowedOrigins(Arrays.asList(
+                        "http://localhost:5173",
+                        "https://umclittlepet.shop"
+                ));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS","PATCH"));
                 configuration.setAllowCredentials(true);
-                configuration.addAllowedHeader("*");
+                configuration.setAllowedHeaders(Collections.singletonList("*"));
                 configuration.setMaxAge(3600L);
-                configuration.addExposedHeader("Set-Cookie");
-                configuration.addExposedHeader("Authorization");
+                configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie"));
+
 
                 return configuration;
             }
@@ -69,16 +73,20 @@ public class SecurityConfig {
 
         http.httpBasic(httpBasic -> httpBasic.disable());
 
+        http.anonymous(anonymous -> anonymous.disable());
+
+
         // 5. JWTFilter 추가
 
          http
                  .addFilterAfter(new JwtFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
 
-        // 6. OAuth2 로그인 설정
+//        //6. OAuth2 로그인 설정
 //        http.oauth2Login(oauth2 -> oauth2
 //                .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
 //                .successHandler(customSuccessHandler)
 //        );
+
         http
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
@@ -88,35 +96,43 @@ public class SecurityConfig {
 
                 );
 
-        http
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(
-                                "/",
-                                "/docs/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/auth/login",
-                                "/auth/sign-in",
-                                "/quiz",
-                                "/users/**",
-                                "/animal-categories",
-                                "/animal-categories/**",
-                                "/hospitals",
-                                "/hospitals/**",
-                                "/community",
-                                "/community/**",
-                                "/challenger",
-                                "/health/records",
-                                "/health/records/**",
-                                "/badge",
-                                "/badge/**"
-                        ).permitAll()
-                        .anyRequest().authenticated());
+//        http
+//                .authorizeHttpRequests((auth) -> auth
+//                        .requestMatchers(
+//                                "/",
+//                                "/docs/**",
+//                                "/v3/api-docs/**",
+//                                "/swagger-ui/**",
+//                                "/oauth2/authorization/**",
+//                                "/login/oauth2/code/**",
+//                                "/login",
+//                                "/api/**"
+//                        ).permitAll()
+//                                // /pet-register 경로는 로그인한 사용자만 접근 가능하게 설정
+//                        .requestMatchers("/pet-register").authenticated()
+//                                // 나머지 모든 요청은 인증 필요 (필요에 따라 조정)
+//                        .anyRequest().authenticated());
+//                        //.anyRequest().authenticated());
+
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                        "/",
+                        "/docs/**",
+                        "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/oauth2/authorization/**",
+                        "/login/oauth2/code/**",
+                        "/login",
+                        "/api/**"
+                ).permitAll()  // 나머지 명시된 URL은 인증 없이 접근 가능
+                .anyRequest().authenticated() // 위에 명시하지 않은 모든 요청은 인증 필요
+        );
 
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
+        http.addFilterBefore(oAuth2LoggingFilter, OAuth2LoginAuthenticationFilter.class);
 
         return http.build();
     }

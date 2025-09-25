@@ -15,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@ToString
 public class PostCategory extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +24,10 @@ public class PostCategory extends BaseTimeEntity {
     private String category;
 
     @OneToMany(mappedBy = "postCategory", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private List<Post> postList= new ArrayList<>();
+
+    public PostCategory(String category) {
+        this.category = category;
+    }
 }

@@ -1,6 +1,7 @@
 package LittlePet.UMC.User.converter;
 
 import LittlePet.UMC.User.dto.PetProfileRequest.PetProfileRequestDTO;
+import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileAllResponseDTO;
 import LittlePet.UMC.User.dto.PetProfileResponse.PetProfileResponseDTO;
 import LittlePet.UMC.domain.enums.Gender;
 import LittlePet.UMC.domain.petEntity.categories.PetCategory;
@@ -17,9 +18,19 @@ public class PetProfileConverter {
                 .birthDay(userPet.getBirthDay().toString())
                 .gender(userPet.getGender().toString())
                 .profilePhoto(userPet.getProfilePhoto())
-                .categoryName(userPet.getPetCategory().getSpecies()) // PetCategory 이름
+                .categorySpecies(userPet.getPetCategory().getSpecies()) // PetCategory 이름
                 .build();
     }
+
+    public static PetProfileAllResponseDTO toPetHealthRecordResponseDTO(UserPet userPet) {
+        return PetProfileAllResponseDTO.builder()
+                .petId(userPet.getId())
+                .name(userPet.getName())
+                .profilePhoto(userPet.getProfilePhoto())
+                .build();
+    }
+
+
 
     // RequestDTO -> Entity 변환
     public static UserPet toUserPetEntity(PetProfileRequestDTO petRequestDTO, User user, PetCategory category) {
@@ -27,7 +38,6 @@ public class PetProfileConverter {
                 .name(petRequestDTO.getName())
                 .birthDay(LocalDate.parse(petRequestDTO.getBirthDay())) // String -> LocalDate 변환
                 .gender(Gender.valueOf(petRequestDTO.getGender().toUpperCase())) // Enum 변환
-                .profilePhoto(petRequestDTO.getProfilePhoto())
                 .user(user)
                 .petCategory(category)
                 .build();

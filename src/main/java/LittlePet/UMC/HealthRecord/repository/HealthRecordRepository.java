@@ -18,4 +18,9 @@ public interface HealthRecordRepository extends JpaRepository<HealthRecord, Long
     Optional<HealthRecord> findFirstByUserPetOrderByRecordDateDesc(UserPet userPet);
     Optional<HealthRecord> findByUserPetAndRecordDate(UserPet userPet, LocalDate recordDate);
     List<HealthRecord> findAllByUserPet(UserPet pet);
+    Optional<HealthRecord> findFirstByUserPetAndRecordDateBeforeOrderByRecordDateDesc(UserPet userPet, LocalDate recordDate);
+
+
+    void deleteByUserPet(UserPet userPet);  // JPA 자동 삭제 지원 (JPQL 불필요)
+
 }

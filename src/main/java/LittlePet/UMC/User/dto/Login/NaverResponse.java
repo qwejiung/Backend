@@ -33,7 +33,7 @@ public class NaverResponse implements OAuth2Response {
 
     @Override
     public String getPhone() {
-        return attribute.get("mobile").toString();
+        return "Not Provided";
     }
 
 

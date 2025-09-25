@@ -16,11 +16,11 @@ import LittlePet.UMC.domain.petEntity.categories.PetCategory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-//response dto 처리를 controller에서 할지 생각 중 일단 다
 @Service
 @RequiredArgsConstructor
 public class PetCategoryService {
@@ -34,7 +34,7 @@ public class PetCategoryService {
 
     //모든 petbigcategory 가져오기.
     @Transactional(readOnly = true)
-    public List<PetBigCategoryResponseDto.GetDto> getPetBigCategories() {
+    public List<PetBigCategoryResponseDto.PetBigCategoryGetDto> getPetBigCategories() {
         return petBigCategoryRepository.findAll().stream()
                 .map(PetBigCategoryConverter::toGetDto)
                 .collect(Collectors.toList());
@@ -48,7 +48,7 @@ public class PetCategoryService {
 
         return newEntity;
     }
-//
+    //
     //PetBig Category 수정에 따른 service 로직 추가
     //validation을 따로 둘지 아니면 그냥 service에서 처리할지 고민.
     //일단 validation하는 게 두 곳에 존재하는게 보기 싫
@@ -79,20 +79,27 @@ public class PetCategoryService {
     }
 
     @Transactional(readOnly = true)
-    public PetCategoryResponseDto.DTO getPetCategoryById(Long id){
+    public PetCategoryResponseDto.PetCategoryDetailDTO getPetCategoryById(Long id){
         PetCategory petCategory = this.isValidPetCategoryId(id);
 
         return PetCategoryConverter.toResponseDTO(petCategory);
     }
 
+    @Transactional(readOnly = true)
+    public List<PetCategoryResponseDto.PetCategoryDTO> getPetCategoryAll(){
+        List<PetCategory> petCategoryList = this.petCategoryRepository.findAll();
+
+        return petCategoryList.stream()
+                .map(PetCategoryConverter::toShortResponseDTO)
+                .collect(Collectors.toList());
+    }
+
+
     @Transactional
-    public PetCategoryResponseDto.DTO createPetCategory(PetCategoryReqeustDto.PetCategoryWriteDTO request){
+    public PetCategoryResponseDto.PetCategoryDetailDTO createPetCategory(PetCategoryReqeustDto.PetCategoryWriteDTO request, String url){
         PetBigCategory bigCategory = this.isValidPetBigCategoryId(request.getPetBigCategoryId());
 
-        //image 저장 logic 여기 있어야 함. url 반환 받아야 함.
-        String imagePathUrl = "mock data";
-
-        PetCategory newEntity = PetCategoryConverter.toEntity(request,bigCategory,imagePathUrl);
+        PetCategory newEntity = PetCategoryConverter.toEntity(request,bigCategory,url);
         petCategoryRepository.save(newEntity);
 
         return PetCategoryConverter.toResponseDTO(newEntity);
@@ -100,17 +107,17 @@ public class PetCategoryService {
 
     @Transactional
     //유효성 검증을 service에서만 처리할 수 있도록 하였습니다.
-    public PetCategoryResponseDto.DTO updatePetCategory(Long id, PetCategoryReqeustDto.PetCategoryWriteDTO request){
+    public PetCategoryResponseDto.PetCategoryDetailDTO updatePetCategory(Long id, PetCategoryReqeustDto.PetCategoryPuTDTO request,String url){
         PetCategory petCategory = this.isValidPetCategoryId(id);
 
         if(request.getFeatures() != null){
-            petCategory.setFeatures(request.getFeatures());
+            petCategory.setFeatures(request.getFeatures().replace("\n", "<br>"));
         }
         if(request.getEnvironment() != null){
-            petCategory.setEnvironment(request.getEnvironment());
+            petCategory.setEnvironment(request.getEnvironment().replace("\n", "<br>"));
         }
         if(request.getPlayMethods() != null){
-            petCategory.setPlayMethods(request.getPlayMethods());
+            petCategory.setPlayMethods(request.getPlayMethods().replace("\n", "<br>"));
         }
         if(request.getSpecies() != null){
             petCategory.setSpecies(request.getSpecies());
@@ -120,7 +127,13 @@ public class PetCategoryService {
             petCategory.setPetBigCategory(petBigCategory);
         }
         if(request.getFoodInfo() != null){
-            petCategory.setFoodInfo(request.getFoodInfo());
+            petCategory.setFoodInfo(request.getFoodInfo().replace("\n", "<br>"));
+        }
+        if(url != null){
+            petCategory.setFeatureImagePath(url);
+        }
+        if(request.getTitle() != null){
+            petCategory.setTitle(request.getTitle());
         }
 
         return PetCategoryConverter.toResponseDTO(petCategory);

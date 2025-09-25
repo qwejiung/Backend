@@ -7,40 +7,51 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 30MB
   jwt:
-    secret-key: "afdsjfkpoqjfelkjlknsadafdshsalfkjadfsjadfsjfadlkjfdsalkjsaflklsjklfk"
+    secret-key: "afdkjfkldsjsflkaklfsjklfsjlkfdjskldfjslkdjfk"
     expiration-time: 86400000 # 1일
-
-
   security:
+    cors:
+      allowed-origins: "https://umclittlepet.shop, http://localhost:5173"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
     oauth2:
       client:
         registration:
           naver:
             client-name: naver
-            client-id: ${NAVER_CLIENT_ID} # 환경 변수로 클라이언트 ID 설정
-            client-secret: ${NAVER_CLIENT_SECRET} # 환경 변수로 클라이언트 Secret 설정
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            client-id: ${NAVER_CLIENT_ID}
+            client-secret: ${NAVER_CLIENT_SECRET}
+            redirect-uri: https://umclittlepet.shop/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope:
               - name
               - email
-              - phone_number # 핸드폰 번호 추가
           google:
             client-name: google
-            client-id: ${GOOGLE_CLIENT_ID} # 환경 변수로 클라이언트 ID 설정
-            client-secret: ${GOOGLE_CLIENT_SECRET} # 환경 변수로 클라이언트 Secret 설정
-            redirect-uri: http://localhost:8080/login/oauth2/code/google
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: https://umclittlepet.shop/login/oauth2/code/google
             authorization-grant-type: authorization_code
             scope:
               - email
               - profile
-
-
+          kakao:
+            client-name: kakao
+            client-id: ${KAKAO_CLIENT_ID}
+            redirect-uri: https://umclittlepet.shop/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
@@ -52,3 +63,36 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: littlepet-bucket
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.security.oauth2.client: DEBUG
+    org.springframework.security.oauth2.provider: DEBUG
+
+kakao:
+  api:
+    key: ${KAKAO_REST_API_KEY}  # 카카오 개발자 사이트에서 발급받은 REST API 키
+
+server:
+  tomcat:
+    max-upload-size: 31457280     # 30MB (30 * 1024 * 1024)
+    max-swallow-size: 31457280    # 30MB
+    max-http-form-post-size: 31457280  # 30MB
+

@@ -14,6 +14,5 @@ public class PetProfileRequestDTO {
     private String name;          // 반려동물 이름
     private String birthDay;      // 반려동물 생년월일
     private String gender;        // 반려동물 성별
-    private String profilePhoto;  // 반려동물 프로필 사진 경로
-    private Long categoryId; // PetCategory ID
+    private String categorySpecies; // PetCategory
 }

@@ -1,3 +1,11 @@
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: lax
+        secure: false # ✅ 로컬 개발은 HTTP 허용
+
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/LittlePet
@@ -12,7 +20,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
   jwt:
-    secret-key: "afdsjfkpoqjfelkjlknsadafdshsalfkjadfsjadfsjfadlkjfdsalkjsaflklsjklfk"
+    secret-key: "afdkjfkldsjsflkaklfsjklfsjlkfdjskldfjslkdjfk"
     expiration-time: 86400000 # 1일
 
 
@@ -29,7 +37,6 @@ spring:
             scope:
               - name
               - email
-              - phone_number # 핸드폰 번호 추가
           google:
             client-name: google
             client-id: ${GOOGLE_CLIENT_ID} # 환경 변수로 클라이언트 ID 설정
@@ -39,6 +46,14 @@ spring:
             scope:
               - email
               - profile
+          kakao:
+            client-name: kakao
+            client-id: ${KAKAO_CLIENT_ID}
+            redirect-uri: https://umclittlepet.shop/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - account_email
 
 
         provider:
@@ -52,3 +67,24 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+#local 테스트 시 AWS_ACCESS_KEY_ID와 QWS_SECRET_ACCESS_KEY를 다운 받아서 환경 변수 추가 후 테스트 부탁드립니다.
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID}
+      secret-key: ${AWS_SECRET_ACCESS_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: littlepet-bucket
+
+kakao:
+  api:
+    key: ${KAKAO_REST_API_KEY}  # 카카오 개발자 사이트에서 발급받은 REST API 키 또는 JavaScript 키

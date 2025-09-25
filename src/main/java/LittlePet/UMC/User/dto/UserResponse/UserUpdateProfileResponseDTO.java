@@ -15,5 +15,6 @@ public class UserUpdateProfileResponseDTO {
     private Long userId;
     private String nickname;
     private String phone;
+    private String profilePhoto;
     private String introduction;
 }
